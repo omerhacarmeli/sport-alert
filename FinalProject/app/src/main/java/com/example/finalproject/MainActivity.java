@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText userName = findViewById(R.id.userName);
                 EditText password = findViewById(R.id.password);
-                String strUserName = String.valueOf(userName);
-                String strParssword = String.valueOf(password);
+                String strUserName = String.valueOf(userName.getText());
+                String strParssword = String.valueOf(password.getText());
                 User user = new User();
                 if (userDao.isUserExist(strUserName, strParssword)) {
                     user.setUserName(strUserName);

@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
             if (INSTANCE == null) {
                 synchronized (FinalProjectDataBase.class) {
                     if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(context.getApplicationContext(), FinalProjectDataBase.class, "MyDB").fallbackToDestructiveMigration().build();
+                        INSTANCE = Room.databaseBuilder(context.getApplicationContext(), FinalProjectDataBase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
                     }
                 }
             }
