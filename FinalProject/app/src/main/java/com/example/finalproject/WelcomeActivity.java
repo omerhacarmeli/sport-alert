@@ -13,15 +13,30 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        changeFragmentToSingIn();
+    }
 
+    public void changeFragmentToSingIn() {
         LogInFragment logInFragment = new LogInFragment();
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         transaction.replace(R.id.myFragmentContainerView, logInFragment,
                 "logInFragment");
 
+        transaction.commit();
+    }
+
+    public void changeFragmentToSingUp() {
+
+        SignUpFragment signUpFragment = new SignUpFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+
+        transaction.replace(R.id.myFragmentContainerView, signUpFragment,
+                "signUpFragment");
         transaction.commit();
     }
 }

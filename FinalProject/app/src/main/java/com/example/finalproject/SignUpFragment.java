@@ -6,29 +6,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-public class LogInFragment extends Fragment {
+public class SignUpFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-        View inflate = inflater.inflate(R.layout.login_fragment, container, false);
+        View inflate = inflater.inflate(R.layout.signup_fragment, container, false);
         return inflate;
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button signupBttn = view.findViewById(R.id.signup);
-        signupBttn.setOnClickListener(new View.OnClickListener() {
+        Button loginBttn = view.findViewById(R.id.login);
+        loginBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
-                welcomeActivity.changeFragmentToSingUp();
+                welcomeActivity.changeFragmentToSingIn();
             }
         });
     }
