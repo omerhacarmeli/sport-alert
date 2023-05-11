@@ -33,7 +33,6 @@ public class WelcomeActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 
         transaction.replace(R.id.myFragmentContainerView, signUpFragment,
                 "signUpFragment");
