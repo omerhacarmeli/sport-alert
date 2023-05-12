@@ -11,8 +11,14 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-public class SignUpFragment extends Fragment {
+import com.example.finalproject.database.AppDataBase;
+import com.example.finalproject.database.UserDao;
+import com.example.finalproject.dataobjects.User;
+import com.example.finalproject.validators.UserValidator;
+import com.example.finalproject.validators.ValidateResponse;
 
+public class SignUpFragment extends Fragment {
+    UserDao userDao;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -24,79 +30,138 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button loginBttn = view.findViewById(R.id.backToLoginButtom);
-        FinalProjectDataBase dataBase = FinalProjectDataBase.getdatabase(getActivity());
-        UserDao userDao = dataBase.userDao();
+        Button signupButton = view.findViewById(R.id.backToLoginButtom);
 
-        loginBttn.setOnClickListener(new View.OnClickListener() {
+        AppDataBase dataBase = AppDataBase.getDatabase(getActivity());
+        this.userDao = dataBase.userDao();
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
-                welcomeActivity.changeFragmentToSingIn();
+                welcomeActivity.changeFragmentToLogin();
             }
         });
-        Button signInButtom = view.findViewById(R.id.signIn);
+        Button signInButton = view.findViewById(R.id.signIn);
         TextView title = view.findViewById(R.id.title);
 
-        EditText email = view.findViewById(R.id.gettingTheEmail);
-        EditText password = view.findViewById(R.id.gettingThePassword);
-        EditText userName = view.findViewById(R.id.gettingTheUserName);
-
-        signInButtom.setOnClickListener(new View.OnClickListener() {
+        EditText userName = view.findViewById(R.id.signup_user);
+        EditText password = view.findViewById(R.id.signup_password);
+        EditText email = view.findViewById(R.id.signup_email);
+        EditText phone = view.findViewById(R.id.signup_phonenumber);
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 String strPassword = String.valueOf(password.getText());
-                String strUserName = String.valueOf(userName.getText());
+
                 String strEmail = String.valueOf(email.getText());
                 User user = new User();
-                boolean checkPass = checkingThePassword(strPassword);
-                if (checkPass == false) {
-                    password.setText("");
-                } else {
-                    user.setUserPassword(strPassword);
-                }
-                boolean checkUser = checkingTheUserName(strUserName);
-                if (checkUser == false) {
-                    userName.setText("");
-                } else {
-                    user.setUserName(strUserName);
 
-                }
-                user.setEmail(strEmail);
+                ValidateResponse validateUserNameResponse = validateUserName(user, userName);
+                ValidateResponse validatePasswordResponse = validatePassword(user, password);
+                ValidateResponse validateEmailResponse =  validateEmail(user, email);
+                ValidateResponse validatePhoneResponse = validatePhone(user, phone);
 
-                try {
-                    userDao.insertUser(user);
-                    Toast toast = Toast.makeText(getActivity(), "משתמש תקין", Toast.LENGTH_SHORT);
-                    toast.show();
+                if(!validateUserNameResponse.isValidate() ||
+                        !validatePasswordResponse.isValidate() ||
+                        !validateEmailResponse.isValidate() ||
+                        !validatePhoneResponse.isValidate())
+                {
+                    return;
                 }
-                catch (Exception e) {
-                    e.printStackTrace();
-                    Toast toast = Toast.makeText(getActivity(), "משתמש לא תקין, נסה שנית", Toast.LENGTH_SHORT);
-                    toast.show();
+                else {
+                    try {
+                        userDao.insertUser(user);
+                        Toast toast = Toast.makeText(getActivity(), "משתמש תקין", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast toast = Toast.makeText(getActivity(), "משתמש לא תקין, נסה שנית", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                 }
-
-            }
-
-            private boolean checkingThePassword(String strPassword) {
-                if (strPassword.length() < 2) {
-                    Toast toast = Toast.makeText(getActivity(), "סיסמה קצרה מידיי", Toast.LENGTH_SHORT);
-                    toast.show();
-                    return false;
-                }
-                return true;
-            }
-
-            private boolean checkingTheUserName(String strUserName) {
-                if (strUserName.length() < 2) {
-                    Toast toast = Toast.makeText(getActivity(), "שם משתמש קצר מידיי", Toast.LENGTH_SHORT);
-                    toast.show();
-                    return false;
-                }
-                return true;
             }
         });
+    }
 
+    private ValidateResponse validateUserName(User user, EditText userName) {
+
+        String strUserName = String.valueOf(userName.getText());
+
+        ValidateResponse validateResponse = UserValidator.validateUserName(strUserName);
+
+        if (!validateResponse.isValidate()) {
+            userName.setText("");
+            Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            user.setUserName(strUserName);
+        }
+
+        return validateResponse;
+    }
+
+    private ValidateResponse validatePassword(User user, EditText password) {
+
+        String strPassword = String.valueOf(password.getText());
+
+        ValidateResponse validateResponse = UserValidator.validatePassword(strPassword);
+
+        if (!validateResponse.isValidate()) {
+            password.setText("");
+            Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            user.setPassword(strPassword);
+        }
+
+        return validateResponse;
+    }
+
+    private ValidateResponse validateEmail(User user, EditText email) {
+
+        String strEmail = String.valueOf(email.getText());
+
+        ValidateResponse validateResponse = UserValidator.validateEmail(strEmail);
+
+        if (!validateResponse.isValidate()) {
+            email.setText("");
+            Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            long userExist =  userDao.isEmailExist(email.getText().toString());
+
+            if(userExist>0)
+            {
+                validateResponse.setValidate(false);
+                validateResponse.setMsg("משתמש זה קיים במערכת");
+
+                Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            else {
+                user.setEmail(strEmail);
+            }
+        }
+
+        return validateResponse;
+    }
+
+    private ValidateResponse validatePhone(User user, EditText phone) {
+        String strPhone = String.valueOf(phone.getText());
+
+        ValidateResponse validateResponse = UserValidator.validatePhoneNumber(strPhone);
+
+        if (!validateResponse.isValidate()) {
+            phone.setText("");
+            Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            user.setPhoneNumber(strPhone);
+        }
+
+        return validateResponse;
     }
 }
 

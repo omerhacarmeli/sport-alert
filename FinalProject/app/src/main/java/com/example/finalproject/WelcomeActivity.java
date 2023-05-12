@@ -13,11 +13,11 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        changeFragmentToSingIn();
+        changeFragmentToLogin();
     }
 
-    public void changeFragmentToSingIn() {
-        LogInFragment logInFragment = new LogInFragment();
+    public void changeFragmentToLogin() {
+        LoginFragment logInFragment = new LoginFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
