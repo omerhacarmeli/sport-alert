@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:src="@drawable/`baseline_email_24`"
+        android:id="@+id/im1"
+        android:scaleType="fitXY"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
+
 
     <TextView
         android:id="@+id/title2"
@@ -20,10 +27,12 @@
     <EditText
         android:id="@+id/login_email"
         android:layout_width="211dp"
-        android:layout_height="46dp"
+        android:layout_height="48dp"
+        android:drawableLeft="@drawable/baseline_email_24"
         android:ems="10"
         android:hint="אימייל"
         android:inputType="textEmailAddress"
+        android:text="omerh@gmail.com"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.425"
@@ -34,10 +43,12 @@
     <EditText
         android:id="@+id/login_password"
         android:layout_width="211dp"
-        android:layout_height="46dp"
+        android:layout_height="48dp"
+        android:drawableLeft="@drawable/baseline_person_24"
         android:ems="10"
         android:hint="סיסמה"
         android:inputType="textPassword"
+        android:text="7511"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.425"
@@ -83,4 +94,14 @@
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/login_animation"
         tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="416dp"
+        android:layout_height="732dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/im1"
+        tools:srcCompat="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>
