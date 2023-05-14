@@ -1,1 +1,10 @@
+locationIntent
+omerh@gmail.com
+7511
 https://www.youtube.com/watch?v=VcrzLcokvvc&ab_channel=CodingWithTea
+
+
+ git config --global user.email "omerhacarmeli@gmail.com"
+ git config --global user.name "omerhacarmeli"
+
+com.google.android.geo.API_KEY - AIzaSyDJF_z4BxiZbZFLdHyrMmyBcoDZOBrLp3k

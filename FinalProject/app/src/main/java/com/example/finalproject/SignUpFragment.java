@@ -129,6 +129,7 @@ public class SignUpFragment extends Fragment {
             email.setText("");
             Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
             toast.show();
+
         } else {
             long userExist =  userDao.isEmailExist(email.getText().toString());
 

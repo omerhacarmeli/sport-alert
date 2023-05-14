@@ -1,5 +1,6 @@
 package com.example.finalproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,8 +61,11 @@ public class LoginFragment extends Fragment {
                         if (user != null) {
                             Toast toast = Toast.makeText(getActivity(), "שלום", Toast.LENGTH_SHORT);
                             toast.show();
+
+                            Intent locationIntent  = new Intent(getActivity().getApplicationContext(), LocationActivity.class);
+                            startActivity(locationIntent);
                         } else {
-                            Toast toast = Toast.makeText(getActivity(), "הסיסמה או שם המשתמש אינם נכונים", Toast.LENGTH_SHORT);
+                            Toast toast = Toast.makeText(getActivity(), "שם המשתמש או הסיסמה אינם נכונים", Toast.LENGTH_SHORT);
                             toast.show();
                         }
                     }
@@ -69,3 +73,5 @@ public class LoginFragment extends Fragment {
 
     }
 }
+
+
