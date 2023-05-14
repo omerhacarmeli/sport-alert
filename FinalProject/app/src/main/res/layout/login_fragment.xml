@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
-        android:src="@drawable/`baseline_email_24`"
+        android:src="@drawable/baseline_email_24"
         android:id="@+id/im1"
         android:scaleType="fitXY"
         android:layout_height="match_parent"
