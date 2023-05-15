@@ -54,8 +54,8 @@ public class SignUpFragment extends Fragment {
             public void onClick(View view) {
 
                 String strPassword = String.valueOf(password.getText());
-
                 String strEmail = String.valueOf(email.getText());
+
                 User user = new User();
 
                 ValidateResponse validateUserNameResponse = validateUserName(user, userName);
@@ -73,7 +73,7 @@ public class SignUpFragment extends Fragment {
                 else {
                     try {
                         userDao.insertUser(user);
-                        Toast toast = Toast.makeText(getActivity(), "משתמש תקין", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getActivity(), "משתמש נרשם במערכת", Toast.LENGTH_SHORT);
                         toast.show();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -92,9 +92,10 @@ public class SignUpFragment extends Fragment {
         ValidateResponse validateResponse = UserValidator.validateUserName(strUserName);
 
         if (!validateResponse.isValidate()) {
-            userName.setText("");
+            userName.setError(validateResponse.getMsg());
+           /* userName.setText("");
             Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
-            toast.show();
+            toast.show();*/
         } else {
             user.setUserName(strUserName);
         }
@@ -109,9 +110,10 @@ public class SignUpFragment extends Fragment {
         ValidateResponse validateResponse = UserValidator.validatePassword(strPassword);
 
         if (!validateResponse.isValidate()) {
-            password.setText("");
+            password.setError(validateResponse.getMsg());
+           /* password.setText("");
             Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
-            toast.show();
+            toast.show();*/
         } else {
             user.setPassword(strPassword);
         }
@@ -126,9 +128,9 @@ public class SignUpFragment extends Fragment {
         ValidateResponse validateResponse = UserValidator.validateEmail(strEmail);
 
         if (!validateResponse.isValidate()) {
-            email.setText("");
-            Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
-            toast.show();
+            email.setError(validateResponse.getMsg());
+        /*    Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
+            toast.show();*/
 
         } else {
             long userExist =  userDao.isEmailExist(email.getText().toString());
@@ -155,9 +157,10 @@ public class SignUpFragment extends Fragment {
         ValidateResponse validateResponse = UserValidator.validatePhoneNumber(strPhone);
 
         if (!validateResponse.isValidate()) {
-            phone.setText("");
+            phone.setError(validateResponse.getMsg());
+            /*phone.setText("");
             Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
-            toast.show();
+            toast.show();*/
         } else {
             user.setPhoneNumber(strPhone);
         }

@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.example.finalproject.database.AppDataBase;
 import com.example.finalproject.database.UserDao;
 import com.example.finalproject.dataobjects.User;
+import com.example.finalproject.validators.UserValidator;
+import com.example.finalproject.validators.ValidateResponse;
 
 public class LoginFragment extends Fragment {
 
@@ -44,19 +46,23 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        TextView logIN = view.findViewById(R.id.logIN);
-
         Button loginButton = view.findViewById(R.id.buttonLogin);
 
         loginButton
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditText userName = view.findViewById(R.id.login_email);
+                        EditText email = view.findViewById(R.id.login_email);
                         EditText password = view.findViewById(R.id.login_password);
-                        String strUserName = String.valueOf(userName.getText());
+                        String strEmail = String.valueOf(email.getText());
                         String strPassword = String.valueOf(password.getText());
-                        User user = userDao.login(strUserName, strPassword);
+
+                        if (!validateInput(email, password))
+                        {
+                            return;
+                        }
+
+                        User user = userDao.login(strEmail, strPassword);
 
                         if (user != null) {
                             Toast toast = Toast.makeText(getActivity(), "שלום", Toast.LENGTH_SHORT);
@@ -68,6 +74,26 @@ public class LoginFragment extends Fragment {
                             Toast toast = Toast.makeText(getActivity(), "שם המשתמש או הסיסמה אינם נכונים", Toast.LENGTH_SHORT);
                             toast.show();
                         }
+                    }
+
+                    private boolean validateInput(EditText email, EditText password) {
+                        ValidateResponse validateEmailResponse = UserValidator.validateEmail(email.getText().toString());
+
+                        if (!validateEmailResponse.isValidate()) {
+                            email.setError(validateEmailResponse.getMsg());
+                        }
+
+                        ValidateResponse validatePasswordResponse = UserValidator.validatePassword(password.getText().toString());
+
+                        if (!validatePasswordResponse.isValidate()) {
+                            password.setError(validatePasswordResponse.getMsg());
+                        }
+
+                        if(!validateEmailResponse.isValidate() || !validatePasswordResponse.isValidate())
+                        {
+                            return false;
+                        }
+                        return true;
                     }
                 });
 
