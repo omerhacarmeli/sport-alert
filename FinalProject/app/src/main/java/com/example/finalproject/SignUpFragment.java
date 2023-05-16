@@ -47,6 +47,7 @@ public class SignUpFragment extends Fragment {
 
         EditText userName = view.findViewById(R.id.signup_user);
         EditText password = view.findViewById(R.id.signup_password);
+        EditText verifyPassword = view.findViewById(R.id.signup_passwordVerify);
         EditText email = view.findViewById(R.id.signup_email);
         EditText phone = view.findViewById(R.id.signup_phonenumber);
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -55,16 +56,19 @@ public class SignUpFragment extends Fragment {
 
                 String strPassword = String.valueOf(password.getText());
                 String strEmail = String.valueOf(email.getText());
+                String strVerifyPassword=String.valueOf(verifyPassword.getText());
 
                 User user = new User();
 
                 ValidateResponse validateUserNameResponse = validateUserName(user, userName);
                 ValidateResponse validatePasswordResponse = validatePassword(user, password);
+                ValidateResponse validateVerifyPasswordResponse = validateVerifyPassword(user, verifyPassword,password);
                 ValidateResponse validateEmailResponse =  validateEmail(user, email);
                 ValidateResponse validatePhoneResponse = validatePhone(user, phone);
 
                 if(!validateUserNameResponse.isValidate() ||
                         !validatePasswordResponse.isValidate() ||
+                        !validateVerifyPasswordResponse.isValidate() ||
                         !validateEmailResponse.isValidate() ||
                         !validatePhoneResponse.isValidate())
                 {
@@ -121,6 +125,24 @@ public class SignUpFragment extends Fragment {
         return validateResponse;
     }
 
+    private ValidateResponse validateVerifyPassword(User user, EditText verifyPassword, EditText password) {
+
+        String strVerifyPassword = String.valueOf(verifyPassword.getText());
+        String strPassword = String.valueOf(password.getText());
+
+        ValidateResponse validateResponse = new ValidateResponse();
+        if (!strVerifyPassword.equals(strPassword)) {
+            validateResponse.setValidate(false);
+            validateResponse.setMsg("הסיסמה אינה תואמת");
+            verifyPassword.setError(validateResponse.getMsg());
+
+        }
+        else{
+            validateResponse.setValidate(true);
+        }
+        return validateResponse;
+    }
+
     private ValidateResponse validateEmail(User user, EditText email) {
 
         String strEmail = String.valueOf(email.getText());
@@ -139,9 +161,7 @@ public class SignUpFragment extends Fragment {
             {
                 validateResponse.setValidate(false);
                 validateResponse.setMsg("משתמש זה קיים במערכת");
-
-                Toast toast = Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_SHORT);
-                toast.show();
+                email.setError(validateResponse.getMsg());
             }
             else {
                 user.setEmail(strEmail);

@@ -5,12 +5,16 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
+
     <ImageView
-        android:src="@drawable/login_background"
         android:id="@+id/im1"
-        android:scaleType="fitXY"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:scaleType="fitXY"
+        android:src="@drawable/login_background"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="26dp" />
+
     <TextView
         android:id="@+id/title"
     android:layout_width="250dp"
@@ -51,51 +55,65 @@
         android:id="@+id/signup_password"
         android:layout_width="211dp"
         android:layout_height="48dp"
+        android:background="@drawable/rounded_corner_view"
+        android:drawableLeft="@drawable/baseline_password_24"
         android:ems="10"
         android:hint="סיסמה"
         android:inputType="textPassword"
-        android:drawableLeft="@drawable/baseline_password_24"
-        android:background="@drawable/rounded_corner_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.425"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.286" />
+        app:layout_constraintVertical_bias="0.291" />
+
+    <EditText
+        android:id="@+id/signup_passwordVerify"
+        android:layout_width="211dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_corner_view"
+        android:drawableLeft="@drawable/baseline_password_24"
+        android:ems="10"
+        android:hint="אימות סיסמה"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.425"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.404" />
 
     <EditText
         android:id="@+id/signup_user"
         android:layout_width="211dp"
         android:layout_height="48dp"
+        android:background="@drawable/rounded_corner_view"
+        android:drawableLeft="@drawable/baseline_person_24"
         android:ems="10"
         android:hint="שם המשתמש"
         android:inputType="textPersonName"
-        android:drawableLeft="@drawable/baseline_person_24"
-        android:background="@drawable/rounded_corner_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.425"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.388" />
-
+        app:layout_constraintVertical_bias="0.513" />
 
     <EditText
         android:id="@+id/signup_phonenumber"
         android:layout_width="211dp"
         android:layout_height="48dp"
+        android:background="@drawable/rounded_corner_view"
+        android:drawableLeft="@drawable/baseline_phone_24"
         android:ems="10"
         android:hint="טלפון"
         android:inputType="textPersonName"
-        android:drawableLeft="@drawable/baseline_phone_24"
-        android:background="@drawable/rounded_corner_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.425"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
-
+        app:layout_constraintVertical_bias="0.623" />
 
     <Button
         android:id="@+id/signIn"
@@ -104,10 +122,10 @@
         android:text="הרשמה"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.858"
+        app:layout_constraintHorizontal_bias="0.847"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.64" />
+        app:layout_constraintVertical_bias="0.734" />
 
     <Button
         android:id="@+id/backToLoginButtom"
@@ -116,9 +134,9 @@
         android:text="חזרה"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.185"
+        app:layout_constraintHorizontal_bias="0.171"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.64" />
+        app:layout_constraintVertical_bias="0.734" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

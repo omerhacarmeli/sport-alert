@@ -145,7 +145,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
         double lat = 31.509445864880238;
         double lng = 34.59184909322831;
         LatLng latLng = new LatLng(lat,lng);
-        mMap.addMarker(new MarkerOptions().position(latLng).title("Sydney"));
+        mMap.addMarker(new MarkerOptions().position(latLng).title("Sapir"));
       //  mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
 

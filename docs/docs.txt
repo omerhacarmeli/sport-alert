@@ -8,3 +8,23 @@ https://www.youtube.com/watch?v=VcrzLcokvvc&ab_channel=CodingWithTea
  git config --global user.name "omerhacarmeli"
 
 com.google.android.geo.API_KEY - AIzaSyDJF_z4BxiZbZFLdHyrMmyBcoDZOBrLp3k
+
+
+git commands:
+
+open git bsh
+
+goto /c/SpotAlert/code/sport-alert
+
+
+(add all files to)
+
+git add .
+
+git commit -m "commit description
+
+git push
+
+
+(get files from git)
+git pull

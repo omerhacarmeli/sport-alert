@@ -49,7 +49,7 @@
         android:id="@+id/login_password"
         android:layout_width="211dp"
         android:layout_height="48dp"
-        android:drawableLeft="@drawable/baseline_person_24"
+        android:drawableLeft="@drawable/baseline_password_24"
         android:ems="10"
         android:hint="סיסמה"
         android:inputType="textPassword"

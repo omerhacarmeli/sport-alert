@@ -3,6 +3,9 @@ package com.example.finalproject.validators;
 public class ValidateResponse {
     private String msg;
     private boolean validate;
+    public ValidateResponse(){
+
+    }
 
     public ValidateResponse(boolean validate,String msg ) {
         this.msg = msg;
