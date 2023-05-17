@@ -15,15 +15,18 @@
         android:theme="@style/Theme.FinalProject"
         tools:targetApi="31">
         <activity
+            android:name=".MainActivity2"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
-            android:exported="true" >
-
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDJF_z4BxiZbZFLdHyrMmyBcoDZOBrLp3k" />
@@ -33,9 +36,11 @@
             android:exported="true" />
         <activity
             android:name=".WelcomeActivity"
-            android:exported="true">
+            android:exported="true"></activity>
 
-        </activity>
+        <receiver
+            android:name=".GpsLocationReceiver"
+            android:exported="true" />
     </application>
 
 </manifest>

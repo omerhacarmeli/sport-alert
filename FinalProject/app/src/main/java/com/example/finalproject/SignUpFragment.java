@@ -1,11 +1,14 @@
 package com.example.finalproject;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ public class SignUpFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button signupButton = view.findViewById(R.id.backToLoginButtom);
+        ProgressBar bar =view.findViewById(R.id.bar);
 
         AppDataBase dataBase = AppDataBase.getDatabase(getActivity());
         this.userDao = dataBase.userDao();
@@ -76,9 +80,29 @@ public class SignUpFragment extends Fragment {
                 }
                 else {
                     try {
-                        userDao.insertUser(user);
+
+                        long createdUserId=userDao.insertUser(user);
+                        SpotAlertAppContext.ACTIVE_USER = userDao.getUser(createdUserId);
                         Toast toast = Toast.makeText(getActivity(), "משתמש נרשם במערכת", Toast.LENGTH_SHORT);
                         toast.show();
+                        bar.setProgress(0,true);
+                        bar.setVisibility(View.VISIBLE);
+                        int delayTime= 2000;
+
+                        new CountDownTimer(delayTime, delayTime/100){
+                           int counter=0;
+                            public void onTick(long millisUntilFinished) {
+                                bar.setProgress(counter, true);
+                                counter++;
+                            }
+                            public  void onFinish() {
+                                bar.setProgress(100, true);
+                                Intent mainActivityIntent = new Intent(getActivity().getApplicationContext(), MainActivity2.class);
+                                startActivity(mainActivityIntent);
+                                getActivity().overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
+
+                            }
+                        }.start();
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast toast = Toast.makeText(getActivity(), "משתמש לא תקין, נסה שנית", Toast.LENGTH_SHORT);

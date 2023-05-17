@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,17 +20,17 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        TextView appNameTextView =  findViewById(R.id.appName);
+        TextView appNameTextView = findViewById(R.id.appName);
         appNameTextView.animate().translationY(-1600).setDuration(2700).setStartDelay(0);
-        Handler handler = new Handler();
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(getApplicationContext(),WelcomeActivity.class));
-                overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
-                finish();
+        new CountDownTimer(3000, 3000){
+            public void onTick(long millisUntilFinished){
+
             }
-        },3000);
-      }
+            public  void onFinish(){
+                startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
+                overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
+            }
+        }.start();
+    }
 }
