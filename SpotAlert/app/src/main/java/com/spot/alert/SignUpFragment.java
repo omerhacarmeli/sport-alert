@@ -1,5 +1,7 @@
 package com.spot.alert;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -19,9 +21,10 @@ import com.spot.alert.database.UserDao;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.validators.UserValidator;
 import com.spot.alert.validators.ValidateResponse;
-import com.spot.alert.R;
+
 public class SignUpFragment extends Fragment {
     UserDao userDao;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ public class SignUpFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button signupButton = view.findViewById(R.id.backToLoginButtom);
-        ProgressBar bar =view.findViewById(R.id.bar);
+        ProgressBar bar = view.findViewById(R.id.bar);
 
         AppDataBase dataBase = AppDataBase.getDatabase(getActivity());
         this.userDao = dataBase.userDao();
@@ -60,49 +63,74 @@ public class SignUpFragment extends Fragment {
 
                 String strPassword = String.valueOf(password.getText());
                 String strEmail = String.valueOf(email.getText());
-                String strVerifyPassword=String.valueOf(verifyPassword.getText());
+                String strVerifyPassword = String.valueOf(verifyPassword.getText());
 
                 User user = new User();
 
                 ValidateResponse validateUserNameResponse = validateUserName(user, userName);
                 ValidateResponse validatePasswordResponse = validatePassword(user, password);
-                ValidateResponse validateVerifyPasswordResponse = validateVerifyPassword(user, verifyPassword,password);
-                ValidateResponse validateEmailResponse =  validateEmail(user, email);
+                ValidateResponse validateVerifyPasswordResponse = validateVerifyPassword(user, verifyPassword, password);
+                ValidateResponse validateEmailResponse = validateEmail(user, email);
                 ValidateResponse validatePhoneResponse = validatePhone(user, phone);
 
-                if(!validateUserNameResponse.isValidate() ||
+                if (!validateUserNameResponse.isValidate() ||
                         !validatePasswordResponse.isValidate() ||
                         !validateVerifyPasswordResponse.isValidate() ||
                         !validateEmailResponse.isValidate() ||
-                        !validatePhoneResponse.isValidate())
-                {
+                        !validatePhoneResponse.isValidate()) {
                     return;
-                }
-                else {
+                } else {
                     try {
 
-                        long createdUserId=userDao.insertUser(user);
-                        SpotAlertAppContext.ACTIVE_USER = userDao.getUser(createdUserId);
-                        Toast toast = Toast.makeText(getActivity(), "משתמש נרשם במערכת", Toast.LENGTH_SHORT);
-                        toast.show();
-                        bar.setProgress(0,true);
-                        bar.setVisibility(View.VISIBLE);
-                        int delayTime= 2000;
 
-                        new CountDownTimer(delayTime, delayTime/100){
-                           int counter=0;
-                            public void onTick(long millisUntilFinished) {
-                                bar.setProgress(counter, true);
-                                counter++;
-                            }
-                            public  void onFinish() {
-                                bar.setProgress(100, true);
-                                Intent mainActivityIntent = new Intent(getActivity().getApplicationContext(), MainActivity2.class);
-                                startActivity(mainActivityIntent);
-                                getActivity().overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+                        builder1.setMessage("האם אתה מאשר את יצירת המשתמש?");
+                        builder1.setCancelable(true);
 
-                            }
-                        }.start();
+                        builder1.setPositiveButton(
+                                "כן",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        long createdUserId = userDao.insertUser(user);
+                                        SpotAlertAppContext.ACTIVE_USER = userDao.getUser(createdUserId);
+                                        Toast toast = Toast.makeText(getActivity(), "משתמש נרשם בהצלחה", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                        bar.setProgress(0, true);
+                                        bar.setVisibility(View.VISIBLE);
+                                        int delayTime = 2000;
+
+                                        new CountDownTimer(delayTime, delayTime / 100) {
+                                            int counter = 0;
+
+                                            public void onTick(long millisUntilFinished) {
+                                                bar.setProgress(counter, true);
+                                                counter++;
+                                            }
+
+                                            public void onFinish() {
+                                                bar.setProgress(100, true);
+                                                Intent mainActivityIntent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                                                startActivity(mainActivityIntent);
+                                                getActivity().overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
+
+                                            }
+                                        }.start();
+                                    }
+                                });
+
+                        builder1.setNegativeButton(
+                                " לא",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
+
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast toast = Toast.makeText(getActivity(), "משתמש לא תקין, נסה שנית", Toast.LENGTH_SHORT);
@@ -160,8 +188,7 @@ public class SignUpFragment extends Fragment {
             validateResponse.setMsg("הסיסמה אינה תואמת");
             verifyPassword.setError(validateResponse.getMsg());
 
-        }
-        else{
+        } else {
             validateResponse.setValidate(true);
         }
         return validateResponse;
@@ -179,15 +206,13 @@ public class SignUpFragment extends Fragment {
             toast.show();*/
 
         } else {
-            long userExist =  userDao.isEmailExist(email.getText().toString());
+            long userExist = userDao.isEmailExist(email.getText().toString());
 
-            if(userExist>0)
-            {
+            if (userExist > 0) {
                 validateResponse.setValidate(false);
                 validateResponse.setMsg("משתמש זה קיים במערכת");
                 email.setError(validateResponse.getMsg());
-            }
-            else {
+            } else {
                 user.setEmail(strEmail);
             }
         }

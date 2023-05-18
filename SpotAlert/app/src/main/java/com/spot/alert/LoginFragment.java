@@ -18,7 +18,6 @@ import com.spot.alert.database.UserDao;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.validators.UserValidator;
 import com.spot.alert.validators.ValidateResponse;
-import com.spot.alert.R;
 
 public class LoginFragment extends Fragment {
 
@@ -80,7 +79,7 @@ public class LoginFragment extends Fragment {
                                 }
                                 public  void onFinish() {
                                     bar.setProgress(100, true);
-                                    Intent mainActivityIntent = new Intent(getActivity().getApplicationContext(), MainActivity2.class);
+                                    Intent mainActivityIntent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
                                     startActivity(mainActivityIntent);
                                     getActivity().overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
 
