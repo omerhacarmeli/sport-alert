@@ -2,12 +2,9 @@ package com.spot.alert;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
-import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -56,10 +52,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_camera);
+        navigationView.setCheckedItem(R.id.nav_location);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        ImportFragment fragment = new ImportFragment();
+        LocationFragment fragment = new LocationFragment();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
     }
 
@@ -104,8 +100,8 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if (id == R.id.nav_camera) {
-            fragment = new ImportFragment();
+        if (id == R.id.nav_location) {
+            fragment = new LocationFragment();
         } else if (id == R.id.nav_gallery) {
             fragment = new GalleryFragment();
         } else if (id == R.id.nav_slideshow) {
