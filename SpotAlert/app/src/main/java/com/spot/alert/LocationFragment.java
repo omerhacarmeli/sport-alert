@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -100,14 +101,9 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
             alert11.show();
         }
 
-
         FragmentManager fm = getActivity().getSupportFragmentManager();
-
-        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
-        if (supportMapFragment == null) {
-            supportMapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.map, supportMapFragment).commit();
-        }
+        supportMapFragment = SupportMapFragment.newInstance();
+        fm.beginTransaction().replace(R.id.map, supportMapFragment).commit();
         supportMapFragment.getMapAsync(this);
     }
 
@@ -127,7 +123,7 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        SpotAlertAppContext.googleMap = googleMap;
         mMap = googleMap;
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -136,12 +132,14 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
             }
         });
 
-
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
         mMap.addMarker(new MarkerOptions().position(new LatLng(31.5094458, 34.5918490)).title("Sapir"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(31.5080314, 34.6004334)).title("Gevim"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(31.509445865991342, 34.59184910433942), 16.0f));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(31.509445865991342, 34.59184910433942), 16.0f);
+        mMap.animateCamera(cameraUpdate);
+        mMap.moveCamera(cameraUpdate);
         double distance = getDistanceFromLatLonInKm( 31.5094458, 34.5918490, 31.5080314, 34.6004334);
 
         Log.d("distance: ", distance + "KM");
