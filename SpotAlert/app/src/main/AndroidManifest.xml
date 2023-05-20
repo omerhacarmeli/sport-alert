@@ -15,7 +15,7 @@
         android:theme="@style/Theme.SpotAlert"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity2"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
@@ -30,6 +30,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDJF_z4BxiZbZFLdHyrMmyBcoDZOBrLp3k" />
+        <!--AIzaSyCqssBlAL_El5OA0StkmFO8Jv3GjgqvvNY-->
 
         <activity
             android:name=".LocationActivity"

@@ -71,6 +71,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
         setContentView(R.layout.activity_location);
 
         locationActivity = this;
+
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION
                 , Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
 
