@@ -59,6 +59,7 @@ public class LoginFragment extends Fragment {
                         EditText password = view.findViewById(R.id.login_password);
                         String strEmail = String.valueOf(email.getText());
                         String strPassword = String.valueOf(password.getText());
+
                         if (SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL.equals(strEmail)) {
 
                             successLogin(SpotAlertAppContext.SPOT_ALERT_ADMIN_USER);

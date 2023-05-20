@@ -31,6 +31,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.spot.alert.database.AppDataBase;
+import com.spot.alert.database.LocationDao;
 
 /**
  * Created by velmmuru on 1/6/2018.
@@ -38,6 +40,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class LocationFragment extends Fragment implements LocationListener, OnMapReadyCallback {
 
+    private LocationDao locationDao;
     private GpsLocationReceiver gpsLocationReceiver = new GpsLocationReceiver();
 
     private double latitude, longitude;
@@ -60,6 +63,8 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
         super.onViewCreated(view, savedInstanceState);
 
         //locationActivity = this;
+
+        this.locationDao  = AppDataBase.getDatabase(getActivity()).locationDao();
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
                 , android.Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
@@ -135,8 +140,8 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        mMap.addMarker(new MarkerOptions().position(new LatLng(31.5094458, 34.5918490)).title("Sapir"));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(31.5080314, 34.6004334)).title("Gevim"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(31.5094458, 34.5918490)).title("ספיר"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(31.5080314, 34.6004334)).title("גבים"));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(31.509445865991342, 34.59184910433942), 16.0f);
         mMap.animateCamera(cameraUpdate);
         mMap.moveCamera(cameraUpdate);

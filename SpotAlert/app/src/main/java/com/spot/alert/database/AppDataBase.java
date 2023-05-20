@@ -6,12 +6,14 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.spot.alert.dataobjects.Location;
+import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-    @Database(entities = {User.class}, version = 1)
+    @Database(entities = {User.class, Location.class, LocationTimeRange.class}, version = 1)
     public abstract class AppDataBase extends RoomDatabase {
 
         private static final int NUMBER_OF_THREADS = 4;
@@ -20,13 +22,15 @@ import java.util.concurrent.Executors;
 
         public abstract UserDao userDao();
 
+        public abstract LocationDao locationDao();
+
         private static volatile AppDataBase INSTANCE;
 
         public static AppDataBase getDatabase(final Context context) {
             if (INSTANCE == null) {
                 synchronized (AppDataBase.class) {
                     if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDataBase.class, "MyDB2").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+                        INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDataBase.class, "SpotAlertDB_1").allowMainThreadQueries().fallbackToDestructiveMigration().build();
                     }
                 }
             }

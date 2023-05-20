@@ -1,20 +1,17 @@
 package com.spot.alert;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import android.provider.Settings;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -112,8 +109,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_center) {
+            fragment = new CenterPointFragment();
         } else if (id == R.id.logout) {
             logout();
         }
@@ -132,7 +129,7 @@ public class MainActivity extends AppCompatActivity
                 "כן",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        SpotAlertAppContext.ACTIVE_USER=null;
+                        SpotAlertAppContext.ACTIVE_USER = null;
                         startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
                         overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
                         dialog.cancel();

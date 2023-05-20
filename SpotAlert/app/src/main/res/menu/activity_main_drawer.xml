@@ -22,12 +22,12 @@
             android:title="Tools" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="הגדרות">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_center"
+                android:icon="@drawable/baseline_center_focus_24"
+                android:title="מוקד" />
             <item
                 android:id="@+id/logout"
                 android:icon="@drawable/baseline_logout_24"

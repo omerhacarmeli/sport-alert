@@ -15,6 +15,9 @@
         android:theme="@style/Theme.SpotAlert"
         tools:targetApi="31">
         <activity
+            android:name=".CenterPointFragment"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
@@ -29,15 +32,13 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDJF_z4BxiZbZFLdHyrMmyBcoDZOBrLp3k" />
-        <!--AIzaSyCqssBlAL_El5OA0StkmFO8Jv3GjgqvvNY-->
-
+            android:value="" />
         <activity
             android:name=".LocationActivity"
             android:exported="true" />
         <activity
             android:name=".WelcomeActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
 
         <receiver
             android:name=".GpsLocationReceiver"
