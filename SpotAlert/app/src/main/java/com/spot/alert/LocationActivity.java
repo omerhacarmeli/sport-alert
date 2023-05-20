@@ -29,15 +29,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.spot.alert.R;
 
 public class LocationActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
-    GpsLocationReceiver gpsLocationReceiver = new GpsLocationReceiver();
-
-
-    private final int FINE_PERMMISION_CODE = 1;
-
+    LocationReceiver gpsLocationReceiver;
     Location currentLocation;
     private LocationManager locationManager;
     private double latitude, longitude;
@@ -109,7 +104,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
                     });
 
             AlertDialog alert11 = builder1.create();
-           alert11.show();
+            alert11.show();
         }
 
 

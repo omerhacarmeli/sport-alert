@@ -41,7 +41,7 @@
             android:exported="true" />
 
         <receiver
-            android:name=".GpsLocationReceiver"
+            android:name=".LocationReceiver"
             android:exported="true" />
     </application>
 

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -50,19 +49,15 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         super.onViewCreated(view, savedInstanceState);
 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
-        location = new Location();
-        location.setLabel("מוקד אבטחה");
-        location.setLevel(1);
-        location.setRadius(10);
-        location.setName("מוקד אבטחה");
-        location.setLatitude(31.557886);
-        location.setLongitude(34.646048);
+        this.location = locationDao.getLocationByName(SpotAlertAppContext.CENTER_POINT_STRING);
 
         EditText widthEditText = view.findViewById(R.id.width);
         EditText lengthEditText = view.findViewById(R.id.length);
 
-        widthEditText.setText(String.valueOf(location.getLatitude()));
-        lengthEditText.setText(String.valueOf(location.getLongitude()));
+        if (location != null) {
+            widthEditText.setText(String.valueOf(location.getLatitude()));
+            lengthEditText.setText(String.valueOf(location.getLongitude()));
+        }
 
         Button approval = view.findViewById(R.id.approval);
         approval.setOnClickListener(new View.OnClickListener() {
@@ -72,15 +67,21 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
                 Double latitude = Double.parseDouble(widthEditText.getText().toString());
                 Double longitude = Double.parseDouble(lengthEditText.getText().toString());
 
-                Location location = new Location();
-                location.setLabel("מוקד אבטחה");
-                location.setLevel(1);
-                location.setRadius(10);
-                location.setName("מוקד אבטחה");
-                location.setLatitude(latitude);
-                location.setLongitude(longitude);
+                if (location == null) {
+                    location = new Location();
+                    location.setLabel(SpotAlertAppContext.CENTER_POINT_STRING);
+                    location.setLevel(1);
+                    location.setRadius(10);
+                    location.setName(SpotAlertAppContext.CENTER_POINT_STRING);
+                    location.setLatitude(latitude);
+                    location.setLongitude(longitude);
+                    location.setId(locationDao.insertLocation(location));
+                } else {
+                    location.setLatitude(latitude);
+                    location.setLongitude(longitude);
+                    locationDao.updateLocation(location);
+                }
 
-                locationDao.insertLocation(location);
                 updateLocationOnMap(location);
             }
         });
@@ -98,17 +99,19 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        updateLocationOnMap(location);
+        if(location != null)
+        {
+            updateLocationOnMap(location);
+        }
     }
 
     private void updateLocationOnMap(Location location) {
+
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        if( this.marker!=null)
-        {
+        if (this.marker != null) {
             this.marker.setPosition(latLng);
-        }
-        else {
+        } else {
             this.marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.getLabel()));
         }
         this.marker.showInfoWindow();

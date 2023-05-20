@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,14 +35,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
 
-/**
- * Created by velmmuru on 1/6/2018.
- */
 
-public class LocationFragment extends Fragment implements LocationListener, OnMapReadyCallback {
+public class LocationFragment extends Fragment implements LocationReceiver.OnLocationStateListener,LocationListener, OnMapReadyCallback {
 
     private LocationDao locationDao;
-    private GpsLocationReceiver gpsLocationReceiver = new GpsLocationReceiver();
+    private LocationReceiver locationReceiver ;
 
     private double latitude, longitude;
     private GoogleMap mMap;
@@ -62,8 +60,7 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //locationActivity = this;
-
+        this.locationReceiver = new LocationReceiver(this);
         this.locationDao  = AppDataBase.getDatabase(getActivity()).locationDao();
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -80,30 +77,7 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
 
             Log.i("About GPS", "GPS is Enabled in your devide");
         } else {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-            builder1.setMessage("המיקום של המכשיר כבוי, האם אתה מעונין להדליק?");
-            builder1.setCancelable(true);
-
-            builder1.setPositiveButton(
-                    "כן",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivity(intent);
-                            dialog.cancel();
-                        }
-                    });
-
-            builder1.setNegativeButton(
-                    " לא",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
+            alertDialogEnableLocation();
         }
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -112,18 +86,44 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
         supportMapFragment.getMapAsync(this);
     }
 
+    protected void alertDialogEnableLocation() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setMessage("המיקום של המכשיר כבוי, האם אתה מעונין להדליק?");
+        alertDialogBuilder.setCancelable(true);
+
+        alertDialogBuilder.setPositiveButton(
+                "כן",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton(
+                " לא",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = alertDialogBuilder.create();
+        alert11.show();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         IntentFilter intentFilter = new IntentFilter(LocationManager.MODE_CHANGED_ACTION);
-
-        getActivity().registerReceiver(gpsLocationReceiver, intentFilter);
+        getActivity().registerReceiver(locationReceiver, intentFilter);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        getActivity().unregisterReceiver(gpsLocationReceiver);
+        getActivity().unregisterReceiver(locationReceiver);
     }
 
     @Override
@@ -176,5 +176,19 @@ public class LocationFragment extends Fragment implements LocationListener, OnMa
 
         // Do something with the coordinates
         Log.d("MyApp", "Latitude: " + latitude + ", Longitude: " + longitude);
+    }
+
+    @Override
+    public void onLocationStateChange() {
+
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            Log.i("About GPS", "GPS is Enabled in your devide");
+            Toast toast = Toast.makeText(getActivity(), "המיקום שלך הופעל", Toast.LENGTH_SHORT);
+            toast.show();
+
+        } else {
+            alertDialogEnableLocation();
+        }
     }
 }
