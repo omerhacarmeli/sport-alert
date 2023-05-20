@@ -35,7 +35,7 @@
         android:ems="10"
         android:hint="אימייל"
         android:inputType="textEmailAddress"
-        android:text="omerh@gmail.com"
+        android:text="admin@spotalert.com"
         android:background="@drawable/rounded_corner_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
