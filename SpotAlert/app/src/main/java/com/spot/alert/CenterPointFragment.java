@@ -67,7 +67,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
 
                 Double latitude = Double.parseDouble(widthEditText.getText().toString());
                 Double longitude = Double.parseDouble(lengthEditText.getText().toString());
-                Double zoom = Double.parseDouble(lengthEditText.getText().toString());
+                Double zoom = Double.parseDouble(zoomEditText.getText().toString());
 
                 if (location == null) {
                     location = new Location();
@@ -82,6 +82,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
                 } else {
                     location.setLatitude(latitude);
                     location.setLongitude(longitude);
+                    location.setZoom(zoom);
                     locationDao.updateLocation(location);
                 }
 
