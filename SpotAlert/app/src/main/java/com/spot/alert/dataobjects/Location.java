@@ -29,7 +29,10 @@ public class Location {
     @ColumnInfo(name = "level")
     public Integer level;
 
-    public Location(Long id, String name, String label, Integer radius, Double latitude, Double longitude, Integer level) {
+    @ColumnInfo(name = "zoom",defaultValue = "14")
+    public Double zoom;
+
+    public Location(Long id, String name, String label, Integer radius, Double latitude, Double longitude, Integer level, Double zoom) {
         this.id = id;
         this.name = name;
         this.label = label;
@@ -37,6 +40,7 @@ public class Location {
         this.latitude = latitude;
         this.longitude = longitude;
         this.level = level;
+        this.zoom = zoom;
     }
 
     public Location() {
@@ -97,5 +101,13 @@ public class Location {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public Double getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(Double zoom) {
+        this.zoom = zoom;
     }
 }

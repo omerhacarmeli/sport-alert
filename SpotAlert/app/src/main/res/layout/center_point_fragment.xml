@@ -74,6 +74,21 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.286" />
 
+            <EditText
+                android:id="@+id/zoom"
+                android:layout_width="211dp"
+                android:layout_height="48dp"
+                android:background="@drawable/rounded_corner_view"
+                android:drawableLeft="@drawable/baseline_camera_enhance_24"
+                android:ems="10"
+                android:hint="זום מצלמה 8-14"
+                android:inputType="numberDecimal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.425"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.386" />
 
             <Button
                 android:id="@+id/approval"
@@ -102,7 +117,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="270dp"
                 android:background="#ccc"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -110,9 +125,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.651"
+                app:layout_constraintVertical_bias="0.715"
                 tools:ignore="MissingConstraints">
-
                 <fragment
                     android:id="@+id/map"
                     class="com.google.android.gms.maps.SupportMapFragment"

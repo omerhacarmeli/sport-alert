@@ -53,10 +53,11 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
 
         EditText widthEditText = view.findViewById(R.id.width);
         EditText lengthEditText = view.findViewById(R.id.length);
-
+        EditText zoomEditText = view.findViewById(R.id.zoom);
         if (location != null) {
             widthEditText.setText(String.valueOf(location.getLatitude()));
             lengthEditText.setText(String.valueOf(location.getLongitude()));
+            zoomEditText.setText(String.valueOf(location.getZoom()));
         }
 
         Button approval = view.findViewById(R.id.approval);
@@ -66,6 +67,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
 
                 Double latitude = Double.parseDouble(widthEditText.getText().toString());
                 Double longitude = Double.parseDouble(lengthEditText.getText().toString());
+                Double zoom = Double.parseDouble(lengthEditText.getText().toString());
 
                 if (location == null) {
                     location = new Location();
@@ -75,6 +77,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
                     location.setName(SpotAlertAppContext.CENTER_POINT_STRING);
                     location.setLatitude(latitude);
                     location.setLongitude(longitude);
+                    location.setZoom(zoom);
                     location.setId(locationDao.insertLocation(location));
                 } else {
                     location.setLatitude(latitude);
@@ -115,7 +118,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             this.marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.getLabel()));
         }
         this.marker.showInfoWindow();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14.0f);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,location.getZoom().floatValue());
         mMap.animateCamera(cameraUpdate);
         mMap.moveCamera(cameraUpdate);
     }
