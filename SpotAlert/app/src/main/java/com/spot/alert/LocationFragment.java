@@ -24,6 +24,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,14 +35,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.spot.alert.adapter.ClickListener;
+import com.spot.alert.adapter.LocationAdapter;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class LocationFragment extends Fragment implements LocationReceiver.OnLocationStateListener,LocationListener, OnMapReadyCallback {
+
+public class LocationFragment extends Fragment implements LocationReceiver.OnLocationStateListener, LocationListener, OnMapReadyCallback {
 
     private LocationDao locationDao;
-    private LocationReceiver locationReceiver ;
+    private LocationReceiver locationReceiver;
 
     private double latitude, longitude;
     private GoogleMap mMap;
@@ -50,10 +58,14 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     //private LocationActivity locationActivity;
     private LocationManager locationManager;
 
+    private LocationAdapter adapter;
+    private RecyclerView recyclerView;
+    private ClickListener clickListener;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.location_fragment,container,false);
+        return inflater.inflate(R.layout.location_fragment, container, false);
     }
 
     @Override
@@ -61,7 +73,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         super.onViewCreated(view, savedInstanceState);
 
         this.locationReceiver = new LocationReceiver(this);
-        this.locationDao  = AppDataBase.getDatabase(getActivity()).locationDao();
+        this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
                 , android.Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
@@ -84,6 +96,27 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         supportMapFragment = SupportMapFragment.newInstance();
         fm.beginTransaction().replace(R.id.map, supportMapFragment).commit();
         supportMapFragment.getMapAsync(this);
+
+
+        List<com.spot.alert.dataobjects.Location> list = new ArrayList<>();
+
+
+        recyclerView
+                = (RecyclerView) view.findViewById(
+                R.id.recyclerView);
+        clickListener = new ClickListener() {
+            @Override
+            public void click(int index) {
+                Toast.makeText(getActivity(), "clicked item index is " + index, Toast.LENGTH_LONG).show();
+            }
+        };
+
+        adapter = new LocationAdapter(getActivity(), clickListener);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext()));
+        loadLiveData();
+
     }
 
     protected void alertDialogEnableLocation() {
@@ -145,21 +178,21 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(31.509445865991342, 34.59184910433942), 16.0f);
         mMap.animateCamera(cameraUpdate);
         mMap.moveCamera(cameraUpdate);
-        double distance = getDistanceFromLatLonInKm( 31.5094458, 34.5918490, 31.5080314, 34.6004334);
+        double distance = getDistanceFromLatLonInKm(31.5094458, 34.5918490, 31.5080314, 34.6004334);
 
         Log.d("distance: ", distance + "KM");
     }
 
 
-    private double getDistanceFromLatLonInKm(double lat1,double lon1,double lat2,double lon2) {
+    private double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
         double R = 6371; // Radius of the earth in km
-        double dLat = deg2rad(lat2-lat1);  // deg2rad below
-        double dLon = deg2rad(lon2-lon1);
+        double dLat = deg2rad(lat2 - lat1);  // deg2rad below
+        double dLon = deg2rad(lon2 - lon1);
         double a =
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                         Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                                Math.sin(dLon/2) * Math.sin(dLon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double d = R * c; // Distance in km
         return d;
     }
@@ -190,5 +223,14 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         } else {
             alertDialogEnableLocation();
         }
+    }
+
+    private void loadLiveData() {
+        this.locationDao.getLocations().observe(getActivity(), new Observer<List<com.spot.alert.dataobjects.Location>>() {
+            @Override
+            public void onChanged(List<com.spot.alert.dataobjects.Location> locations) {
+                adapter.setDataChanged(locations);
+            }
+        });
     }
 }

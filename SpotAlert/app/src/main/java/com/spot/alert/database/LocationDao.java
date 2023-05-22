@@ -11,6 +11,8 @@ import androidx.room.Update;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
 
+import java.util.List;
+
 @Dao
 public interface LocationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -24,4 +26,7 @@ public interface LocationDao {
     LiveData<Location> getLocation(Long id);
     @Query("SELECT * FROM Location WHERE name =:name")
     Location getLocationByName(String name);
+
+    @Query("SELECT * FROM Location")
+    LiveData<List<Location>> getLocations();
 }

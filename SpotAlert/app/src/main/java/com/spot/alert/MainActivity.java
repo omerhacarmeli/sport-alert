@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity
             fragment = new GalleryFragment();
         } else if (id == R.id.nav_slideshow) {
 
+
+
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_center) {
