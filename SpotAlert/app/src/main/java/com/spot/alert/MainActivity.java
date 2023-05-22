@@ -114,9 +114,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.logout) {
             logout();
         }
-        fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out,  // exit
+                        R.anim.fade_in,   // popEnter
+                        R.anim.slide_out  // popExit
+                )
+                .replace(R.id.frameLayout, fragment).commit();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
@@ -131,7 +140,7 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int id) {
                         SpotAlertAppContext.ACTIVE_USER = null;
                         startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
-                        overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         dialog.cancel();
                     }
                 });

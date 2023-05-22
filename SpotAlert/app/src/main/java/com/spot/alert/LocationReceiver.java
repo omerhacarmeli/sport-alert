@@ -17,7 +17,7 @@ public class LocationReceiver extends BroadcastReceiver {
 
         if(this.onLocationStateListener!=null)
         {
-            this.onLocationStateListener .onLocationStateChange();
+            this.onLocationStateListener.onLocationStateChange();
         }
 
     }

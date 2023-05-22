@@ -111,7 +111,7 @@ public class SignUpFragment extends Fragment {
                                                 bar.setProgress(100, true);
                                                 Intent mainActivityIntent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
                                                 startActivity(mainActivityIntent);
-                                                getActivity().overridePendingTransition(R.drawable.fade_in, R.drawable.fade_out);
+                                                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                                             }
                                         }.start();

@@ -79,7 +79,7 @@
                 android:layout_width="211dp"
                 android:layout_height="48dp"
                 android:background="@drawable/rounded_corner_view"
-                android:drawableLeft="@drawable/baseline_camera_enhance_24"
+                android:drawableLeft="@drawable/baseline_zoom_in_24"
                 android:ems="10"
                 android:hint="זום מצלמה 13-18"
                 android:inputType="numberDecimal"
