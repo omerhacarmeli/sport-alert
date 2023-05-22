@@ -183,7 +183,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
-            Log.i("About GPS", "GPS is Enabled in your devide");
+            Log.i("About GPS", "GPS is Enabled in your device");
             Toast toast = Toast.makeText(getActivity(), "המיקום שלך הופעל", Toast.LENGTH_SHORT);
             toast.show();
 
