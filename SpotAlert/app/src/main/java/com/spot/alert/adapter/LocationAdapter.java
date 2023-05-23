@@ -98,7 +98,7 @@ public class LocationAdapter
                             viewHolder.editItem.setVisibility(View.INVISIBLE);
                             viewHolder.deleteItem.setVisibility(View.INVISIBLE);
                         }
-                        ,3000);
+                        ,5000);
                 return true;
             }
         });

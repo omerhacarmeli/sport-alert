@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -107,28 +108,40 @@ public class MainActivity extends AppCompatActivity
             fragment = new GalleryFragment();
         } else if (id == R.id.nav_slideshow) {
 
-
-
         } else if (id == R.id.nav_manage) {
 
+
+        } else if (id == R.id.nav_magic_stick) {
+                magicStick();
         } else if (id == R.id.nav_center) {
             fragment = new CenterPointFragment();
         } else if (id == R.id.logout) {
             logout();
         }
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(
-                        R.anim.slide_in,  // enter
-                        R.anim.fade_out,  // exit
-                        R.anim.fade_in,   // popEnter
-                        R.anim.slide_out  // popExit
-                )
-                .replace(R.id.frameLayout, fragment).commit();
+
+
+        if(fragment!=null) {
+            fragmentManager.beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in,  // enter
+                            R.anim.fade_out,  // exit
+                            R.anim.fade_in,   // popEnter
+                            R.anim.slide_out  // popExit
+                    )
+                    .replace(R.id.frameLayout, fragment).commit();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    private void magicStick() {
+        new MagicStickManager().run(this);
+
+        Toast toast = Toast.makeText(this, "Magic Stick Completed", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     private void logout() {

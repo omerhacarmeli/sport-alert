@@ -6,17 +6,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="510dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".CenterPointFragment">
-
 
             <ImageView
                 android:id="@+id/im1"
@@ -40,7 +33,7 @@
                 app:layout_constraintHorizontal_bias="0.446"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.063" />
+                app:layout_constraintVertical_bias="0.05" />
 
             <EditText
                 android:id="@+id/width"
@@ -56,7 +49,7 @@
                 app:layout_constraintHorizontal_bias="0.425"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.186" />
+                app:layout_constraintVertical_bias="0.150" />
 
             <EditText
                 android:id="@+id/length"
@@ -72,7 +65,7 @@
                 app:layout_constraintHorizontal_bias="0.425"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.286" />
+                app:layout_constraintVertical_bias="0.250" />
 
             <EditText
                 android:id="@+id/zoom"
@@ -88,7 +81,31 @@
                 app:layout_constraintHorizontal_bias="0.425"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.386" />
+                app:layout_constraintVertical_bias="0.350" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/customborder"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight="percent"
+                app:layout_constraintHeight_percent=".45"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.780"
+                tools:ignore="MissingConstraints">
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/map"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"  />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <Button
@@ -103,29 +120,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.976" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="320dp"
-                android:background="@drawable/customborder"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.815"
-                tools:ignore="MissingConstraints">
-                <fragment
-                    android:id="@+id/map"
-                    class="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
-
 </LinearLayout>

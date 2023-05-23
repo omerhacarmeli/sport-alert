@@ -28,6 +28,12 @@
                 android:id="@+id/nav_center"
                 android:icon="@drawable/baseline_center_focus_24"
                 android:title="מוקד" />
+
+            <item
+                android:id="@+id/nav_magic_stick"
+                android:icon="@drawable/baseline_blur_off_24"
+                android:title="מטה קסמים" />
+
             <item
                 android:id="@+id/logout"
                 android:icon="@drawable/baseline_logout_24"
