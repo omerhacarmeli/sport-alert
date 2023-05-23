@@ -1,3 +1,1 @@
-fvgbdfgbdfgfdg
-g
-dfgfdgdf
+INSERT INTO Location (id, name, label,radius, latitude, longitude,level,zoom) VALUES (6,	"מוקד אבטחה 6"	,"מוקד אבטחה",	10,	31.45,	34.65,	1,	11.0)

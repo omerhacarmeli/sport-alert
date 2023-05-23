@@ -6,7 +6,7 @@
 
 
     <TextView
-        android:id="@+id/examName"
+        android:id="@+id/locationName"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -20,39 +20,49 @@
         android:textColor="@color/white"
         android:textSize="16sp" />
 
-
-    <TextView
-        android:id="@+id/examDate"
+    <ImageButton
+        android:id="@+id/deleteItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/examName"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@null"
+        android:contentDescription="Delete"
+        android:visibility="invisible"
+        android:src="@drawable/baseline_remove_circle_24" />
+
+    <ImageButton
+        android:id="@+id/editItemButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:contentDescription="Edit"
+        android:visibility="invisible"
+        android:src="@drawable/baseline_edit_note_24" />
+
+    <TextView
+        android:id="@+id/activeLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/locationName"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="150dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="30dp"
-        android:drawableRight="@drawable/baseline_email_24"
+        android:drawableRight="@drawable/baseline_check_circle_24"
         android:gravity="right"
         android:text="רמת אבטחה 1"
         android:textColor="@color/white"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/examMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/examDate"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="top|end"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="30dp"
-        android:drawableRight="@drawable/baseline_email_24"
-        android:gravity="right"
-        android:text="תאור אבטחה 1"
-        android:textColor="@color/white"
-        android:textDirection="rtl"
         android:textSize="16sp" />
 
 

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
-<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="510dp"
     android:layout_weight="1"
@@ -31,33 +30,32 @@ android:orientation="vertical">
             android:id="@+id/locationDefinitionTextView"
             android:layout_width="250dp"
             android:layout_height="0dp"
-            app:layout_constraintHeight="percent"
-            app:layout_constraintHeight_percent=".05"
             android:gravity="center"
             android:text="ניהול נקודות אבטחה"
             android:textColor="@color/white"
             android:textSize="28sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight="percent"
+            app:layout_constraintHeight_percent=".05"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.05" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintHeight="percent"
-            app:layout_constraintHeight_percent=".35"
-            android:background="#ccc"
+            android:background="@drawable/customborder"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHeight="percent"
+            app:layout_constraintHeight_percent=".42"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.200"
-
             tools:ignore="MissingConstraints">
 
             <fragment
@@ -65,8 +63,7 @@ android:orientation="vertical">
                 class="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="-72dp" />
+             />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -74,42 +71,27 @@ android:orientation="vertical">
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_below="@+id/constraintLayout"
             android:background="#80000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight="percent"
-            app:layout_constraintHeight_percent=".40"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.825"
-              />
+            app:layout_constraintHeight_percent=".465"
+            app:layout_constraintVertical_bias="1.0" />
 
-        <Button
-            android:id="@+id/approval"
-            android:layout_width="142dp"
-            android:layout_height="50dp"
-            android:text="אישור"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addLocationFB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/round_add_circle_outline_24"
+            app:backgroundTintMode="src_in"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.858"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.97" />
+            app:layout_constraintRight_toRightOf="parent" />
 
-        <Button
-            android:id="@+id/cencel"
-            android:layout_width="142dp"
-            android:layout_height="50dp"
-            android:text="ביטול"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.185"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.97" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</LinearLayout>
 
 
 </LinearLayout>

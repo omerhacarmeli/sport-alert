@@ -34,7 +34,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spot.alert.adapter.ClickListener;
 import com.spot.alert.adapter.LocationAdapter;
 import com.spot.alert.database.AppDataBase;
@@ -60,7 +62,11 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
     private LocationAdapter adapter;
     private RecyclerView recyclerView;
-    private ClickListener clickListener;
+
+    private ClickListener deleteListener;
+    private ClickListener editListener;
+
+    private List<com.spot.alert.dataobjects.Location> locations;
 
     @Nullable
     @Override
@@ -104,17 +110,56 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         recyclerView
                 = (RecyclerView) view.findViewById(
                 R.id.recyclerView);
-        clickListener = new ClickListener() {
+        deleteListener = new ClickListener() {
             @Override
-            public void click(int index) {
-                Toast.makeText(getActivity(), "clicked item index is " + index, Toast.LENGTH_LONG).show();
+            public void click(Object obj) {
+                if (obj instanceof com.spot.alert.dataobjects.Location) {
+
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+                    locationDao.deleteLocation(location);
+
+                    Toast.makeText(getActivity(), "Delete Location " + location.getName(), Toast.LENGTH_LONG).show();
+                }
             }
         };
 
-        adapter = new LocationAdapter(getActivity(), clickListener);
+        editListener = new ClickListener() {
+            @Override
+            public void click(Object obj) {
+                if (obj instanceof com.spot.alert.dataobjects.Location) {
+
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+
+
+                    Toast.makeText(getActivity(), "Edit Location " + location.getName(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        FloatingActionButton floatingActionButton             = (FloatingActionButton) view.findViewById(
+                R.id.addLocationFB);
+
+        adapter = new LocationAdapter(getActivity(), deleteListener, editListener);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy){
+
+                if(dy>0)
+                {
+                    floatingActionButton.hide();
+                }
+                else
+                {
+                    floatingActionButton.show();
+                }
+                super.onScrolled(recyclerView,dx,dy);
+
+            }
+        });
+
         loadLiveData();
 
     }
@@ -173,14 +218,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        mMap.addMarker(new MarkerOptions().position(new LatLng(31.5094458, 34.5918490)).title("ספיר"));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(31.5080314, 34.6004334)).title("גבים"));
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(31.509445865991342, 34.59184910433942), 16.0f);
-        mMap.animateCamera(cameraUpdate);
-        mMap.moveCamera(cameraUpdate);
-        double distance = getDistanceFromLatLonInKm(31.5094458, 34.5918490, 31.5080314, 34.6004334);
-
-        Log.d("distance: ", distance + "KM");
+        updateLocationsOnMap();
     }
 
 
@@ -228,9 +266,42 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     private void loadLiveData() {
         this.locationDao.getLocations().observe(getActivity(), new Observer<List<com.spot.alert.dataobjects.Location>>() {
             @Override
-            public void onChanged(List<com.spot.alert.dataobjects.Location> locations) {
+            public void onChanged(List<com.spot.alert.dataobjects.Location> locationList) {
+
+                locations = locationList;
+
                 adapter.setDataChanged(locations);
+
+                updateLocationsOnMap();
             }
         });
+    }
+
+    private void updateLocationsOnMap() {
+        if(mMap!=null && locations!=null && !locations.isEmpty()) {
+
+            com.spot.alert.dataobjects.Location center = locations.get(0);
+
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.getLatitude(), center.getLongitude()), center.getZoom().floatValue());
+
+            mMap.animateCamera(cameraUpdate);
+            mMap.moveCamera(cameraUpdate);
+
+
+            List<Marker> markers  = new ArrayList<>();
+            for (com.spot.alert.dataobjects.Location location : locations) {
+
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.getLabel()));
+
+                markers.add(marker);
+            }
+
+            mMap.animateCamera(cameraUpdate);
+            mMap.moveCamera(cameraUpdate);
+
+            markers.get(0).showInfoWindow();
+        }
     }
 }
