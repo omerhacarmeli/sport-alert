@@ -2,6 +2,8 @@ package com.spot.alert;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,6 +19,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_splash);
         TextView appNameTextView = findViewById(R.id.appName);
         appNameTextView.animate().translationY(-1600).setDuration(2700).setStartDelay(0);
@@ -31,4 +34,25 @@ public class SplashActivity extends AppCompatActivity {
             }
         }.start();
     }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this).setMessage("האם אתה מעוניין לצאת מהאפליקציה S?")
+                .setCancelable(true).setPositiveButton(
+                        "כן",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                finishAffinity();
+                            }
+                        })
+                .setNegativeButton(
+                        " לא",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                .create().show();
+    }
+
 }

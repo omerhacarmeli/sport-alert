@@ -25,15 +25,15 @@
                 android:layout_width="250dp"
                 android:layout_height="55dp"
                 android:gravity="center"
-                android:text="הגדרת למוקד"
+                android:text="הגדרת מוקד"
                 android:textColor="@color/white"
                 android:textSize="28sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.446"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.05" />
+                app:layout_constraintVertical_bias="0.063" />
 
             <EditText
                 android:id="@+id/width"
@@ -46,10 +46,10 @@
                 android:inputType="numberDecimal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.425"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.150" />
+                app:layout_constraintVertical_bias="0.186" />
 
             <EditText
                 android:id="@+id/length"
@@ -62,10 +62,10 @@
                 android:inputType="numberDecimal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.425"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.250" />
+                app:layout_constraintVertical_bias="0.286" />
 
             <EditText
                 android:id="@+id/zoom"
@@ -78,10 +78,11 @@
                 android:inputType="numberDecimal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.425"
+
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.350" />
+                app:layout_constraintVertical_bias="0.386" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -93,7 +94,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight="percent"
-                app:layout_constraintHeight_percent=".45"
+                app:layout_constraintHeight_percent=".40"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.780"
@@ -112,7 +113,7 @@
                 android:id="@+id/approval"
                 android:layout_width="142dp"
                 android:layout_height="50dp"
-                android:text="אישור"
+                android:text="שמירה"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"

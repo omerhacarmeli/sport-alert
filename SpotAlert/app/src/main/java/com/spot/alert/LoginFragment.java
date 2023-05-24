@@ -1,5 +1,7 @@
 package com.spot.alert;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -11,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.spot.alert.database.AppDataBase;
@@ -104,7 +108,7 @@ public class LoginFragment extends Fragment {
 
     public void successLogin(User user) {
         SpotAlertAppContext.ACTIVE_USER = user;
-        Toast toast = Toast.makeText(getActivity(), "שלום", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(getActivity(), "התחברת בהצלחה", Toast.LENGTH_SHORT);
         toast.show();
         bar.setProgress(0, true);
         bar.setVisibility(View.VISIBLE);
@@ -122,6 +126,7 @@ public class LoginFragment extends Fragment {
                 Intent mainActivityIntent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
                 startActivity(mainActivityIntent);
                 getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                bar.setVisibility(View.INVISIBLE);
 
             }
         }.start();

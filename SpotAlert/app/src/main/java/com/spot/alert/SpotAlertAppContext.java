@@ -8,7 +8,6 @@ public class SpotAlertAppContext {
     public static GoogleMap googleMap;
     public static final String SPOT_ALERT_ADMIN_EMAIL="admin@spotalert.com";
     public static final String CENTER_POINT_STRING ="מוקד אבטחה";
-
     public static  final User SPOT_ALERT_ADMIN_USER = new User(0,SPOT_ALERT_ADMIN_EMAIL,"spotalert","amdin","0509999999");
 
 }

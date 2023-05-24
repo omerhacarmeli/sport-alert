@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.spot.alert.R;
@@ -39,5 +41,25 @@ public class WelcomeActivity extends AppCompatActivity {
         transaction.replace(R.id.myFragmentContainerView, signUpFragment,
                 "signUpFragment");
         transaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this).setMessage("האם אתה מעוניין לצאת מהאפליקציה?")
+                .setCancelable(true).setPositiveButton(
+                        "כן",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                finishAffinity();
+                            }
+                        })
+                .setNegativeButton(
+                        " לא",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                .create().show();
     }
 }

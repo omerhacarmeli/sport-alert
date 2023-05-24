@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,7 +68,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            logout();
         }
     }
 
@@ -93,7 +95,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_magic_stick) {
-                magicStick();
+            magicStick();
         } else if (id == R.id.nav_center) {
             fragment = new CenterPointFragment();
         } else if (id == R.id.logout) {
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        if(fragment!=null) {
+        if (fragment != null) {
             fragmentManager.beginTransaction()
                     .setCustomAnimations(
                             R.anim.slide_in,  // enter
@@ -145,32 +146,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void logout() {
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage("המיקום של המכשיר כבוי, האם אתה מעונין להדליק?");
-        builder1.setCancelable(true);
-
-        builder1.setPositiveButton(
-                "כן",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SpotAlertAppContext.ACTIVE_USER = null;
-                        startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                        dialog.cancel();
-                    }
-                });
-
-        builder1.setNegativeButton(
-                " לא",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
-
-
+        new AlertDialog.Builder(this).setMessage("האם אתה מעוניין להתנתק?")
+                .setCancelable(true).setPositiveButton(
+                        "כן",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                SpotAlertAppContext.ACTIVE_USER = null;
+                                startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
+                                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                dialog.cancel();
+                            }
+                        })
+                .setNegativeButton(
+                        " לא",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                .create().show();
     }
 }

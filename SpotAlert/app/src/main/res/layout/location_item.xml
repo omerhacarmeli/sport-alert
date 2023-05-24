@@ -5,66 +5,64 @@
     android:layout_height="105dp">
 
 
-    <TextView
-        android:id="@+id/locationName"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:gravity="right"
-        android:maxLines="1"
-        android:text="נקודת אבטחה 1"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
-
     <ImageButton
         android:id="@+id/deleteItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
         android:background="@null"
         android:contentDescription="Delete"
-        android:visibility="invisible"
-        android:src="@drawable/baseline_remove_circle_24" />
+        android:src="@drawable/baseline_remove_circle__white"
+        android:visibility="invisible" />
 
     <ImageButton
         android:id="@+id/editItemButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+
         android:layout_alignParentTop="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="64dp"
         android:layout_marginTop="8dp"
         android:background="@null"
         android:contentDescription="Edit"
-        android:visibility="invisible"
-        android:src="@drawable/baseline_edit_note_24" />
+        android:src="@drawable/baseline_edit_note_32_white"
+        android:visibility="invisible" />
+
+
+    <TextView
+        android:id="@+id/locationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginRight="00dp"
+        android:maxLines="1"
+        android:text="נקודת אבטחה 1"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/activeLocation"
-        android:layout_width="wrap_content"
+        android:layout_width="169dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/locationName"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="30dp"
-        android:drawableRight="@drawable/baseline_check_circle_24"
-        android:gravity="right"
-        android:text="רמת אבטחה 1"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="261dp"
+        android:layout_marginTop="42dp"
 
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="9dp"
+        android:drawableRight="@drawable/baseline_check_circle_24"
+        android:text="רמת אבטחה 1"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/border2"

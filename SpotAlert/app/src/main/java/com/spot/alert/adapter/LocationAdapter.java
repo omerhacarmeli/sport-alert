@@ -26,10 +26,13 @@ public class LocationAdapter
     ClickListener deleteListener;
     ClickListener editListener;
 
-    public LocationAdapter(Context context, ClickListener deleteListener,ClickListener editListener) {
+    ClickListener clickListener;
+
+    public LocationAdapter(Context context, ClickListener deleteListener,ClickListener editListener,ClickListener clickListener) {
         this.context = context;
         this.deleteListener = deleteListener;
         this.editListener = editListener;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -59,7 +62,13 @@ public class LocationAdapter
         viewHolder.activeLocation
                 .setText("(" + list.get(position).latitude + ", " + list.get(position).longitude + ")");
 
+        viewHolder.editItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+
+            }
+        });
         viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,14 +85,10 @@ public class LocationAdapter
             }
         });
 
-        viewHolder.view.setOnLongClickListener(new View.OnLongClickListener() {
+        viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-
-                viewHolder.editItem.setVisibility(View.VISIBLE);
-                viewHolder.deleteItem.setVisibility(View.VISIBLE);
-
-                return true;
+            public void onClick(View view) {
+                clickListener.click(list.get(position));
             }
         });
 
@@ -98,7 +103,7 @@ public class LocationAdapter
                             viewHolder.editItem.setVisibility(View.INVISIBLE);
                             viewHolder.deleteItem.setVisibility(View.INVISIBLE);
                         }
-                        ,5000);
+                        ,4000);
                 return true;
             }
         });

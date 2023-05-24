@@ -43,7 +43,9 @@ import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class LocationFragment extends Fragment implements LocationReceiver.OnLocationStateListener, LocationListener, OnMapReadyCallback {
@@ -57,7 +59,6 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     private LatLng locationChanged;
 
     private SupportMapFragment supportMapFragment;
-    //private LocationActivity locationActivity;
     private LocationManager locationManager;
 
     private LocationAdapter adapter;
@@ -65,6 +66,10 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
     private ClickListener deleteListener;
     private ClickListener editListener;
+
+    private ClickListener clickListener;
+
+    private Map<Long, Marker> markerMap = new HashMap<>();
 
     private List<com.spot.alert.dataobjects.Location> locations;
 
@@ -79,6 +84,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         super.onViewCreated(view, savedInstanceState);
 
         this.locationReceiver = new LocationReceiver(this);
+
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -116,8 +122,14 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                 if (obj instanceof com.spot.alert.dataobjects.Location) {
 
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
-                    locationDao.deleteLocation(location);
 
+                    if (markerMap.get(location.getId()) != null) {
+
+                        Marker removedMarker = markerMap.remove(location.getId());
+                        removedMarker.remove();
+                    }
+
+                    locationDao.deleteLocation(location);
                     Toast.makeText(getActivity(), "Delete Location " + location.getName(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -129,33 +141,44 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                 if (obj instanceof com.spot.alert.dataobjects.Location) {
 
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
-
-
                     Toast.makeText(getActivity(), "Edit Location " + location.getName(), Toast.LENGTH_LONG).show();
                 }
             }
         };
 
-        FloatingActionButton floatingActionButton             = (FloatingActionButton) view.findViewById(
+        clickListener = new ClickListener() {
+            @Override
+            public void click(Object obj) {
+                if (obj instanceof com.spot.alert.dataobjects.Location) {
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+
+                    if (markerMap.get(location.getId()) != null) {
+                        markerMap.get(location.getId()).showInfoWindow();
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                        mMap.animateCamera(cameraUpdate);
+                        mMap.moveCamera(cameraUpdate);
+                    }
+                }
+            }
+        };
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(
                 R.id.addLocationFB);
 
-        adapter = new LocationAdapter(getActivity(), deleteListener, editListener);
+        adapter = new LocationAdapter(getActivity(), deleteListener, editListener, clickListener);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext()));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy){
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 
-                if(dy>0)
-                {
+                if (dy > 0) {
                     floatingActionButton.hide();
-                }
-                else
-                {
+                } else {
                     floatingActionButton.show();
                 }
-                super.onScrolled(recyclerView,dx,dy);
+                super.onScrolled(recyclerView, dx, dy);
 
             }
         });
@@ -252,7 +275,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     @Override
     public void onLocationStateChange() {
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (locationManager.isLocationEnabled()) {
 
             Log.i("About GPS", "GPS is Enabled in your device");
             Toast toast = Toast.makeText(getActivity(), "המיקום שלך הופעל", Toast.LENGTH_SHORT);
@@ -278,7 +301,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     }
 
     private void updateLocationsOnMap() {
-        if(mMap!=null && locations!=null && !locations.isEmpty()) {
+        if (mMap != null && locations != null && !locations.isEmpty()) {
 
             com.spot.alert.dataobjects.Location center = locations.get(0);
 
@@ -287,15 +310,19 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             mMap.animateCamera(cameraUpdate);
             mMap.moveCamera(cameraUpdate);
 
+            List<Marker> markers = new ArrayList<>();
 
-            List<Marker> markers  = new ArrayList<>();
             for (com.spot.alert.dataobjects.Location location : locations) {
 
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.getLabel()));
-
-                markers.add(marker);
+                if (!markerMap.containsKey(location.getId())) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.getLabel()));
+                    markerMap.put(location.getId(), marker);
+                    markers.add(marker);
+                }
+                else {
+                    markers.add(markerMap.get(location.getId()));
+                }
             }
 
             mMap.animateCamera(cameraUpdate);

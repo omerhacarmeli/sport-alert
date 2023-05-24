@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -84,6 +85,9 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
                     location.setLongitude(longitude);
                     location.setZoom(zoom);
                     locationDao.updateLocation(location);
+
+                    Toast toast = Toast.makeText(getActivity(), "מוקד נשמר בהצלחה", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
 
                 updateLocationOnMap(location);
