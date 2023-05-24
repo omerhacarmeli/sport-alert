@@ -26,9 +26,6 @@ public class LocationViewHolder
 		locationName
 			= (TextView)itemView
 				.findViewById(R.id.locationName);
-		activeLocation
-			= (TextView)itemView
-				.findViewById(R.id.activeLocation);
 
 		deleteItem
 				= (ImageButton)itemView

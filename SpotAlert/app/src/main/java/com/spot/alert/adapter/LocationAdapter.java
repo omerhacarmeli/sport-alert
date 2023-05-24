@@ -59,9 +59,6 @@ public class LocationAdapter
         viewHolder.locationName
                 .setText(list.get(position).name);
 
-        viewHolder.activeLocation
-                .setText("(" + list.get(position).latitude + ", " + list.get(position).longitude + ")");
-
         viewHolder.editItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

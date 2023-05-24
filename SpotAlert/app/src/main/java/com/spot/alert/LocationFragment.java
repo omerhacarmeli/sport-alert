@@ -130,7 +130,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                     }
 
                     locationDao.deleteLocation(location);
-                    Toast.makeText(getActivity(), "Delete Location " + location.getName(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), location.getName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show();
                 }
             }
         };
