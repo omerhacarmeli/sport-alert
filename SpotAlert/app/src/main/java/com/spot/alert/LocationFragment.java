@@ -141,6 +141,9 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                 if (obj instanceof com.spot.alert.dataobjects.Location) {
 
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+
+                    ((MainActivity)getActivity()).moveEditLocation(location);
+
                     Toast.makeText(getActivity(), "Edit Location " + location.getName(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -162,8 +165,16 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             }
         };
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(
+        FloatingActionButton addLocationFB = (FloatingActionButton) view.findViewById(
                 R.id.addLocationFB);
+
+
+        addLocationFB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).moveCreateLocation();
+            }
+        });
 
         adapter = new LocationAdapter(getActivity(), deleteListener, editListener, clickListener);
         recyclerView.setAdapter(adapter);
@@ -174,9 +185,9 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 
                 if (dy > 0) {
-                    floatingActionButton.hide();
+                    addLocationFB.hide();
                 } else {
-                    floatingActionButton.show();
+                    addLocationFB.show();
                 }
                 super.onScrolled(recyclerView, dx, dy);
 

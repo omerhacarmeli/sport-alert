@@ -12,7 +12,7 @@
         tools:context=".CenterPointFragment">
 
         <ImageView
-            android:id="@+id/im1"
+            android:id="@+id/create"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
@@ -25,7 +25,7 @@
             android:layout_width="250dp"
             android:layout_height="55dp"
             android:gravity="center"
-            android:text="הגדרת מוקד"
+            android:text="יצירת מיקום"
             android:textColor="@color/white"
             android:textSize="28sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,17 +36,16 @@
             app:layout_constraintVertical_bias="0.063" />
 
         <EditText
-            android:id="@+id/width"
+            android:id="@+id/createLocationName"
             android:layout_width="211dp"
             android:layout_height="48dp"
             android:background="@drawable/rounded_corner_view"
-            android:drawableLeft="@drawable/baseline_arrow_right_24"
+            android:drawableLeft="@drawable/baseline_edit_location_alt_24_black"
             android:ems="10"
-            android:hint="קו רוחב"
-            android:inputType="numberDecimal"
+            android:hint="שם המקום"
+            android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.186" />
@@ -56,9 +55,9 @@
             android:layout_width="211dp"
             android:layout_height="48dp"
             android:background="@drawable/rounded_corner_view"
-            android:drawableLeft="@drawable/baseline_double_arrow_up_24"
+            android:drawableLeft="@drawable/baseline_not_listed_location_24_black"
             android:ems="10"
-            android:hint="קו אורך"
+            android:hint="בחר מקום"
             android:inputType="numberDecimal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,23 +66,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.286" />
 
-        <EditText
-            android:id="@+id/zoom"
-            android:layout_width="211dp"
-            android:layout_height="48dp"
-            android:background="@drawable/rounded_corner_view"
-            android:drawableLeft="@drawable/baseline_zoom_in_24"
-            android:ems="10"
-            android:hint="זום מצלמה 13-18"
-            android:inputType="numberDecimal"
+
+        <ImageButton
+            android:id="@+id/locationItemButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="270dp"
+            android:background="@null"
+            android:src="@drawable/baseline_place_32"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.386" />
-
+            app:layout_constraintVertical_bias="0.291" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
