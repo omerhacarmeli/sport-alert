@@ -1,4 +1,4 @@
-package com.spot.alert.adapter;
+package com.spot.alert.adapter.location;
 
 import android.content.Context;
 import android.os.Handler;
@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.spot.alert.adapter.ClickListener;
 import com.spot.alert.dataobjects.Location;
 
 import java.util.Collections;
@@ -25,7 +26,6 @@ public class LocationAdapter
     Context context;
     ClickListener deleteListener;
     ClickListener editListener;
-
     ClickListener clickListener;
 
     public LocationAdapter(Context context, ClickListener deleteListener,ClickListener editListener,ClickListener clickListener) {

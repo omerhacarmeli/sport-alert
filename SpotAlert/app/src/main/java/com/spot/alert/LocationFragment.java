@@ -38,7 +38,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spot.alert.adapter.ClickListener;
-import com.spot.alert.adapter.LocationAdapter;
+import com.spot.alert.adapter.location.LocationAdapter;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
 

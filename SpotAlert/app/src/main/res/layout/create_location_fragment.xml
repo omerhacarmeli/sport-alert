@@ -84,38 +84,81 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/customborder"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight="percent"
-            app:layout_constraintHeight_percent=".40"
+            app:layout_constraintHeight_percent=".52"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.780"
+            app:layout_constraintVertical_bias="0.760"
             tools:ignore="MissingConstraints">
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.SupportMapFragment"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="fill_parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical"                    >
 
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"                       >
 
-        <Button
-            android:id="@+id/approval"
-            android:layout_width="142dp"
-            android:layout_height="50dp"
-            android:text="שמירה"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.976" />
+                        <TableRow android:layout_width="match_parent"  android:background="@drawable/customborder">
 
+                            <androidx.fragment.app.FragmentContainerView
+                                android:id="@+id/map"
+                                class="com.google.android.gms.maps.SupportMapFragment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="250dp" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="250dp"
+                                android:layout_below="@+id/constraintLayout"
+                                android:background="#80000000" />
+
+                        </TableRow>
+
+                    </TableLayout>
+
+            </RelativeLayout>
+
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addTimeRageFB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/round_add_circle_outline_24"
+            app:backgroundTintMode="src_in"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    <Button
+        android:id="@+id/approval"
+        android:layout_width="142dp"
+        android:layout_height="50dp"
+        android:text="שמירה"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout></LinearLayout>

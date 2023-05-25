@@ -1,5 +1,5 @@
 // ViewHolder code for RecyclerView
-package com.spot.alert.adapter;
+package com.spot.alert.adapter.location;
 
 import android.view.View;
 import android.widget.ImageButton;

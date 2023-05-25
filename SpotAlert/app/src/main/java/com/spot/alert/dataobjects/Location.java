@@ -8,6 +8,7 @@ import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 
 @Entity
 public class Location {
+
     @PrimaryKey(autoGenerate = true)
     public Long id;
 

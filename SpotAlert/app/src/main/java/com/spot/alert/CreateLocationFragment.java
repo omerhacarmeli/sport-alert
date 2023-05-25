@@ -10,10 +10,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,11 +27,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spot.alert.R;
 import com.spot.alert.SpotAlertAppContext;
+import com.spot.alert.adapter.ClickListener;
+import com.spot.alert.adapter.location.LocationAdapter;
+import com.spot.alert.adapter.timerange.TimeRangeAdapter;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
 import com.spot.alert.dataobjects.Location;
+import com.spot.alert.dataobjects.LocationTimeRange;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateLocationFragment extends Fragment implements OnMapReadyCallback {
 
@@ -38,8 +50,16 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     private Location location;
 
     private LatLng latLng;
-
     private Marker marker;
+
+    private TimeRangeAdapter timeRangeAdapter;
+    private RecyclerView recyclerView;
+
+    private ClickListener deleteListener;
+    private ClickListener editListener;
+    private ClickListener clickListener;
+
+    private List<LocationTimeRange> locationTimeRangeList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -56,7 +76,8 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
         this.location = locationDao.getLocationByName(SpotAlertAppContext.CENTER_POINT_STRING);
 
         //EditText createLocationNameEditText = view.findViewById(R.id.createLocationName);
-      //  EditText createLocationNameLocationEditText = view.findViewById(R.id.createLocationNameLocation);
+        //EditText createLocationNameLocationEditText = view.findViewById(R.id.createLocationNameLocation);
+
         if (location != null) {
 
         }
@@ -97,6 +118,32 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
                 , android.Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
+
+        recyclerView
+                = (RecyclerView) view.findViewById(
+                R.id.recyclerView);
+        timeRangeAdapter = new TimeRangeAdapter(getActivity(), deleteListener, editListener, clickListener);
+        recyclerView.setAdapter(timeRangeAdapter);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext()));
+
+        FloatingActionButton addLocationFB = (FloatingActionButton) view.findViewById(
+                R.id.addTimeRageFB);
+
+        addLocationFB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LocationTimeRange locationTimeRange = new LocationTimeRange();
+                locationTimeRange.setFromTime("8:00");
+                locationTimeRange.setToTime("10:00");
+                locationTimeRange.setDayWeek(1);
+
+                locationTimeRangeList.add(locationTimeRange);
+
+                timeRangeAdapter.setDataChanged(locationTimeRangeList);
+            }
+        });
+
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
         SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();
