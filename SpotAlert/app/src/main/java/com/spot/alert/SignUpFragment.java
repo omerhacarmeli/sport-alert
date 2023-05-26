@@ -36,13 +36,13 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button signupButton = view.findViewById(R.id.backToLoginButtom);
+        Button backToLoginButtom = view.findViewById(R.id.backToLoginButtom);
         ProgressBar bar = view.findViewById(R.id.bar);
 
         AppDataBase dataBase = AppDataBase.getDatabase(getActivity());
         this.userDao = dataBase.userDao();
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
+        backToLoginButtom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WelcomeActivity welcomeActivity = (WelcomeActivity) getActivity();
@@ -60,11 +60,6 @@ public class SignUpFragment extends Fragment {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String strPassword = String.valueOf(password.getText());
-                String strEmail = String.valueOf(email.getText());
-                String strVerifyPassword = String.valueOf(verifyPassword.getText());
-
                 User user = new User();
 
                 ValidateResponse validateUserNameResponse = validateUserName(user, userName);

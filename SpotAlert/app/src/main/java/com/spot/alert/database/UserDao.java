@@ -26,8 +26,7 @@ public interface UserDao {
     public User login(String email, String password);
 
     @Query("SELECT COUNT(*) FROM User WHERE email = :email")
-    public long
-    isEmailExist(String email);
+    public long isEmailExist(String email);
     @Query("SELECT * FROM User WHERE userId= :userId ")
     User getUser(long userId);
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="105dp">
 
@@ -11,12 +10,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@null"
         android:contentDescription="Delete"
-        android:src="@drawable/baseline_delete_location_32"
-        android:visibility="invisible" />
+        android:src="@drawable/baseline_auto_delete_time_24"
+        android:visibility="visible" />
 
     <ImageButton
         android:id="@+id/editItemTimeRangeButton"
@@ -24,23 +23,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="56dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="56dp"
         android:background="@null"
         android:contentDescription="Edit"
-        android:src="@drawable/baseline_edit_location_alt_32"
-        android:visibility="invisible" />
+        android:src="@drawable/baseline_edit_note_32_white_1"
+        android:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/locationImage"
+    <ImageButton
+        android:id="@+id/fromTimeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="26dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="35dp"
         android:background="@null"
         android:contentDescription="Edit"
-        android:src="@drawable/baseline_place_32"
+        android:src="@drawable/baseline_access_time_32"
         android:visibility="visible" />
 
     <TextView
@@ -49,12 +48,48 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="65dp"
+        android:layout_marginStart="75dp"
         android:layout_marginTop="40dp"
-        android:visibility="visible"
+        android:text="00:00"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/border10"
+        android:layout_width="110dp"
+        android:layout_height="1dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="75dp"
+        android:layout_marginStart="34dp"
+        android:background="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/fromTimeDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="84dp"
         android:text="תחילת שעה"
         android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:textSize="12sp"
+        android:visibility="visible" />
+
+
+    <ImageButton
+        android:id="@+id/toTimeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="180dp"
+        android:layout_marginTop="35dp"
+        android:background="@null"
+        android:contentDescription="Edit"
+        android:src="@drawable/baseline_access_time_32"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/toTime"
@@ -62,13 +97,35 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="65dp"
+        android:layout_marginStart="217dp"
         android:layout_marginTop="40dp"
-        android:visibility="visible"
+        android:text="00:00"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/border11"
+        android:layout_width="120dp"
+        android:layout_height="1dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="75dp"
+        android:layout_marginStart="177dp"
+        android:background="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/toTimeDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="217dp"
+        android:layout_marginTop="84dp"
         android:text="סיום שעה"
         android:textColor="@color/white"
-        android:textSize="24sp" />
-
+        android:textSize="12dp"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/border2"

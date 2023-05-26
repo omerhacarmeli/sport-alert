@@ -18,6 +18,10 @@ public class TimeRangeViewHolder
     ImageButton deleteItem;
 
     ImageButton editItem;
+
+    ImageButton fromTimePickerImage;
+
+    ImageButton toTimePickerImage;
     View view;
 
     TimeRangeViewHolder(View itemView) {
@@ -37,6 +41,11 @@ public class TimeRangeViewHolder
         editItem
                 = (ImageButton) itemView
                 .findViewById(R.id.editItemTimeRangeButton);
+
+        fromTimePickerImage =  (ImageButton) itemView
+                .findViewById(R.id.fromTimeImage);
+
+        toTimePickerImage =  (ImageButton) itemView.findViewById(R.id.toTimeImage);
 
         view = itemView;
     }

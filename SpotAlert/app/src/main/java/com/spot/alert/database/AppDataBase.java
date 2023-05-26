@@ -13,7 +13,7 @@ import com.spot.alert.dataobjects.User;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-    @Database(entities = {User.class, Location.class, LocationTimeRange.class}, version = 3)
+    @Database(entities = {User.class, Location.class, LocationTimeRange.class}, version = 5)
     public abstract class AppDataBase extends RoomDatabase {
 
         private static final int NUMBER_OF_THREADS = 4;

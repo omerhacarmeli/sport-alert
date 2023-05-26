@@ -14,14 +14,14 @@ import androidx.room.PrimaryKey;
 public class LocationTimeRange {
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public Long id;
 
 
     @ColumnInfo(name = "fromTime")
-    public String fromTime;
+    public Double fromTime;
 
     @ColumnInfo(name = "toTime")
-    public String toTime;
+    public Double toTime;
 
     @ColumnInfo(name = "dayWeek")
     public int dayWeek;
@@ -29,7 +29,7 @@ public class LocationTimeRange {
     @ColumnInfo(name = "locationId")
     public Long locationId;
 
-    public LocationTimeRange(int id, String fromTime, String toTime, int dayWeek, Long locationId) {
+    public LocationTimeRange(int Long, Double fromTime, Double toTime, int dayWeek, Long locationId) {
         this.id = id;
         this.fromTime = fromTime;
         this.toTime = toTime;
@@ -41,27 +41,27 @@ public class LocationTimeRange {
     {}
 
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getFromTime() {
+    public Double getFromTime() {
         return fromTime;
     }
 
-    public void setFromTime(String fromTime) {
+    public void setFromTime(Double fromTime) {
         this.fromTime = fromTime;
     }
 
-    public String getToTime() {
+    public Double getToTime() {
         return toTime;
     }
 
-    public void setToTime(String toTime) {
+    public void setToTime(Double toTime) {
         this.toTime = toTime;
     }
 

@@ -134,12 +134,8 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
             @Override
             public void onClick(View v) {
                 LocationTimeRange locationTimeRange = new LocationTimeRange();
-                locationTimeRange.setFromTime("8:00");
-                locationTimeRange.setToTime("10:00");
                 locationTimeRange.setDayWeek(1);
-
                 locationTimeRangeList.add(locationTimeRange);
-
                 timeRangeAdapter.setDataChanged(locationTimeRangeList);
             }
         });

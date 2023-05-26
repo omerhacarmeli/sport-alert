@@ -8,13 +8,15 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.spot.alert.DatePickerFragment;
 import com.spot.alert.R;
+import com.spot.alert.SpotAlertAppContext;
 import com.spot.alert.adapter.ClickListener;
-import com.spot.alert.adapter.location.LocationViewHolder;
-import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
+import com.spot.alert.utils.TimeRangeUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +29,6 @@ public class TimeRangeAdapter
     Context context;
     ClickListener deleteListener;
     ClickListener editListener;
-
     ClickListener clickListener;
 
     public TimeRangeAdapter(Context context, ClickListener deleteListener, ClickListener editListener, ClickListener clickListener) {
@@ -53,14 +54,46 @@ public class TimeRangeAdapter
     }
 
     @Override
-    public void  onBindViewHolder(final TimeRangeViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final TimeRangeViewHolder viewHolder, final int position) {
         final int index = viewHolder.getAdapterPosition();
+        if(locationTimeRangeList.get(position).getFromTime()!=null) {
+            viewHolder.fromTime
+                    .setText(TimeRangeUtils.getTimeLabel(locationTimeRangeList.get(position).getFromTime()));
+        }
 
-        viewHolder.fromTime
-                .setText("10:00");
+        if(locationTimeRangeList.get(position).getFromTime()!=null) {
+            viewHolder.toTime
+                    .setText(TimeRangeUtils.getTimeLabel(locationTimeRangeList.get(position).getToTime()));
+        }
 
-        viewHolder.toTime
-                .setText("10:30");
+        viewHolder.fromTimePickerImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatePickerFragment fromDatePickerFragment = new DatePickerFragment(viewHolder.fromTime,locationTimeRangeList.get(position), SpotAlertAppContext.FROM_TIME);
+
+                fromDatePickerFragment.show(((FragmentActivity)context).getSupportFragmentManager() , "DATE PICK");
+            }
+        });
+
+        viewHolder.toTimePickerImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerFragment toDatePickerFragment = new DatePickerFragment(viewHolder.toTime,locationTimeRangeList.get(position),SpotAlertAppContext.TO_TIME);
+
+
+                toDatePickerFragment.show(((FragmentActivity)context).getSupportFragmentManager() , "DATE PICK");
+
+
+
+                if(!toDatePickerFragment.isIgnoreTime())
+                {
+                    int hours = toDatePickerFragment.getHours();
+                    int minutes = toDatePickerFragment.getMinutes();
+                    locationTimeRangeList.get(position).setFromTime(TimeRangeUtils.getTimeNumber(hours,minutes));
+                }
+            }
+        });
 
         viewHolder.editItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,17 +112,10 @@ public class TimeRangeAdapter
                 anim.setDuration(300);
                 viewHolder.view.startAnimation(anim);
 
-                new Handler().postDelayed(()-> {
-                        deleteListener.click(locationTimeRangeList.get(position));
+                new Handler().postDelayed(() -> {
+                    deleteListener.click(locationTimeRangeList.get(position));
 
                 }, anim.getDuration());
-            }
-        });
-
-        viewHolder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickListener.click(locationTimeRangeList.get(position));
             }
         });
 
@@ -104,7 +130,7 @@ public class TimeRangeAdapter
                             viewHolder.editItem.setVisibility(View.INVISIBLE);
                             viewHolder.deleteItem.setVisibility(View.INVISIBLE);
                         }
-                        ,4000);
+                        , 4000);
                 return true;
             }
         });

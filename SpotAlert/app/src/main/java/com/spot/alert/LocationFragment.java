@@ -142,7 +142,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
 
-                    ((MainActivity)getActivity()).moveEditLocation(location);
+                    ((MainActivity) getActivity()).moveEditLocation(location);
 
                     Toast.makeText(getActivity(), "Edit Location " + location.getName(), Toast.LENGTH_LONG).show();
                 }
@@ -172,7 +172,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         addLocationFB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).moveCreateLocation();
+                ((MainActivity) getActivity()).moveCreateLocation();
             }
         });
 
@@ -256,22 +256,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     }
 
 
-    private double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
-        double R = 6371; // Radius of the earth in km
-        double dLat = deg2rad(lat2 - lat1);  // deg2rad below
-        double dLon = deg2rad(lon2 - lon1);
-        double a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double d = R * c; // Distance in km
-        return d;
-    }
 
-    private double deg2rad(double deg) {
-        return deg * (Math.PI / 180);
-    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -330,8 +315,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                     Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.getLabel()));
                     markerMap.put(location.getId(), marker);
                     markers.add(marker);
-                }
-                else {
+                } else {
                     markers.add(markerMap.get(location.getId()));
                 }
             }
@@ -342,4 +326,28 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             markers.get(0).showInfoWindow();
         }
     }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+
+    /**
+     * Called when the provider this listener is registered with becomes disabled. If a provider is
+     * disabled when this listener is registered, this callback will be invoked immediately.
+     *
+     * <p class="note">Note that this method only has a default implementation on Android R and
+     * above, and this method must still be overridden in order to run successfully on Android
+     * versions below R. LocationListenerCompat from the compat libraries may be used to avoid the
+     * need to override for older platforms.
+     *
+     * @param provider the name of the location provider
+     */
+    @Override
+    public void onProviderDisabled(String provider) {
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
 }
