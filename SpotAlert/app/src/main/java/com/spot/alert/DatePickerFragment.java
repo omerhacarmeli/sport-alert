@@ -44,13 +44,13 @@ public class DatePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
 
-        if (selectedMinute % 15 != 0) {
+    /*    if (selectedMinute % 15 != 0) {
 
             Toast toast = Toast.makeText(getActivity(), "הבחירת הדקות אינה תקינה, הדקות צריכות להיות בחלקי 15 דקות", Toast.LENGTH_SHORT);
             toast.show();
             ignoreTime = true;
             return;
-        }
+        }*/
 
         ignoreTime = false;
         minutes = selectedMinute;

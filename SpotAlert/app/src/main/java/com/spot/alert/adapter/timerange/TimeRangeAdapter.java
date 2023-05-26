@@ -56,21 +56,24 @@ public class TimeRangeAdapter
     @Override
     public void onBindViewHolder(final TimeRangeViewHolder viewHolder, final int position) {
         final int index = viewHolder.getAdapterPosition();
-        if(locationTimeRangeList.get(position).getFromTime()!=null) {
+
+        LocationTimeRange locationTimeRange = locationTimeRangeList.get(position);
+
+        if(locationTimeRange.getFromTime()!=null) {
             viewHolder.fromTime
-                    .setText(TimeRangeUtils.getTimeLabel(locationTimeRangeList.get(position).getFromTime()));
+                    .setText(TimeRangeUtils.getTimeLabel(locationTimeRange.getFromTime()));
         }
 
-        if(locationTimeRangeList.get(position).getFromTime()!=null) {
+        if(locationTimeRange.getToTime()!=null) {
             viewHolder.toTime
-                    .setText(TimeRangeUtils.getTimeLabel(locationTimeRangeList.get(position).getToTime()));
+                    .setText(TimeRangeUtils.getTimeLabel(locationTimeRange.getToTime()));
         }
 
         viewHolder.fromTimePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                DatePickerFragment fromDatePickerFragment = new DatePickerFragment(viewHolder.fromTime,locationTimeRangeList.get(position), SpotAlertAppContext.FROM_TIME);
+                DatePickerFragment fromDatePickerFragment = new DatePickerFragment(viewHolder.fromTime,locationTimeRange, SpotAlertAppContext.FROM_TIME);
 
                 fromDatePickerFragment.show(((FragmentActivity)context).getSupportFragmentManager() , "DATE PICK");
             }
@@ -79,19 +82,9 @@ public class TimeRangeAdapter
         viewHolder.toTimePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerFragment toDatePickerFragment = new DatePickerFragment(viewHolder.toTime,locationTimeRangeList.get(position),SpotAlertAppContext.TO_TIME);
-
+                DatePickerFragment toDatePickerFragment = new DatePickerFragment(viewHolder.toTime,locationTimeRange,SpotAlertAppContext.TO_TIME);
 
                 toDatePickerFragment.show(((FragmentActivity)context).getSupportFragmentManager() , "DATE PICK");
-
-
-
-                if(!toDatePickerFragment.isIgnoreTime())
-                {
-                    int hours = toDatePickerFragment.getHours();
-                    int minutes = toDatePickerFragment.getMinutes();
-                    locationTimeRangeList.get(position).setFromTime(TimeRangeUtils.getTimeNumber(hours,minutes));
-                }
             }
         });
 
@@ -113,7 +106,7 @@ public class TimeRangeAdapter
                 viewHolder.view.startAnimation(anim);
 
                 new Handler().postDelayed(() -> {
-                    deleteListener.click(locationTimeRangeList.get(position));
+                    deleteListener.click(locationTimeRange);
 
                 }, anim.getDuration());
             }
