@@ -22,9 +22,9 @@ public class SplashActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splash);
         TextView appNameTextView = findViewById(R.id.appName);
-        appNameTextView.animate().translationY(-1600).setDuration(2700).setStartDelay(0);
+        appNameTextView.animate().translationY(-1600).setDuration(700).setStartDelay(0);
 
-        new CountDownTimer(3000, 3000){
+        new CountDownTimer(1000, 1000){
             public void onTick(long millisUntilFinished){
 
             }

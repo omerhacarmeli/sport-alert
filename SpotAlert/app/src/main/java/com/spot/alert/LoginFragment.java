@@ -112,8 +112,8 @@ public class LoginFragment extends Fragment {
         toast.show();
         bar.setProgress(0, true);
         bar.setVisibility(View.VISIBLE);
-        int delayTime = 2000;
-        new CountDownTimer(delayTime, delayTime / 100) {
+        int delayTime = 500;
+        new CountDownTimer(500 , delayTime / 100) {
             int counter = 0;
 
             public void onTick(long millisUntilFinished) {

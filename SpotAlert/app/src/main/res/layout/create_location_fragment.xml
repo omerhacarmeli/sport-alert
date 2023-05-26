@@ -30,7 +30,6 @@
             android:textSize="28sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.063" />
@@ -57,11 +56,10 @@
             android:background="@drawable/rounded_corner_view"
             android:drawableLeft="@drawable/baseline_not_listed_location_24_black"
             android:ems="10"
-            android:hint="בחר מקום"
+            android:hint="בחר מיקום"
             android:inputType="numberDecimal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.286" />

@@ -17,4 +17,11 @@
     <style parent="ThemeOverlay.AppCompat.Dark.ActionBar" name="AppTheme.AppBarOverlay"/>
 
     <style parent="ThemeOverlay.AppCompat.Light" name="AppTheme.PopupOverlay"/>
+
+    <style name="SpinnerStyle"
+        parent="@android:style/Widget.TextView.SpinnerItem"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        <item name="android:textSize">14sp</item> <!-- Set your desired text size -->
+        <item name="android:textColor">#FF0000</item> <!-- Set your desired text color -->
+    </style>
 </resources>

@@ -3,6 +3,7 @@ package com.spot.alert.adapter.location;
 
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ public class LocationViewHolder
 	ImageButton deleteItem;
 
 	ImageButton editItem;
+
 	View view;
 
 	LocationViewHolder(View itemView)
@@ -33,6 +35,7 @@ public class LocationViewHolder
 		editItem
 			= (ImageButton)itemView
 				.findViewById(R.id.editItemButton);
+
 
 		view = itemView;
 	}

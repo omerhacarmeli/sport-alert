@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,7 +60,25 @@ public class TimeRangeAdapter
     public void onBindViewHolder(final TimeRangeViewHolder viewHolder, final int position) {
         final int index = viewHolder.getAdapterPosition();
 
+        ArrayAdapter<CharSequence> adapter=ArrayAdapter.createFromResource(context.getApplicationContext(), R.array.days, R.layout.spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        viewHolder.spinnerDays.setAdapter(adapter);
+
         LocationTimeRange locationTimeRange = locationTimeRangeList.get(position);
+
+        viewHolder.spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                locationTimeRange.setDayWeek(position+1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
 
         if(locationTimeRange.getFromTime()!=null) {
             viewHolder.fromTime
@@ -88,14 +109,6 @@ public class TimeRangeAdapter
             }
         });
 
-        viewHolder.editItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
-        });
-
         viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,17 +129,18 @@ public class TimeRangeAdapter
             @Override
             public boolean onLongClick(View view) {
 
-                viewHolder.editItem.setVisibility(View.VISIBLE);
                 viewHolder.deleteItem.setVisibility(View.VISIBLE);
 
                 new Handler().postDelayed(() -> {
-                            viewHolder.editItem.setVisibility(View.INVISIBLE);
+
                             viewHolder.deleteItem.setVisibility(View.INVISIBLE);
                         }
                         , 4000);
                 return true;
             }
         });
+
+        viewHolder.spinnerDays.setSelection(locationTimeRange.getDayWeek() - 1 );
 
     }
 

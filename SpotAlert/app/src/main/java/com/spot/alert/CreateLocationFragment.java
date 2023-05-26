@@ -81,6 +81,35 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
         if (location != null) {
 
         }
+        deleteListener = new ClickListener() {
+            @Override
+            public void click(Object obj) {
+                if (obj instanceof com.spot.alert.dataobjects.LocationTimeRange) {
+
+                    LocationTimeRange locationTimeRange = (LocationTimeRange) obj;
+
+                    locationTimeRangeList.remove(locationTimeRange);
+
+                    timeRangeAdapter.setDataChanged(locationTimeRangeList);
+
+                  //  locationDao.deleteLocation(location);
+                    Toast.makeText(getActivity(), "נמחק בהצלחה", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        editListener = new ClickListener() {
+            @Override
+            public void click(Object obj) {
+                if (obj instanceof com.spot.alert.dataobjects.Location) {
+/*
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+                    ((MainActivity) getActivity()).moveEditLocation(location);
+                    Toast.makeText(getActivity(), "Edit Location " + location.getName(), Toast.LENGTH_LONG).show();*/
+                }
+            }
+        };
+
 
         Button approval = view.findViewById(R.id.approval);
         approval.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +168,6 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
                 timeRangeAdapter.setDataChanged(locationTimeRangeList);
             }
         });
-
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
         SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();

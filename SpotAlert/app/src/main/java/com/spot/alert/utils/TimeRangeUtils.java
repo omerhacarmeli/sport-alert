@@ -25,10 +25,16 @@ public class TimeRangeUtils {
         return timeLabelHours + ":" + timeLabelMinutes;
 
     }
-
     public static Double getTimeNumber(int hours, int minutes) {
 
         double time = (double) hours + (double) minutes / (double) 60;
         return time;
     }
+
+    public static int getDayAsNum(String day) {
+
+        return 1;
+    }
+
+
 }

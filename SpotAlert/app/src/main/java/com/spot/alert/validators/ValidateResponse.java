@@ -12,6 +12,10 @@ public class ValidateResponse {
         this.validate = validate;
     }
 
+    public ValidateResponse(boolean validate) {
+        this.validate = validate;
+    }
+
     public String getMsg() {
         return msg;
     }
