@@ -228,9 +228,6 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         updateLocationsOnMap();
     }
 
-
-
-
     @Override
     public void onLocationChanged(Location location) {
         // Get the latitude and longitude

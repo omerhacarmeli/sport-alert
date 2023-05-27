@@ -2,7 +2,9 @@ package com.spot.alert;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -39,6 +41,8 @@ import com.spot.alert.database.LocationDao;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.GeoUtils;
+import com.spot.alert.validators.LocationValidation;
+import com.spot.alert.validators.ValidateResponse;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -46,6 +50,7 @@ import java.util.List;
 
 public class CreateLocationFragment extends Fragment implements OnMapReadyCallback {
 
+    public static final String DEFAULT_NAME = "נקודה_1";
     private LocationDao locationDao;
 
     private double latitude, longitude;
@@ -84,10 +89,33 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
         this.centerlocation = locationDao.getLocationByName(SpotAlertAppContext.CENTER_POINT_STRING);
-        this.newlocation = new Location();
 
         createLocationNameEditText = view.findViewById(R.id.createLocationName);
         createLocationSpotEditText = view.findViewById(R.id.createLocationSpot);
+
+        this.newlocation = new Location();
+        this.newlocation.setLabel(DEFAULT_NAME);
+        this.newlocation.setName(DEFAULT_NAME);
+        createLocationNameEditText.setText(DEFAULT_NAME);
+        createLocationNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    // The EditText has lost focus (user has left the field)
+                    // Get the text from the EditText and perform actions.
+                    EditText editText = (EditText) v;
+
+                    newlocation.setName(editText.getText().toString());
+                    newlocation.setLabel(editText.getText().toString());
+                    if (newLocationMarker != null) {
+                        newLocationMarker.setTitle(newlocation.getLabel());
+                    }
+
+                    validateLocationName();
+                }
+            }
+        });
+
 
         deleteListener = new ClickListener() {
             @Override
@@ -118,53 +146,62 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
         createLocationCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) getActivity()).moveLocation();
+                new AlertDialog.Builder(getActivity()).setMessage("האם אתה מעוניין לצאת ללא שמירת הנתונים?")
+                        .setCancelable(true).setPositiveButton(
+                                "כן",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        ((MainActivity) getActivity()).moveLocation();
+                                    }
+                                })
+                        .setNegativeButton(
+                                " לא",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                })
+                        .create().show();
             }
         });
 
         createLocationApproval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                newlocation.setName(createLocationNameEditText.getText().toString());
+                newlocation.setLabel(createLocationNameEditText.getText().toString());
 
-                /*
-                Double latitude = Double.parseDouble(widthEditText.getText().toString());
-                Double longitude = Double.parseDouble(lengthEditText.getText().toString());
-                Double zoom = Double.parseDouble(zoomEditText.getText().toString());
+                boolean validateLocation = validateLocationName().isValidate();
+                boolean validateLocationPoint = validateLocationPoint().isValidate();
 
-                if (location == null) {
-                    location = new Location();
-                    location.setLabel(SpotAlertAppContext.CENTER_POINT_STRING);
-                    location.setLevel(1);
-                    location.setRadius(10);
-                    location.setName(SpotAlertAppContext.CENTER_POINT_STRING);
-                    location.setLatitude(latitude);
-                    location.setLongitude(longitude);
-                    location.setZoom(zoom);
-                    location.setId(locationDao.insertLocation(location));
-                } else {
-                    location.setLatitude(latitude);
-                    location.setLongitude(longitude);
-                    location.setZoom(zoom);
-                    locationDao.updateLocation(location);
-
-                    Toast toast = Toast.makeText(getActivity(), "מוקד נשמר בהצלחה", Toast.LENGTH_SHORT);
+                if (!validateLocation || !validateLocationPoint) {
+                    Toast toast = Toast.makeText(getActivity(), "נתוני המיקום אינם תקינים", Toast.LENGTH_SHORT);
                     toast.show();
+                    return;
+                } else {
+                    locationDao.insertLocation(newlocation);
+                    Toast toast = Toast.makeText(getActivity(), "נקודה נשמרה בהצלחה", Toast.LENGTH_SHORT);
+                    toast.show();
+                    ((MainActivity) getActivity()).moveLocation();
                 }
-        */
-
             }
         });
 
-        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
-                , android.Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
+        ActivityCompat.requestPermissions(
+                getActivity(), new String[]
+                        {
+                                android.Manifest.permission.ACCESS_FINE_LOCATION
+                                , android.Manifest.permission.ACCESS_COARSE_LOCATION
+                        }, PackageManager.PERMISSION_GRANTED);
 
         recyclerView
                 = (RecyclerView) view.findViewById(
                 R.id.recyclerView);
-        timeRangeAdapter = new TimeRangeAdapter(getActivity(), deleteListener, clickListener);
+        timeRangeAdapter = new
+
+                TimeRangeAdapter(getActivity(), deleteListener, clickListener);
         recyclerView.setAdapter(timeRangeAdapter);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         FloatingActionButton addLocationFB = (FloatingActionButton) view.findViewById(
                 R.id.addTimeRageFB);
@@ -181,8 +218,38 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
         SupportMapFragment supportMapFragment = SupportMapFragment.newInstance();
-        fm.beginTransaction().replace(R.id.map, supportMapFragment).commit();
+        fm.beginTransaction().
+
+                replace(R.id.map, supportMapFragment).
+
+                commit();
         supportMapFragment.getMapAsync(this);
+    }
+
+    private ValidateResponse validateLocationName() {
+
+        ValidateResponse validateResponse = LocationValidation.validateName(newlocation);
+
+        if (!validateResponse.isValidate()) {
+            createLocationNameEditText.setError(validateResponse.getMsg());
+        } else {
+            createLocationNameEditText.setError(null);
+        }
+
+        return validateResponse;
+    }
+
+    private ValidateResponse validateLocationPoint() {
+
+        ValidateResponse validateResponse = LocationValidation.validateLocation(newlocation);
+
+        if (!validateResponse.isValidate()) {
+            createLocationSpotEditText.setError(validateResponse.getMsg());
+        } else {
+            createLocationSpotEditText.setError(null);
+        }
+
+        return validateResponse;
     }
 
     private void selectLocation() {
@@ -232,6 +299,8 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
         newlocation.setLongitude(latLng.longitude);
 
         createLocationSpotEditText.setText("(" + df.format(latLng.latitude) + "," + df.format(latLng.longitude) + ")");
+
+        validateLocationPoint();
 
         updateNewLocationOnMap();
     }

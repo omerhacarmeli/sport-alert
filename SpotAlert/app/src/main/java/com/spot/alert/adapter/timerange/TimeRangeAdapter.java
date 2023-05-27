@@ -68,30 +68,35 @@ public class TimeRangeAdapter
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 locationTimeRange.setDayWeek(position + 1);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
-
         if (locationTimeRange.getFromTime() != null) {
+
             viewHolder.fromTime
                     .setText(TimeRangeUtils.getTimeLabel(locationTimeRange.getFromTime()));
+        }
+        else {
+            viewHolder.fromTime
+                    .setText("----:----");
         }
 
         if (locationTimeRange.getToTime() != null) {
             viewHolder.toTime
                     .setText(TimeRangeUtils.getTimeLabel(locationTimeRange.getToTime()));
         }
+        else {
+            viewHolder.toTime
+                    .setText("----:----");
+        }
 
         viewHolder.fromTimePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 DatePickerFragment fromDatePickerFragment = new DatePickerFragment(viewHolder.fromTime, locationTimeRange, SpotAlertAppContext.FROM_TIME);
-
                 fromDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");
             }
         });
@@ -99,9 +104,9 @@ public class TimeRangeAdapter
         viewHolder.toTimePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (locationTimeRange.getFromTime() != null) {
                     DatePickerFragment toDatePickerFragment = new DatePickerFragment(viewHolder.toTime, locationTimeRange, SpotAlertAppContext.TO_TIME);
-
                     toDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");
                 } else {
                     Toast.makeText(context, "קודם צריך להגדיר שעת התחלה", Toast.LENGTH_LONG).show();
@@ -113,7 +118,6 @@ public class TimeRangeAdapter
         viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Animation anim = AnimationUtils.loadAnimation(context.getApplicationContext(),
                         android.R.anim.slide_out_right);
                 anim.setDuration(300);
