@@ -23,9 +23,8 @@ import java.util.concurrent.Executors;
         public abstract UserDao userDao();
 
         public abstract LocationDao locationDao();
-
+        public abstract LocationTimeRangeDao locationTimeRangeDao();
         private static volatile AppDataBase INSTANCE;
-
         public static AppDataBase getDatabase(final Context context) {
             if (INSTANCE == null) {
                 synchronized (AppDataBase.class) {

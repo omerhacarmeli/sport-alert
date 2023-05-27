@@ -17,6 +17,7 @@ import java.util.List;
 public interface LocationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertLocation(Location location);
+
     @Delete
     void deleteLocation(Location location);
     @Update

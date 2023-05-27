@@ -38,6 +38,7 @@ import com.spot.alert.adapter.ClickListener;
 import com.spot.alert.adapter.timerange.TimeRangeAdapter;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
+import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.GeoUtils;
@@ -52,6 +53,8 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
     public static final String DEFAULT_NAME = "נקודה_1";
     private LocationDao locationDao;
+
+    private LocationTimeRangeDao locationTimeRangeDao;
 
     private double latitude, longitude;
     private GoogleMap mMap;
@@ -72,9 +75,7 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     private EditText createLocationSpotEditText;
 
     private List<LocationTimeRange> locationTimeRangeList = new ArrayList<>();
-
     private DecimalFormat df = new DecimalFormat("#.#####");
-
 
     @Nullable
     @Override
@@ -88,6 +89,8 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
+        this.locationTimeRangeDao = AppDataBase.getDatabase(getActivity()).locationTimeRangeDao();
+
         this.centerlocation = locationDao.getLocationByName(SpotAlertAppContext.CENTER_POINT_STRING);
 
         createLocationNameEditText = view.findViewById(R.id.createLocationName);
@@ -173,13 +176,20 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
                 boolean validateLocation = validateLocationName().isValidate();
                 boolean validateLocationPoint = validateLocationPoint().isValidate();
+                boolean validateLocationTimeRange = validateLocationTimeRange().isValidate();
 
-                if (!validateLocation || !validateLocationPoint) {
+                if (!validateLocation || !validateLocationPoint || !validateLocationTimeRange) {
                     Toast toast = Toast.makeText(getActivity(), "נתוני המיקום אינם תקינים", Toast.LENGTH_SHORT);
                     toast.show();
                     return;
                 } else {
-                    locationDao.insertLocation(newlocation);
+                    long locationId = locationDao.insertLocation(newlocation);
+
+                    for (LocationTimeRange locationTimeRange: locationTimeRangeList) {
+                        locationTimeRange.setLocationId(locationId);
+                        AppDataBase.databaseWriteExecutor.submit(()-> locationTimeRangeDao.insertLocation(locationTimeRange));
+                    }
+
                     Toast toast = Toast.makeText(getActivity(), "נקודה נשמרה בהצלחה", Toast.LENGTH_SHORT);
                     toast.show();
                     ((MainActivity) getActivity()).moveLocation();
@@ -224,6 +234,16 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
                 commit();
         supportMapFragment.getMapAsync(this);
+    }
+
+    private ValidateResponse validateLocationTimeRange() {
+        ValidateResponse validateResponse = LocationValidation.validateLocationTimeRange(locationTimeRangeList);
+
+        if (!validateResponse.isValidate()) {
+            Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_LONG).show();
+        }
+
+        return validateResponse;
     }
 
     private ValidateResponse validateLocationName() {
