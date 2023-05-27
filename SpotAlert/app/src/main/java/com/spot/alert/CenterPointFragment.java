@@ -61,7 +61,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             zoomEditText.setText(String.valueOf(location.getZoom()));
         }
 
-        Button approval = view.findViewById(R.id.approval);
+        Button approval = view.findViewById(R.id.createLocationApproval);
         approval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

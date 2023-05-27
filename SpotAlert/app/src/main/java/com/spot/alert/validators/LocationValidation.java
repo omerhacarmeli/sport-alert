@@ -1,11 +1,7 @@
 package com.spot.alert.validators;
 
-import android.widget.Toast;
-
-import com.spot.alert.dataobjects.LocationTimeRange;
-
 public class LocationValidation {
-    public static ValidateResponse checkTimeInputValidation(Double timeFrom,Double timeTo) {
+    public static ValidateResponse validateTimeFromTo(Double timeFrom, Double timeTo) {
         if (timeTo == null) {
             return new ValidateResponse(true);
         }

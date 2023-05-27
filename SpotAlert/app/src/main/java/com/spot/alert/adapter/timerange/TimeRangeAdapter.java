@@ -28,16 +28,13 @@ public class TimeRangeAdapter
         extends RecyclerView.Adapter<TimeRangeViewHolder> {
 
     List<LocationTimeRange> locationTimeRangeList = Collections.emptyList();
-
     Context context;
     ClickListener deleteListener;
-    ClickListener editListener;
     ClickListener clickListener;
 
-    public TimeRangeAdapter(Context context, ClickListener deleteListener, ClickListener editListener, ClickListener clickListener) {
+    public TimeRangeAdapter(Context context, ClickListener deleteListener, ClickListener clickListener) {
         this.context = context;
         this.deleteListener = deleteListener;
-        this.editListener = editListener;
         this.clickListener = clickListener;
     }
 
@@ -60,7 +57,7 @@ public class TimeRangeAdapter
     public void onBindViewHolder(final TimeRangeViewHolder viewHolder, final int position) {
         final int index = viewHolder.getAdapterPosition();
 
-        ArrayAdapter<CharSequence> adapter=ArrayAdapter.createFromResource(context.getApplicationContext(), R.array.days, R.layout.spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context.getApplicationContext(), R.array.days, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         viewHolder.spinnerDays.setAdapter(adapter);
 
@@ -69,7 +66,7 @@ public class TimeRangeAdapter
         viewHolder.spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                locationTimeRange.setDayWeek(position+1);
+                locationTimeRange.setDayWeek(position + 1);
             }
 
             @Override
@@ -79,13 +76,12 @@ public class TimeRangeAdapter
         });
 
 
-
-        if(locationTimeRange.getFromTime()!=null) {
+        if (locationTimeRange.getFromTime() != null) {
             viewHolder.fromTime
                     .setText(TimeRangeUtils.getTimeLabel(locationTimeRange.getFromTime()));
         }
 
-        if(locationTimeRange.getToTime()!=null) {
+        if (locationTimeRange.getToTime() != null) {
             viewHolder.toTime
                     .setText(TimeRangeUtils.getTimeLabel(locationTimeRange.getToTime()));
         }
@@ -94,18 +90,23 @@ public class TimeRangeAdapter
             @Override
             public void onClick(View view) {
 
-                DatePickerFragment fromDatePickerFragment = new DatePickerFragment(viewHolder.fromTime,locationTimeRange, SpotAlertAppContext.FROM_TIME);
+                DatePickerFragment fromDatePickerFragment = new DatePickerFragment(viewHolder.fromTime, locationTimeRange, SpotAlertAppContext.FROM_TIME);
 
-                fromDatePickerFragment.show(((FragmentActivity)context).getSupportFragmentManager() , "DATE PICK");
+                fromDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");
             }
         });
 
         viewHolder.toTimePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerFragment toDatePickerFragment = new DatePickerFragment(viewHolder.toTime,locationTimeRange,SpotAlertAppContext.TO_TIME);
+                if (locationTimeRange.getFromTime() != null) {
+                    DatePickerFragment toDatePickerFragment = new DatePickerFragment(viewHolder.toTime, locationTimeRange, SpotAlertAppContext.TO_TIME);
 
-                toDatePickerFragment.show(((FragmentActivity)context).getSupportFragmentManager() , "DATE PICK");
+                    toDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");
+                } else {
+                    Toast.makeText(context, "קודם צריך להגדיר שעת התחלה", Toast.LENGTH_LONG).show();
+
+                }
             }
         });
 
@@ -140,7 +141,7 @@ public class TimeRangeAdapter
             }
         });
 
-        viewHolder.spinnerDays.setSelection(locationTimeRange.getDayWeek() - 1 );
+        viewHolder.spinnerDays.setSelection(locationTimeRange.getDayWeek() - 1);
 
     }
 

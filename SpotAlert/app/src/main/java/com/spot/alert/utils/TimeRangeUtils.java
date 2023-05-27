@@ -1,11 +1,16 @@
 package com.spot.alert.utils;
 
+import java.text.DecimalFormat;
+
 public class TimeRangeUtils {
+
+    private static DecimalFormat df = new DecimalFormat("#.##");
     public static String getTimeLabel(Double time) {
 
 
-        int hours = time.intValue();
-        int minutes = (int) ((time - ((double)hours)) * (double)60);
+         int hours = time.intValue();
+
+        int minutes = Double.valueOf(df.format(((time - ((double) hours)) * (double) 100))).intValue();
 
         String timeLabelHours = "";
         String timeLabelMinutes = "";
@@ -25,16 +30,11 @@ public class TimeRangeUtils {
         return timeLabelHours + ":" + timeLabelMinutes;
 
     }
+
     public static Double getTimeNumber(int hours, int minutes) {
 
-        double time = (double) hours + (double) minutes / (double) 60;
+        double time = (double) hours + (double) minutes / 100.0;
+
         return time;
     }
-
-    public static int getDayAsNum(String day) {
-
-        return 1;
-    }
-
-
 }

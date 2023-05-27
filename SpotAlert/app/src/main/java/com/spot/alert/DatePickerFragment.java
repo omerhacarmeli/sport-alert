@@ -61,7 +61,7 @@ public class DatePickerFragment extends DialogFragment implements TimePickerDial
         Double timeNum = TimeRangeUtils.getTimeNumber(selectedHour, selectedMinute);
 
         if (SpotAlertAppContext.FROM_TIME.equals(fromto)) {
-            ValidateResponse validation = LocationValidation.checkTimeInputValidation(timeNum, locationTimeRange.getToTime());
+            ValidateResponse validation = LocationValidation.validateTimeFromTo(timeNum, locationTimeRange.getToTime());
             if (!validation.isValidate()) {
                 Toast toast = Toast.makeText(getActivity(), validation.getMsg(), Toast.LENGTH_SHORT);
                 toast.show();
@@ -71,7 +71,7 @@ public class DatePickerFragment extends DialogFragment implements TimePickerDial
             }
 
         } else {
-            ValidateResponse validation = LocationValidation.checkTimeInputValidation(locationTimeRange.getFromTime(), timeNum);
+            ValidateResponse validation = LocationValidation.validateTimeFromTo(locationTimeRange.getFromTime(), timeNum);
             if (!validation.isValidate()) {
                 Toast toast = Toast.makeText(getActivity(), validation.getMsg(), Toast.LENGTH_SHORT);
                 toast.show();

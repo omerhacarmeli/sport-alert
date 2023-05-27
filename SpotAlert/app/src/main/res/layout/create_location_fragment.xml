@@ -50,7 +50,7 @@
             app:layout_constraintVertical_bias="0.186" />
 
         <EditText
-            android:id="@+id/length"
+            android:id="@+id/createLocationSpot"
             android:layout_width="211dp"
             android:layout_height="48dp"
             android:background="@drawable/rounded_corner_view"
@@ -58,6 +58,7 @@
             android:ems="10"
             android:hint="בחר מיקום"
             android:inputType="numberDecimal"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -99,13 +100,15 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
-                    android:orientation="vertical"                    >
+                    android:orientation="vertical">
 
                     <TableLayout
                         android:layout_width="match_parent"
-                        android:layout_height="fill_parent"                       >
+                        android:layout_height="fill_parent">
 
-                        <TableRow android:layout_width="match_parent"  android:background="@drawable/customborder">
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:background="@drawable/customborder">
 
                             <androidx.fragment.app.FragmentContainerView
                                 android:id="@+id/map"
@@ -129,11 +132,11 @@
 
                     </TableLayout>
 
-            </RelativeLayout>
+                </RelativeLayout>
 
-        </ScrollView>
+            </ScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -146,17 +149,31 @@
             app:backgroundTintMode="src_in"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
-    <Button
-        android:id="@+id/approval"
-        android:layout_width="142dp"
-        android:layout_height="50dp"
-        android:text="שמירה"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976" />
+
+        <Button
+            android:id="@+id/createLocationApproval"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:text="שמירה"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.340"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.976" />
+
+        <Button
+            android:id="@+id/createLocationCancel"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:text="ביטול"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.800"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.976" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout></LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

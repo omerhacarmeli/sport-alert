@@ -41,6 +41,7 @@ import com.spot.alert.adapter.ClickListener;
 import com.spot.alert.adapter.location.LocationAdapter;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
+import com.spot.alert.utils.GeoUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,7 +102,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
             Log.i("About GPS", "GPS is Enabled in your devide");
         } else {
-            alertDialogEnableLocation();
+            GeoUtils.alertDialogEnableLocation(getActivity());
         }
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -197,34 +198,6 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         loadLiveData();
 
     }
-
-    protected void alertDialogEnableLocation() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setMessage("המיקום של המכשיר כבוי, האם אתה מעונין להדליק?");
-        alertDialogBuilder.setCancelable(true);
-
-        alertDialogBuilder.setPositiveButton(
-                "כן",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
-                        dialog.cancel();
-                    }
-                });
-
-        alertDialogBuilder.setNegativeButton(
-                " לא",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-
-        AlertDialog alert11 = alertDialogBuilder.create();
-        alert11.show();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -278,7 +251,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             toast.show();
 
         } else {
-            alertDialogEnableLocation();
+           GeoUtils.alertDialogEnableLocation(getActivity());
         }
     }
 

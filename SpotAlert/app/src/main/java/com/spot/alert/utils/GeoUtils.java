@@ -1,11 +1,17 @@
 package com.spot.alert.utils;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.provider.Settings;
+
 import com.google.android.gms.maps.model.LatLng;
 
 public class GeoUtils {
 
     public static double getDistanceFromLatLonInKm(LatLng from, LatLng to) {
-       return getDistanceFromLatLonInKm(from.latitude,  from.longitude,  to.latitude,  to.longitude);
+        return getDistanceFromLatLonInKm(from.latitude, from.longitude, to.latitude, to.longitude);
     }
 
     public static double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
@@ -23,5 +29,31 @@ public class GeoUtils {
 
     private static double deg2rad(double deg) {
         return deg * (Math.PI / 180);
+    }
+
+    public static void alertDialogEnableLocation(Context context) {
+
+        new AlertDialog.Builder(context)
+                .setMessage("המיקום של המכשיר כבוי, האם אתה מעונין להדליק?")
+                .setCancelable(true)
+                .setPositiveButton(
+                        "כן",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                context.startActivity(intent);
+                                dialog.cancel();
+                            }
+                        })
+                .setNegativeButton(
+                        " לא",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+
+                .create()
+                .show();
     }
 }
