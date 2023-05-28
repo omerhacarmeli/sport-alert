@@ -4,8 +4,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
-
 @Entity
 public class Location {
 
@@ -29,11 +27,12 @@ public class Location {
 
     @ColumnInfo(name = "level")
     public Integer level;
-
-    @ColumnInfo(name = "zoom",defaultValue = "14")
+    @ColumnInfo(name = "zoom", defaultValue = "14")
     public Double zoom;
+    @ColumnInfo()
+    private Long imageId;
 
-    public Location(Long id, String name, String label, Integer radius, Double latitude, Double longitude, Integer level, Double zoom) {
+    public Location(Long id, String name, String label, Integer radius, Double latitude, Double longitude, Integer level, Double zoom,Long imageId) {
         this.id = id;
         this.name = name;
         this.label = label;
@@ -42,6 +41,7 @@ public class Location {
         this.longitude = longitude;
         this.level = level;
         this.zoom = zoom;
+        this.imageId = imageId;
     }
 
     public Location() {
@@ -110,5 +110,13 @@ public class Location {
 
     public void setZoom(Double zoom) {
         this.zoom = zoom;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 }

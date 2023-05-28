@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ComponentActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -124,6 +125,12 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
 
+                    if(SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName()))
+                    {
+                        Toast.makeText(getActivity(),  "לא ניתן למחוק את מוקד אבטחה" , Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
                     if (markerMap.get(location.getId()) != null) {
 
                         Marker removedMarker = markerMap.remove(location.getId());
@@ -142,6 +149,10 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                 if (obj instanceof com.spot.alert.dataobjects.Location) {
 
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("locationId",location.getId());
+                    getActivity().getIntent().putExtras(bundle);
 
                     ((MainActivity) getActivity()).moveEditLocation(location);
 

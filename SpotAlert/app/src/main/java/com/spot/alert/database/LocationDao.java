@@ -24,7 +24,7 @@ public interface LocationDao {
     void updateLocation(Location location);
 
     @Query("SELECT * FROM Location WHERE id =:id")
-    LiveData<Location> getLocation(Long id);
+    Location getLocation(Long id);
     @Query("SELECT * FROM Location WHERE name =:name")
     Location getLocationByName(String name);
 

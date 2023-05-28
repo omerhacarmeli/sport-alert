@@ -24,8 +24,8 @@ public interface LocationTimeRangeDao {
     void updateLocation(LocationTimeRange locationTimeRange);
 
     @Query("SELECT * FROM LocationTimeRange WHERE id =:id")
-    LiveData<LocationTimeRange> getLocationRange(Long id);
+    LocationTimeRange getLocationRange(Long id);
 
     @Query("SELECT * FROM LocationTimeRange WHERE locationId =:locationId")
-    LiveData<List<LocationTimeRange>> getLocationRangesByLocationId(Long locationId);
+    List<LocationTimeRange> getLocationRangesByLocationId(Long locationId);
 }

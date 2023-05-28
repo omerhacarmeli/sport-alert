@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.spot.alert.SpotAlertAppContext;
 import com.spot.alert.adapter.ClickListener;
 import com.spot.alert.dataobjects.Location;
 
@@ -31,7 +32,7 @@ public class LocationAdapter
     ClickListener editListener;
     ClickListener clickListener;
 
-    public LocationAdapter(Context context, ClickListener deleteListener,ClickListener editListener,ClickListener clickListener) {
+    public LocationAdapter(Context context, ClickListener deleteListener, ClickListener editListener, ClickListener clickListener) {
         this.context = context;
         this.deleteListener = deleteListener;
         this.editListener = editListener;
@@ -67,7 +68,7 @@ public class LocationAdapter
             @Override
             public void onClick(View view) {
 
-
+                editListener.click(list.get(position));
             }
         });
         viewHolder.deleteItem.setOnClickListener(new View.OnClickListener() {
@@ -79,8 +80,8 @@ public class LocationAdapter
                 anim.setDuration(300);
                 viewHolder.view.startAnimation(anim);
 
-                new Handler().postDelayed(()-> {
-                        deleteListener.click(list.get(position));
+                new Handler().postDelayed(() -> {
+                    deleteListener.click(list.get(position));
 
                 }, anim.getDuration());
             }
@@ -97,6 +98,13 @@ public class LocationAdapter
             @Override
             public boolean onLongClick(View view) {
 
+                Location location = list.get(position);
+
+                if (SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName()))
+                {
+                    return true;
+                }
+
                 viewHolder.editItem.setVisibility(View.VISIBLE);
                 viewHolder.deleteItem.setVisibility(View.VISIBLE);
 
@@ -104,7 +112,7 @@ public class LocationAdapter
                             viewHolder.editItem.setVisibility(View.INVISIBLE);
                             viewHolder.deleteItem.setVisibility(View.INVISIBLE);
                         }
-                        ,4000);
+                        , 4000);
                 return true;
             }
         });

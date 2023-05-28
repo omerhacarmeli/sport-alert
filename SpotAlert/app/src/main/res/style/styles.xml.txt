@@ -1,5 +1,0 @@
-<!-- styles.xml -->
-<style name="SpinnerStyle" parent="@android:style/Widget.TextView.SpinnerItem">
-    <item name="android:textSize">18sp</item> <!-- Set your desired text size -->
-    <item name="android:textColor">#FF0000</item> <!-- Set your desired text color -->
-</style>

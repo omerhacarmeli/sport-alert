@@ -2,6 +2,7 @@
 package com.spot.alert.adapter.timerange;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,6 +16,8 @@ public class TimeRangeViewHolder
     TextView fromTime;
 
     TextView toTime;
+
+    TextView errorView;
 
     ImageButton deleteItem;
 
@@ -45,8 +48,9 @@ public class TimeRangeViewHolder
 
         toTimePickerImage =  (ImageButton) itemView.findViewById(R.id.toTimeImage);
 
-
         spinnerDays= itemView.findViewById(R.id.spinner_days);
+
+        errorView= itemView.findViewById(R.id.errorItem);
 
         view = itemView;
     }

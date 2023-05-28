@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         tools:context=".CenterPointFragment">
 
-
         <ImageView
             android:id="@+id/create"
             android:layout_width="match_parent"
@@ -20,7 +19,6 @@
             android:src="@drawable/login_background"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="0dp" />
-
 
         <ImageView
             android:id="@+id/pointImage"
@@ -33,7 +31,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/customborder"
             android:src="@drawable/click_to_add_image"
-             />
+            />
 
         <ImageButton
             android:id="@+id/cameraButton"
@@ -53,9 +51,9 @@
         <TextView
             android:id="@+id/title2"
             android:layout_width="wrap_content"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="יצירת מיקום"
+            android:text="עריכת מיקום"
             android:textColor="@color/white"
             android:textSize="28sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -65,7 +63,7 @@
             app:layout_constraintVertical_bias="0.063" />
 
         <EditText
-            android:id="@+id/createLocationName"
+            android:id="@+id/editLocationName"
             android:layout_width="211dp"
             android:layout_height="48dp"
             android:background="@drawable/rounded_corner_view"
@@ -80,7 +78,7 @@
             app:layout_constraintVertical_bias="0.186" />
 
         <EditText
-            android:id="@+id/createLocationSpot"
+            android:id="@+id/editLocationSpot"
             android:layout_width="211dp"
             android:layout_height="48dp"
             android:background="@drawable/rounded_corner_view"
@@ -138,8 +136,7 @@
                         android:layout_height="fill_parent">
 
                         <TableRow
-                            android:layout_width="22dp"
-                            android:layout_height="157dp"
+                            android:layout_width="match_parent"
                             android:background="@drawable/customborder">
 
                             <androidx.fragment.app.FragmentContainerView
@@ -147,13 +144,6 @@
                                 class="com.google.android.gms.maps.SupportMapFragment"
                                 android:layout_width="wrap_content"
                                 android:layout_height="250dp" />
-
-                            <ImageView
-                                android:id="@+id/create"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/login_background" />
                         </TableRow>
 
                         <TableRow
@@ -190,7 +180,7 @@
             app:layout_constraintRight_toRightOf="parent" />
 
         <Button
-            android:id="@+id/createLocationApproval"
+            android:id="@+id/editLocationApproval"
             android:layout_width="110dp"
             android:layout_height="50dp"
             android:text="שמירה"
@@ -202,7 +192,7 @@
             app:layout_constraintVertical_bias="0.976" />
 
         <Button
-            android:id="@+id/createLocationCancel"
+            android:id="@+id/editLocationCancel"
             android:layout_width="110dp"
             android:layout_height="50dp"
             android:text="ביטול"
@@ -212,8 +202,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.976" />
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

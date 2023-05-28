@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.spot.alert.adapter.timerange.TimeRangeViewHolder;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.TimeRangeUtils;
 import com.spot.alert.validators.LocationValidation;
@@ -20,6 +21,8 @@ import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
     TextView textView;
+    TextView errorView;
+
     long dateTime;
     int minutes;
     int hours;
@@ -27,10 +30,11 @@ public class DatePickerFragment extends DialogFragment implements TimePickerDial
     String fromto;
     boolean ignoreTime;
 
-    public DatePickerFragment(TextView textView, LocationTimeRange locationTimeRange, String fromto) {
+    public DatePickerFragment(TextView textView, TextView errorView,LocationTimeRange locationTimeRange, String fromto) {
         this.textView = textView;
         this.locationTimeRange = locationTimeRange;
         this.fromto = fromto;
+        this.errorView = errorView;
     }
 
     @NonNull
@@ -83,7 +87,10 @@ public class DatePickerFragment extends DialogFragment implements TimePickerDial
 
         this.textView.setText(TimeRangeUtils.getTimeLabel(timeNum));
 
+        validateTimeRange();
     }
+
+
 
     public boolean checkTimeInputValidation5() {
         if (locationTimeRange.getToTime() == null) {
@@ -96,6 +103,21 @@ public class DatePickerFragment extends DialogFragment implements TimePickerDial
         } else {
             return true;
         }
+    }
+
+    private ValidateResponse validateTimeRange() {
+        ValidateResponse validateResponse = LocationValidation.validateLocationTimeRange(locationTimeRange);
+
+        if (!validateResponse.isValidate()) {
+            errorView.setError("טווח שעות אינו תקין");
+            errorView.setText("טווח שעות אינו תקין");
+        }
+        else {
+            errorView.setError(null);
+            errorView.setText(null);
+        }
+
+        return validateResponse;
     }
 
     public int getMinutes() {
