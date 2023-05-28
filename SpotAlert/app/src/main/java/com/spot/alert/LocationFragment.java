@@ -41,7 +41,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spot.alert.adapter.ClickListener;
 import com.spot.alert.adapter.location.LocationAdapter;
 import com.spot.alert.database.AppDataBase;
+import com.spot.alert.database.ImageEntityDao;
 import com.spot.alert.database.LocationDao;
+import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.utils.GeoUtils;
 
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ import java.util.Map;
 public class LocationFragment extends Fragment implements LocationReceiver.OnLocationStateListener, LocationListener, OnMapReadyCallback {
 
     private LocationDao locationDao;
+    private ImageEntityDao imageEntityDao;
     private LocationReceiver locationReceiver;
 
     private double latitude, longitude;
@@ -88,6 +91,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         this.locationReceiver = new LocationReceiver(this);
 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
+        this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
                 , android.Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
@@ -138,6 +142,14 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                     }
 
                     locationDao.deleteLocation(location);
+
+                    if(location.getImageId()!=null)
+                    {
+                        ImageEntity imageEntity=  new ImageEntity();
+                        imageEntity.setId(location.getImageId());
+                        imageEntityDao.deleteImageEntity(imageEntity);
+                    }
+
                     Toast.makeText(getActivity(), location.getName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show();
                 }
             }

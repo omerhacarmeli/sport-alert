@@ -29,7 +29,7 @@ public class Location {
     public Integer level;
     @ColumnInfo(name = "zoom", defaultValue = "14")
     public Double zoom;
-    @ColumnInfo()
+    @ColumnInfo(name = "imageId")
     private Long imageId;
 
     public Location(Long id, String name, String label, Integer radius, Double latitude, Double longitude, Integer level, Double zoom,Long imageId) {

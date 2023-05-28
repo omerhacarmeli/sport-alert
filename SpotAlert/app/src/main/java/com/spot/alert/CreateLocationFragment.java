@@ -138,6 +138,7 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
                     newlocation.setName(editText.getText().toString());
                     newlocation.setLabel(editText.getText().toString());
+
                     if (newLocationMarker != null) {
                         newLocationMarker.setTitle(newlocation.getLabel());
                     }
@@ -211,12 +212,14 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
                     return;
                 } else {
 
+                    long locationId = locationDao.insertLocation(newlocation);
+
                     if(imageEntity.getImageData()!=null) {
                         Long imageId = imageEntityDao.insertImageEntity(imageEntity);
                         newlocation.setImageId(imageId);
                     }
 
-                    long locationId = locationDao.insertLocation(newlocation);
+
 
                     for (LocationTimeRange locationTimeRange : locationTimeRangeList) {
                         locationTimeRange.setLocationId(locationId);
