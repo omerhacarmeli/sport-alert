@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +25,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.spot.alert.dataobjects.Location;
 
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -36,7 +33,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -65,6 +61,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_location);
 
+
+        if(!SpotAlertAppContext.ACTIVE_USER.getEmail().equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL)) {
+            MenuItem item = navigationView.getMenu().findItem(R.id.nav_magic_stick);
+            item.setVisible(false);
+        }
+
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         LocationFragment fragment = new LocationFragment();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
@@ -85,6 +88,10 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+       /*
+        }*/
+
         return true;
     }
 
@@ -114,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_location) {
             fragment = new LocationFragment();
         } else if (id == R.id.nav_gallery) {
-            fragment = new GalleryFragment();
+            fragment = new CreateUserFragment();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

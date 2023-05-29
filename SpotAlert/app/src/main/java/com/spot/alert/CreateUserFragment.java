@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class GalleryFragment extends Fragment {
+public class CreateUserFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.gallery_fragment,container,false);
+        return inflater.inflate(R.layout.create_user_fragment,container,false);
     }
 }

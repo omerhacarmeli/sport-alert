@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.spot.alert.adapter.timerange.TimeRangeViewHolder;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.TimeRangeUtils;
 import com.spot.alert.validators.LocationValidation;
@@ -19,7 +18,7 @@ import com.spot.alert.validators.ValidateResponse;
 
 import java.util.Calendar;
 
-public class DatePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
     TextView textView;
     TextView errorView;
 
@@ -30,7 +29,7 @@ public class DatePickerFragment extends DialogFragment implements TimePickerDial
     String fromto;
     boolean ignoreTime;
 
-    public DatePickerFragment(TextView textView, TextView errorView,LocationTimeRange locationTimeRange, String fromto) {
+    public TimePickerFragment(TextView textView, TextView errorView, LocationTimeRange locationTimeRange, String fromto) {
         this.textView = textView;
         this.locationTimeRange = locationTimeRange;
         this.fromto = fromto;

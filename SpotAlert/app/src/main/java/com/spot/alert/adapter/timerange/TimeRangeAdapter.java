@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.spot.alert.DatePickerFragment;
+import com.spot.alert.TimePickerFragment;
 import com.spot.alert.R;
 import com.spot.alert.SpotAlertAppContext;
 import com.spot.alert.adapter.ClickListener;
@@ -105,7 +105,7 @@ public class TimeRangeAdapter
         viewHolder.fromTimePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerFragment fromDatePickerFragment = new DatePickerFragment(viewHolder.fromTime,viewHolder.errorView , locationTimeRange, SpotAlertAppContext.FROM_TIME);
+                TimePickerFragment fromDatePickerFragment = new TimePickerFragment(viewHolder.fromTime,viewHolder.errorView , locationTimeRange, SpotAlertAppContext.FROM_TIME);
                 fromDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");
             }
         });
@@ -115,7 +115,7 @@ public class TimeRangeAdapter
             public void onClick(View view) {
 
                 if (locationTimeRange.getFromTime() != null) {
-                    DatePickerFragment toDatePickerFragment = new DatePickerFragment(viewHolder.toTime,viewHolder.errorView ,locationTimeRange, SpotAlertAppContext.TO_TIME);
+                    TimePickerFragment toDatePickerFragment = new TimePickerFragment(viewHolder.toTime,viewHolder.errorView ,locationTimeRange, SpotAlertAppContext.TO_TIME);
                     toDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");
 
 
