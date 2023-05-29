@@ -119,9 +119,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         List<com.spot.alert.dataobjects.Location> list = new ArrayList<>();
 
 
-        recyclerView
-                = (RecyclerView) view.findViewById(
-                R.id.recyclerView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         deleteListener = new ClickListener() {
             @Override
             public void click(Object obj) {

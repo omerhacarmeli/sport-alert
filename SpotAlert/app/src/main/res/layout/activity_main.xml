@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     tools:context=".MainActivity">
-
+<!--include is means that it will add other layout xml-->
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"

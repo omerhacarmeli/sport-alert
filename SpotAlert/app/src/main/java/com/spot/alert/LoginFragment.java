@@ -55,8 +55,7 @@ public class LoginFragment extends Fragment {
 
         Button loginButton = view.findViewById(R.id.buttonLogin);
 
-        loginButton
-                .setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         EditText email = view.findViewById(R.id.login_email);
