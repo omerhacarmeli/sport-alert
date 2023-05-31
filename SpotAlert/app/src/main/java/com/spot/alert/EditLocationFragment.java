@@ -30,7 +30,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +43,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spot.alert.adapter.ClickListener;
+import com.spot.alert.adapter.timerange.ITimeRange;
 import com.spot.alert.adapter.timerange.TimeRangeAdapter;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.ImageEntityDao;
@@ -55,6 +55,7 @@ import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.BitMapUtils;
 import com.spot.alert.utils.GeoUtils;
 import com.spot.alert.validators.LocationValidation;
+import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
 
 import java.io.ByteArrayOutputStream;
@@ -70,34 +71,25 @@ import java.util.Locale;
 public class EditLocationFragment extends Fragment implements OnMapReadyCallback {
     private LocationDao locationDao;
     private LocationTimeRangeDao locationTimeRangeDao;
-
     private ImageEntityDao imageEntityDao;
     private GoogleMap mMap;
     private Location centerLocation;
     private Location editLocation;
-
     private ImageEntity imageEntity;
     private Marker centerLocationMarker;
-
     private Marker newLocationMarker;
     private TimeRangeAdapter timeRangeAdapter;
     private RecyclerView recyclerView;
     private ClickListener deleteListener;
     private EditText editLocationNameEditText;
-
     private EditText editLocationSpotEditText;
-
-    private List<LocationTimeRange> locationTimeRangeList = new ArrayList<>();
-
-    private List<LocationTimeRange> deletedTimeRangeList = new ArrayList<>();
+    private List<ITimeRange> locationTimeRangeList = new ArrayList<>();
+    private List<ITimeRange> deletedTimeRangeList = new ArrayList<>();
     private DecimalFormat df = new DecimalFormat("#.#####");
-
     private String imagePath;
     private static int CAMERA_REQUEST_CODE = 1111111222;
 
     ImageView spotImage;
-
-    final long maxBytes = 1024 * 1024;
 
     @Nullable
     @Override
@@ -141,7 +133,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
         editLocationNameEditText.setText(this.editLocation.getName());
         editLocationSpotEditText.setText("(" + df.format(editLocation.getLatitude()) + "," + df.format(editLocation.getLongitude()) + ")");
 
-        this.locationTimeRangeList = this.locationTimeRangeDao.getLocationRangesByLocationId(this.editLocation.getId());
+        this.locationTimeRangeList = mapTimeRangeList(this.locationTimeRangeDao.getLocationTimeRangesByLocationId(this.editLocation.getId()));
 
         editLocationNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -238,14 +230,15 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
 
                     locationDao.updateLocation(editLocation);
 
-                    for (LocationTimeRange locationTimeRange : locationTimeRangeList) {
+                    for (ITimeRange timeRange : locationTimeRangeList) {
+                        LocationTimeRange locationTimeRange = (LocationTimeRange) timeRange;
                         locationTimeRange.setLocationId(editLocation.getId());
-                        AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.insertLocation(locationTimeRange));
+                        AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.insertLocationTimeRange(locationTimeRange));
                     }
 
-                    for (LocationTimeRange deletedLocationTimeRange : deletedTimeRangeList) {
+                    for (ITimeRange deletedLocationTimeRange : deletedTimeRangeList) {
 
-                        AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.deleteLocation(deletedLocationTimeRange));
+                        AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.deleteLocationTimeRange((LocationTimeRange)deletedLocationTimeRange));
                     }
 
                     Toast toast = Toast.makeText(getActivity(), "הנקודה נשמרה בהצלחה", Toast.LENGTH_SHORT);
@@ -265,16 +258,14 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
         recyclerView
                 = (RecyclerView) view.findViewById(
                 R.id.recyclerView);
-        timeRangeAdapter = new
-
-                TimeRangeAdapter(getActivity(), deleteListener, null);
+        timeRangeAdapter = new  TimeRangeAdapter(getActivity(), deleteListener, null);
         recyclerView.setAdapter(timeRangeAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        FloatingActionButton addLocationFB = (FloatingActionButton) view.findViewById(
+        FloatingActionButton addTimeRangeFB = (FloatingActionButton) view.findViewById(
                 R.id.addTimeRageFB);
 
-        addLocationFB.setOnClickListener(new View.OnClickListener() {
+        addTimeRangeFB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LocationTimeRange locationTimeRange = new LocationTimeRange();
@@ -293,10 +284,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
                 commit();
         supportMapFragment.getMapAsync(this);
 
-
         timeRangeAdapter.setDataChanged(locationTimeRangeList);
-
-
         spotImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -329,6 +317,18 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
         });
     }
 
+    private List<ITimeRange> mapTimeRangeList(List<LocationTimeRange> locationTimeRangeList) {
+
+        List<ITimeRange> timeRangeList = new ArrayList<>();
+
+        for (LocationTimeRange locationTimeRange: locationTimeRangeList)
+        {
+            timeRangeList.add(locationTimeRange);
+        }
+
+        return timeRangeList;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -337,7 +337,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
             // Image captured successfully, you can now retrieve the image using the imagePath
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
-            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap, maxBytes);
+            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -351,7 +351,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
     }
 
     private ValidateResponse validateLocationTimeRange() {
-        ValidateResponse validateResponse = LocationValidation.validateLocationTimeRange(locationTimeRangeList);
+        ValidateResponse validateResponse = TimeRangeValidation.validateTimeRange(locationTimeRangeList);
 
         if (!validateResponse.isValidate()) {
             Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_LONG).show();

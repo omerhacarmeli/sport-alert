@@ -10,15 +10,15 @@ import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
+import com.spot.alert.dataobjects.UserTimeRange;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Location.class, LocationTimeRange.class, ImageEntity.class}, version = 7)
+@Database(entities = {User.class, Location.class, LocationTimeRange.class, UserTimeRange.class, ImageEntity.class}, version = 9)
 public abstract class AppDataBase extends RoomDatabase {
 
     private static final int NUMBER_OF_THREADS = 4;
-
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public abstract UserDao userDao();
@@ -26,6 +26,8 @@ public abstract class AppDataBase extends RoomDatabase {
     public abstract LocationDao locationDao();
 
     public abstract LocationTimeRangeDao locationTimeRangeDao();
+
+    public abstract UserTimeRangeDao userTimeRangeDao();
 
     public abstract ImageEntityDao imageEntityDao();
     private static volatile AppDataBase INSTANCE;

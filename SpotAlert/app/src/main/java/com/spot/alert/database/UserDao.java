@@ -8,7 +8,10 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
+
+import java.util.List;
 
 @Dao
 public interface UserDao {
@@ -29,5 +32,8 @@ public interface UserDao {
     public long isEmailExist(String email);
     @Query("SELECT * FROM User WHERE userId= :userId ")
     User getUser(long userId);
+    @Query("SELECT * FROM User")
+    LiveData<List<User>> getUsers();
+
 
 }

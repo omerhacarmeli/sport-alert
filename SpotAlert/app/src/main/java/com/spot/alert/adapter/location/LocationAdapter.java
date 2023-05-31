@@ -7,9 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,8 +37,7 @@ public class LocationAdapter
     }
 
     @Override
-    public LocationViewHolder
-    onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LocationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         Context context
                 = parent.getContext();
@@ -56,9 +52,7 @@ public class LocationAdapter
     }
 
     @Override
-    public void
-    onBindViewHolder(final LocationViewHolder viewHolder,
-                     final int position) {
+    public void onBindViewHolder(final LocationViewHolder viewHolder, final int position) {
         final int index = viewHolder.getAdapterPosition();
 
         viewHolder.locationName

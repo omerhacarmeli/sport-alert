@@ -24,6 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.spot.alert.dataobjects.Location;
+import com.spot.alert.dataobjects.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_location) {
             fragment = new LocationFragment();
         } else if (id == R.id.nav_gallery) {
-            fragment = new CreateUserFragment();
+            fragment = new UserFragment();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -209,5 +210,18 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void moveEditUser(User user) {
+    }
+
+    public void moveCreateUser() {
+        CreateUserFragment fragment = new CreateUserFragment();
+        moveFragment(fragment);
+    }
+
+    public void moveUser() {
+        UserFragment fragment = new UserFragment();
+        moveFragment(fragment);
     }
 }

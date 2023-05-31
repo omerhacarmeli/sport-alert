@@ -3,14 +3,16 @@ package com.spot.alert.utils;
 
 import android.graphics.Bitmap;
 
+import com.spot.alert.SpotAlertAppContext;
+
 public class BitMapUtils {
 
-    public static Bitmap scaleBitmap(final Bitmap input, final long maxBytes) {
+    public static Bitmap scaleBitmap(final Bitmap input ) {
         final int currentWidth = input.getWidth();
         final int currentHeight = input.getHeight();
         final int currentPixels = currentWidth * currentHeight;
 
-        final long maxPixels = maxBytes / 4; // Floored
+        final long maxPixels = SpotAlertAppContext.MAX_IMAGE_SIZE / 4; // Floored
         if (currentPixels <= maxPixels) {
             return input;
         }

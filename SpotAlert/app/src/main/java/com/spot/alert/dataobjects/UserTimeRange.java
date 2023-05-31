@@ -1,7 +1,6 @@
 package com.spot.alert.dataobjects;
 
 import androidx.room.ColumnInfo;
-import androidx.room.Delete;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
@@ -9,11 +8,11 @@ import androidx.room.PrimaryKey;
 import com.spot.alert.adapter.timerange.ITimeRange;
 
 
-@Entity(foreignKeys = @ForeignKey(entity = Location.class,
-        parentColumns = "id",
-        childColumns = "locationId",
+@Entity(foreignKeys = @ForeignKey(entity = User.class,
+        parentColumns = "userId",
+        childColumns = "userId",
         onDelete = ForeignKey.CASCADE))
-public class LocationTimeRange implements ITimeRange {
+public class UserTimeRange implements ITimeRange {
 
     @PrimaryKey(autoGenerate = true)
     public Long id;
@@ -27,19 +26,19 @@ public class LocationTimeRange implements ITimeRange {
     @ColumnInfo(name = "dayWeek")
     public int dayWeek;
 
-    @ColumnInfo(name = "locationId")
-    public Long locationId;
+    @ColumnInfo(name = "userId")
+    public Long userId;
 
-    public LocationTimeRange(int Long, Double fromTime, Double toTime, int dayWeek, Long locationId) {
+    public UserTimeRange(int Long, Double fromTime, Double toTime, int dayWeek, Long userId) {
         this.id = id;
         this.fromTime = fromTime;
         this.toTime = toTime;
         this.dayWeek = dayWeek;
-        this.locationId = locationId;
+        this.userId = userId;
     }
 
-    public LocationTimeRange()
-    {}
+    public UserTimeRange() {
+    }
 
 
     public Long getId() {
@@ -74,11 +73,11 @@ public class LocationTimeRange implements ITimeRange {
         this.dayWeek = dayWeek;
     }
 
-    public Long getLocationId() {
-        return locationId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setLocationId(Long locationId) {
-        this.locationId = locationId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

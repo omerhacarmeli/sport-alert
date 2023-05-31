@@ -21,7 +21,8 @@ import com.spot.alert.SpotAlertAppContext;
 import com.spot.alert.adapter.ClickListener;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.TimeRangeUtils;
-import com.spot.alert.validators.LocationValidation;
+import com.spot.alert.validators.TimeRangeValidation;
+import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
 
 import java.util.Collections;
@@ -30,7 +31,7 @@ import java.util.List;
 public class TimeRangeAdapter
         extends RecyclerView.Adapter<TimeRangeViewHolder> {
 
-    List<LocationTimeRange> locationTimeRangeList = Collections.emptyList();
+    List<ITimeRange> timeRangeList = Collections.emptyList();
     Context context;
     ClickListener deleteListener;
     ClickListener clickListener;
@@ -69,14 +70,14 @@ public class TimeRangeAdapter
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         viewHolder.spinnerDays.setAdapter(adapter);
 
-        LocationTimeRange locationTimeRange = locationTimeRangeList.get(position);
+        ITimeRange timeRange = timeRangeList.get(position);
 
-        validateTimeRange(viewHolder.errorView,locationTimeRange);
+        validateTimeRange(viewHolder.errorView,timeRange);
 
         viewHolder.spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                locationTimeRange.setDayWeek(position + 1);
+                timeRange.setDayWeek(position + 1);
             }
 
             @Override
@@ -85,18 +86,18 @@ public class TimeRangeAdapter
             }
         });
 
-        if (locationTimeRange.getFromTime() != null) {
+        if (timeRange.getFromTime() != null) {
 
             viewHolder.fromTime
-                    .setText(TimeRangeUtils.getTimeLabel(locationTimeRange.getFromTime()));
+                    .setText(TimeRangeUtils.getTimeLabel(timeRange.getFromTime()));
         } else {
             viewHolder.fromTime
                     .setText("----:----");
         }
 
-        if (locationTimeRange.getToTime() != null) {
+        if (timeRange.getToTime() != null) {
             viewHolder.toTime
-                    .setText(TimeRangeUtils.getTimeLabel(locationTimeRange.getToTime()));
+                    .setText(TimeRangeUtils.getTimeLabel(timeRange.getToTime()));
         } else {
             viewHolder.toTime
                     .setText("----:----");
@@ -105,7 +106,7 @@ public class TimeRangeAdapter
         viewHolder.fromTimePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerFragment fromDatePickerFragment = new TimePickerFragment(viewHolder.fromTime,viewHolder.errorView , locationTimeRange, SpotAlertAppContext.FROM_TIME);
+                TimePickerFragment fromDatePickerFragment = new TimePickerFragment(viewHolder.fromTime,viewHolder.errorView , timeRange, SpotAlertAppContext.FROM_TIME);
                 fromDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");
             }
         });
@@ -114,8 +115,8 @@ public class TimeRangeAdapter
             @Override
             public void onClick(View view) {
 
-                if (locationTimeRange.getFromTime() != null) {
-                    TimePickerFragment toDatePickerFragment = new TimePickerFragment(viewHolder.toTime,viewHolder.errorView ,locationTimeRange, SpotAlertAppContext.TO_TIME);
+                if (timeRange.getFromTime() != null) {
+                    TimePickerFragment toDatePickerFragment = new TimePickerFragment(viewHolder.toTime,viewHolder.errorView ,timeRange, SpotAlertAppContext.TO_TIME);
                     toDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");
 
 
@@ -135,7 +136,7 @@ public class TimeRangeAdapter
                 viewHolder.view.startAnimation(anim);
 
                 new Handler().postDelayed(() -> {
-                    deleteListener.click(locationTimeRange);
+                    deleteListener.click(timeRange);
 
                 }, anim.getDuration());
             }
@@ -156,12 +157,12 @@ public class TimeRangeAdapter
             }
         });
 
-        viewHolder.spinnerDays.setSelection(locationTimeRange.getDayWeek() - 1);
+        viewHolder.spinnerDays.setSelection(timeRange.getDayWeek() - 1);
 
     }
     @Override
     public int getItemCount() {
-        return locationTimeRangeList.size();
+        return timeRangeList.size();
     }
 
     @Override
@@ -170,15 +171,15 @@ public class TimeRangeAdapter
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public void setDataChanged(List<LocationTimeRange> locationTimeRangeList) {
+    public void setDataChanged(List<ITimeRange> timeRangeList) {
 
-        this.locationTimeRangeList = locationTimeRangeList;
+        this.timeRangeList = timeRangeList;
 
         this.notifyDataSetChanged();
     }
 
-    private ValidateResponse validateTimeRange(TextView errorView,LocationTimeRange locationTimeRange) {
-        ValidateResponse validateResponse = LocationValidation.validateLocationTimeRange(locationTimeRange);
+    private ValidateResponse validateTimeRange(TextView errorView,ITimeRange timeRange) {
+        ValidateResponse validateResponse = TimeRangeValidation.validateTimeRange(timeRange);
 
         if (!validateResponse.isValidate()) {
             errorView.setError("טווח שעות אינו תקין");

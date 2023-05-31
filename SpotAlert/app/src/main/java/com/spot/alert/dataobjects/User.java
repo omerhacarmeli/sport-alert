@@ -9,6 +9,9 @@ public class User {
     public int userId;
     @ColumnInfo(name = "email")
     public String email;
+
+    @ColumnInfo(name = "imageId")
+    private Long imageId;
     @ColumnInfo(name = "userName", defaultValue = "")
     public String userName;
 
@@ -22,11 +25,19 @@ public class User {
     public User() {
     }
 
-    public User(int userId, String email, String userName, String password,String phoneNumber) {
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+    public User(int userId, String email, Long imageId, String userName, String password, String phoneNumber) {
         this.userId = userId;
+        this.email = email;
+        this.imageId = imageId;
         this.userName = userName;
         this.password = password;
-        this.email = email;
         this.phoneNumber = phoneNumber;
     }
 

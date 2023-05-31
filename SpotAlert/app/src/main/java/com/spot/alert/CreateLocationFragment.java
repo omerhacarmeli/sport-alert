@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spot.alert.adapter.ClickListener;
+import com.spot.alert.adapter.timerange.ITimeRange;
 import com.spot.alert.adapter.timerange.TimeRangeAdapter;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.ImageEntityDao;
@@ -55,6 +56,7 @@ import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.BitMapUtils;
 import com.spot.alert.utils.GeoUtils;
 import com.spot.alert.validators.LocationValidation;
+import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
 
 import java.io.ByteArrayOutputStream;
@@ -91,7 +93,7 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
     private EditText createLocationSpotEditText;
 
-    private List<LocationTimeRange> locationTimeRangeList = new ArrayList<>();
+    private List<ITimeRange> locationTimeRangeList = new ArrayList<>();
     private DecimalFormat df = new DecimalFormat("#.#####");
     private String imagePath;
     private static int CAMERA_REQUEST_CODE = 1111111222;
@@ -212,18 +214,19 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
                     return;
                 } else {
 
-                    long locationId = locationDao.insertLocation(newlocation);
 
-                    if(imageEntity.getImageData()!=null) {
+                    if (imageEntity.getImageData() != null) {
                         Long imageId = imageEntityDao.insertImageEntity(imageEntity);
                         newlocation.setImageId(imageId);
                     }
 
+                    long locationId = locationDao.insertLocation(newlocation);
 
+                    for (ITimeRange timeRange : locationTimeRangeList) {
+                        LocationTimeRange locationTimeRange = (LocationTimeRange) timeRange;
 
-                    for (LocationTimeRange locationTimeRange : locationTimeRangeList) {
                         locationTimeRange.setLocationId(locationId);
-                        AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.insertLocation(locationTimeRange));
+                        AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.insertLocationTimeRange(locationTimeRange));
                     }
 
                     Toast toast = Toast.makeText(getActivity(), "הנקודה נשמרה בהצלחה", Toast.LENGTH_SHORT);
@@ -249,10 +252,10 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
         recyclerView.setAdapter(timeRangeAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        FloatingActionButton addLocationFB = (FloatingActionButton) view.findViewById(
+        FloatingActionButton addTimeRangeFB = (FloatingActionButton) view.findViewById(
                 R.id.addTimeRageFB);
 
-        addLocationFB.setOnClickListener(new View.OnClickListener() {
+        addTimeRangeFB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LocationTimeRange locationTimeRange = new LocationTimeRange();
@@ -313,7 +316,7 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
             // Image captured successfully, you can now retrieve the image using the imagePath
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
-            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap, maxBytes);
+            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -327,7 +330,7 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     }
 
     private ValidateResponse validateLocationTimeRange() {
-        ValidateResponse validateResponse = LocationValidation.validateLocationTimeRange(locationTimeRangeList);
+        ValidateResponse validateResponse = TimeRangeValidation.validateTimeRange(locationTimeRangeList);
 
         if (!validateResponse.isValidate()) {
             Toast.makeText(getActivity(), validateResponse.getMsg(), Toast.LENGTH_LONG).show();

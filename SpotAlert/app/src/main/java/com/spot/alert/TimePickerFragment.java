@@ -11,9 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.spot.alert.adapter.timerange.ITimeRange;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.TimeRangeUtils;
 import com.spot.alert.validators.LocationValidation;
+import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
 
 import java.util.Calendar;
@@ -25,13 +27,13 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     long dateTime;
     int minutes;
     int hours;
-    LocationTimeRange locationTimeRange;
+    ITimeRange timeRange;
     String fromto;
     boolean ignoreTime;
 
-    public TimePickerFragment(TextView textView, TextView errorView, LocationTimeRange locationTimeRange, String fromto) {
+    public TimePickerFragment(TextView textView, TextView errorView, ITimeRange timeRange, String fromto) {
         this.textView = textView;
-        this.locationTimeRange = locationTimeRange;
+        this.timeRange = timeRange;
         this.fromto = fromto;
         this.errorView = errorView;
     }
@@ -64,23 +66,23 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         Double timeNum = TimeRangeUtils.getTimeNumber(selectedHour, selectedMinute);
 
         if (SpotAlertAppContext.FROM_TIME.equals(fromto)) {
-            ValidateResponse validation = LocationValidation.validateTimeFromTo(timeNum, locationTimeRange.getToTime());
+            ValidateResponse validation = TimeRangeValidation.validateTimeFromTo(timeNum, timeRange.getToTime());
             if (!validation.isValidate()) {
                 Toast toast = Toast.makeText(getActivity(), validation.getMsg(), Toast.LENGTH_SHORT);
                 toast.show();
                 return;
             } else {
-                locationTimeRange.setFromTime(timeNum);
+                timeRange.setFromTime(timeNum);
             }
 
         } else {
-            ValidateResponse validation = LocationValidation.validateTimeFromTo(locationTimeRange.getFromTime(), timeNum);
+            ValidateResponse validation = TimeRangeValidation.validateTimeFromTo(timeRange.getFromTime(), timeNum);
             if (!validation.isValidate()) {
                 Toast toast = Toast.makeText(getActivity(), validation.getMsg(), Toast.LENGTH_SHORT);
                 toast.show();
                 return;
             } else {
-                locationTimeRange.setToTime(timeNum);
+                timeRange.setToTime(timeNum);
             }
         }
 
@@ -92,10 +94,10 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
 
     public boolean checkTimeInputValidation5() {
-        if (locationTimeRange.getToTime() == null) {
+        if (timeRange.getToTime() == null) {
             return true;
         }
-        if (locationTimeRange.getFromTime() > locationTimeRange.getToTime()) {
+        if (timeRange.getFromTime() > timeRange.getToTime()) {
             Toast toast = Toast.makeText(getActivity(), "הבחירת השעות אינה תקינה, הנא בחר שוב", Toast.LENGTH_SHORT);
             toast.show();
             return false;
@@ -105,7 +107,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     }
 
     private ValidateResponse validateTimeRange() {
-        ValidateResponse validateResponse = LocationValidation.validateLocationTimeRange(locationTimeRange);
+        ValidateResponse validateResponse = TimeRangeValidation.validateTimeRange(timeRange);
 
         if (!validateResponse.isValidate()) {
             errorView.setError("טווח שעות אינו תקין");
