@@ -14,4 +14,6 @@
         <item>ו</item>
         <item>ש</item>
     </string-array>
+    <string name="back"><![CDATA[<-]]></string>
+    <string name="forward"><![CDATA[->]]></string>
 </resources>

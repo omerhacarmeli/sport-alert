@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_location);
 
 //check that user current user is admin if no the magic will not appear on menu
-        if(!SpotAlertAppContext.ACTIVE_USER.getEmail().equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL)) {
+        if (!SpotAlertAppContext.ACTIVE_USER.getEmail().equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL)) {
             MenuItem item = navigationView.getMenu().findItem(R.id.nav_magic_stick);
             item.setVisible(false);
         }
@@ -118,13 +118,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_location) {
             fragment = new LocationFragment();
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_guards) {
             fragment = new UserFragment();
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-
+        } else if (id == R.id.nav_calendar_management) {
+            fragment = new CalendarManagementFragment();
         } else if (id == R.id.nav_magic_stick) {
             magicStick();
         } else if (id == R.id.nav_center) {

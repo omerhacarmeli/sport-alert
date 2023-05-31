@@ -30,6 +30,9 @@
         </provider>
 
         <activity
+            android:name=".CalendarManagementFragment"
+            android:exported="false" />
+        <activity
             android:name=".CenterPointFragment"
             android:exported="false" />
         <activity
