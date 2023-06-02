@@ -26,4 +26,10 @@ public interface LocationTimeRangeDao {
 
     @Query("SELECT * FROM LocationTimeRange WHERE locationId =:locationId")
     List<LocationTimeRange> getLocationTimeRangesByLocationId(Long locationId);
+
+
+
+    @Query("SELECT DISTINCT(locationId) from LocationTimeRange where dayWeek=:dayWeek")
+    List<Long> getLocationIdsByDayWeek(int dayWeek);
+
 }

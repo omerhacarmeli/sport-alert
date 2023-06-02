@@ -77,13 +77,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
                 }
             });
 
-            viewHolder.view.setOnClickListener(new View.OnClickListener() {
+           /* viewHolder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   /* clickListener.click(list.get(position));*/
+                   *//* clickListener.click(list.get(position));*//*
                 }
             });
-
+*/
             viewHolder.view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {

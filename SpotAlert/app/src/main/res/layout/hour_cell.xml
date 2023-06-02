@@ -11,7 +11,7 @@
         android:gravity="center"
         android:id="@+id/timeTV"
         android:textSize="20sp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:text="10:00"/>
 
     <LinearLayout

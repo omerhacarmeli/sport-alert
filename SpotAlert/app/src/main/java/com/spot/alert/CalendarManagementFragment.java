@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,7 +18,11 @@ import com.spot.alert.adapter.calendar.Event;
 import com.spot.alert.adapter.calendar.HourAdapter;
 import com.spot.alert.adapter.calendar.HourEvent;
 import com.spot.alert.database.AppDataBase;
+import com.spot.alert.database.ImageEntityDao;
+import com.spot.alert.database.LocationDao;
+import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.database.UserDao;
+import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.utils.CalendarUtils;
 
@@ -29,6 +34,10 @@ import java.util.Locale;
 
 public class CalendarManagementFragment extends Fragment {
     private UserDao userDao;
+    private LocationDao locationDao;
+
+    private LocationTimeRangeDao locationTimeRangeDao;
+    private ImageEntityDao imageEntityDao;
 
     private ClickListener deleteListener;
     private ClickListener editListener;
@@ -37,8 +46,13 @@ public class CalendarManagementFragment extends Fragment {
     private TextView monthDayText;
     private TextView dayOfWeekTV;
     private ListView hourListView;
-    private Button nextDayAction;
-    private Button previousDayAction;
+    private ImageButton nextDayAction;
+    private ImageButton previousDayAction;
+    private TextView currentLocation;
+    private ImageButton nextLocationAction;
+    private ImageButton previousLocationAction;
+    private int currentLocationIndex = 0;
+    private List<Long> locationIds;
 
 
     @Nullable
@@ -52,29 +66,40 @@ public class CalendarManagementFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         this.userDao = AppDataBase.getDatabase(getActivity()).userDao();
+        this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
+        this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
+        this.locationTimeRangeDao = AppDataBase.getDatabase(getActivity()).locationTimeRangeDao();
 
+        //day views
         monthDayText = view.findViewById(R.id.monthDayText);
-        dayOfWeekTV = view.findViewById(R.id.dayOfWeekTV);
         hourListView = view.findViewById(R.id.hourListView);
-
         previousDayAction = view.findViewById(R.id.previousDayAction);
         nextDayAction = view.findViewById(R.id.nextDayAction);
 
         previousDayAction.setOnClickListener(v -> previousDayAction(v));
         nextDayAction.setOnClickListener(v -> nextDayAction(v));
 
+        //location views
+        currentLocation = view.findViewById(R.id.currentLocation);
+        previousLocationAction = view.findViewById(R.id.previousLocationAction);
+        nextLocationAction = view.findViewById(R.id.nextLocationAction);
+
+        previousLocationAction.setOnClickListener(v -> previousLocationAction(v));
+        nextLocationAction.setOnClickListener(v -> nextLocationAction(v));
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setDayView();
+        setLocationIds();
+        setLocationByDay();
     }
 
     private void setDayView() {
-        monthDayText.setText(CalendarUtils.monthDayFromDate(CalendarUtils.selectedDate));
+        String dayOfMonth = CalendarUtils.monthDayFromDate(CalendarUtils.selectedDate);
         String dayOfWeek = CalendarUtils.selectedDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
-        dayOfWeekTV.setText(dayOfWeek);
+        monthDayText.setText(dayOfMonth + "\n" + dayOfWeek);
         setHourAdapter();
     }
 
@@ -86,7 +111,14 @@ public class CalendarManagementFragment extends Fragment {
     private ArrayList<HourEvent> hourEventList() {
         ArrayList<HourEvent> list = new ArrayList<>();
 
-        for (int hour = 0; hour < 24; hour++) {
+        for (int hour = 6; hour < 24; hour++) {
+            LocalTime time = LocalTime.of(hour, 0);
+            ArrayList<Event> events = Event.eventsForDateAndTime(CalendarUtils.selectedDate, time);
+            HourEvent hourEvent = new HourEvent(time, events);
+            list.add(hourEvent);
+        }
+
+        for (int hour = 0; hour < 6; hour++) {
             LocalTime time = LocalTime.of(hour, 0);
             ArrayList<Event> events = Event.eventsForDateAndTime(CalendarUtils.selectedDate, time);
             HourEvent hourEvent = new HourEvent(time, events);
@@ -99,11 +131,48 @@ public class CalendarManagementFragment extends Fragment {
     public void previousDayAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusDays(1);
         setDayView();
+        setLocationIds();
+        setLocationByDay();
     }
 
     public void nextDayAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusDays(1);
         setDayView();
+        setLocationIds();
+        setLocationByDay();
+    }
+
+    private void previousLocationAction(View v) {
+        if (this.currentLocationIndex < this.locationIds.size() - 1) {
+            this.currentLocationIndex++;
+            setLocationByDay();
+        }
+
+    }
+
+    private void nextLocationAction(View v) {
+        if (this.currentLocationIndex >0) {
+            this.currentLocationIndex--;
+            setLocationByDay();
+        }
+    }
+
+    private void setLocationByDay() {
+        if(!this.locationIds.isEmpty()) {
+            Long locationId = this.locationIds.get(this.currentLocationIndex);
+            Location location = this.locationDao.getLocation(locationId);
+            this.currentLocation.setText(location.getName() + "     (" + (this.currentLocationIndex+1) + " מ- " + this.locationIds.size() + ")");
+        }
+        else {
+            this.currentLocation.setText("אין שיבוץ להיום");
+        }
+    }
+
+    private void setLocationIds() {
+        this.currentLocationIndex = 0;
+        int dayNumber = CalendarUtils.selectedDate.getDayOfWeek().getValue() + 1;
+       this.locationIds = locationTimeRangeDao.getLocationIdsByDayWeek(dayNumber);
+
     }
 
     private void loadLiveData() {

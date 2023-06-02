@@ -30,4 +30,7 @@ public interface LocationDao {
 
     @Query("SELECT * FROM Location")
     LiveData<List<Location>> getLocations();
+
+    @Query("SELECT * FROM Location WHERE name =:dayNumber")
+    List<Location> getLocationByDay(int dayNumber);
 }
