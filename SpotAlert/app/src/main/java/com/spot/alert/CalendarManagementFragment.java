@@ -155,7 +155,7 @@ public class CalendarManagementFragment extends Fragment {
             int cellHour = time.getHour();
             if (cellHour >= locationTimeRange.fromTime.intValue() && cellHour < locationTimeRange.toTime) {
 
-                Event event = new Event("שיבוץ חסר", dateTime, time, locationTimeRange);
+                Event event = new Event(null, dateTime, time, locationTimeRange);
                 events.add(event);
             }
         }

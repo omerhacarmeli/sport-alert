@@ -25,6 +25,7 @@ import com.spot.alert.utils.CalendarUtils;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class HourAdapter extends ArrayAdapter<HourEvent> {
 
@@ -34,6 +35,11 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         super(context, 0, hourEvents);
 
         this.allUserByIds = allUserByIds;
+
+        User user = new User();
+        user.setUserName("השמה ריקה");
+        user.setUserId(-1);
+        this.allUserByIds.add(0, user);
     }
 
     @NonNull
@@ -56,72 +62,63 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
     }
 
     private void setEvents(View convertView, List<Event> events) {
-        TextView event = convertView.findViewById(R.id.event1);
-        LinearLayout selectionLayout = convertView.findViewById(R.id.selectionLayout);
+
         Spinner spinner = convertView.findViewById(R.id.selectG);
 
-        List<String> options = new ArrayList<>();
-/*
-        for (User user : allUserByIds) {
-            options.add(user.getUserName());
-        }*/
+        if (events.isEmpty()) {
+            spinner.setVisibility(View.GONE);
+            return;
+        }
 
-        ArrayAdapter<User> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, allUserByIds);
+        spinner.setVisibility(View.VISIBLE);
+        ArrayAdapter<User> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, allUserByIds);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-
-        event.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (spinner.getVisibility() == View.VISIBLE) {
-                    spinner.setVisibility(View.GONE);
-                } else {
-                    spinner.setVisibility(View.VISIBLE);
-                    spinner.performClick();
-                }
-            }
-        });
-        spinner.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    spinner.setVisibility(View.GONE);
-                }
-            }
-        });
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private boolean isUserSelection = false;
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                User selectedOption = (User)adapter.getItem(position);
-                event.setText(selectedOption.getUserName());
-                events.get(0).setName(selectedOption.getUserName());
-                spinner.setVisibility(View.GONE);
-                Log.i("About Selection", selectedOption.getUserName());
+                if (isUserSelection) {
+                    if (!events.isEmpty()) {
+                        User selectedUser = (User) adapter.getItem(position);
+                        if (selectedUser.getUserId() != -1) {
+                            events.get(0).setUser(selectedUser);
+                        } else {
+                            events.get(0).setUser(null);
+                        }
+                    }
+                } else {
+                    isUserSelection = true;
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                spinner.setVisibility(View.GONE);
+
             }
         });
 
-        if (events.size() == 0) {
-            hideEvent(event);
-        } else {
-            setEvent(event, events.get(0));
+        int userIndex = getUserIndex(events.get(0).getUser());
+        if (userIndex != -1) {
+
+            spinner.setSelection(userIndex);
         }
     }
 
-    private void setEvent(TextView textView, Event event) {
-        textView.setText(event.getName());
-        textView.setVisibility(View.VISIBLE);
-    }
+    private int getUserIndex(User user) {
 
-    private void hideEvent(TextView tv) {
-        tv.setVisibility(View.INVISIBLE);
+        if (user == null) {
+            return -1;
+        }
+
+        for (int i = 0; i < this.allUserByIds.size(); i++) {
+            if (user.getUserId() == this.allUserByIds.get(i).getUserId()) {
+                return i;
+            }
+        }
+
+        return 0;
     }
 }
 

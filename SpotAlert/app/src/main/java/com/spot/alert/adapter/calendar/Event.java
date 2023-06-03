@@ -1,20 +1,21 @@
 package com.spot.alert.adapter.calendar;
 
 import com.spot.alert.dataobjects.LocationTimeRange;
+import com.spot.alert.dataobjects.User;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Event {
-    private String name;
+    private User user;
     private LocalDate date;
     private LocalTime time;
 
     LocationTimeRange locationTimeRange;
 
-    public Event(String name, LocalDate date, LocalTime time, LocationTimeRange locationTimeRange) {
-        this.name = name;
+    public Event(User user, LocalDate date, LocalTime time, LocationTimeRange locationTimeRange) {
+        this.user = user;
         this.date = date;
         this.time = time;
         this.locationTimeRange = locationTimeRange;
@@ -28,12 +29,12 @@ public class Event {
         this.locationTimeRange = locationTimeRange;
     }
 
-    public String getName() {
-        return name;
+    public User getUser() {
+        return user;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDate getDate() {

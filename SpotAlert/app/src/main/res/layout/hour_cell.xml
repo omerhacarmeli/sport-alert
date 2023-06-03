@@ -21,30 +21,15 @@
         android:layout_height="match_parent"
         android:background="@null"
         android:orientation="horizontal"
-
         android:padding="5dp">
-
-        <TextView
-            android:id="@+id/event1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@color/blue"
-            android:gravity="center"
-            android:lines="2"
-            android:text="Event 1"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
         <Spinner
             android:id="@+id/selectG"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:dropDownWidth="match_parent"
-            android:visibility="gone" />
+            style="@style/SpinnerStyle"/>
 
 
     </LinearLayout>
