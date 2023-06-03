@@ -23,9 +23,11 @@ import com.spot.alert.database.ImageEntityDao;
 import com.spot.alert.database.LocationDao;
 import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.database.UserDao;
+import com.spot.alert.database.UserTimeRangeDao;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
+import com.spot.alert.dataobjects.UserTimeRange;
 import com.spot.alert.utils.CalendarUtils;
 
 import java.time.LocalDate;
@@ -39,6 +41,7 @@ public class CalendarManagementFragment extends Fragment {
     private UserDao userDao;
     private LocationDao locationDao;
 
+    private UserTimeRangeDao userTimeRangeDao;
     private LocationTimeRangeDao locationTimeRangeDao;
     private ImageEntityDao imageEntityDao;
 
@@ -57,6 +60,7 @@ public class CalendarManagementFragment extends Fragment {
     private int currentLocationIndex = 0;
     private List<Long> locationIds;
     private List<User> allUserByIds;
+    private List<UserTimeRange> userTimeRangesByUserAndDay;
 
 
     @Nullable
@@ -73,6 +77,8 @@ public class CalendarManagementFragment extends Fragment {
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
         this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
         this.locationTimeRangeDao = AppDataBase.getDatabase(getActivity()).locationTimeRangeDao();
+        this.userTimeRangeDao = AppDataBase.getDatabase(getActivity()).userTimeRangeDao();
+
 
         //day views
         monthDayText = view.findViewById(R.id.monthDayText);
@@ -95,6 +101,7 @@ public class CalendarManagementFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setLocationIds();
         createData();
     }
 
@@ -106,12 +113,11 @@ public class CalendarManagementFragment extends Fragment {
     }
 
     private void setHourAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getActivity(), hourEventList(),this.allUserByIds);
+        HourAdapter hourAdapter = new HourAdapter(getActivity(), hourEventList(), this.allUserByIds, this.userTimeRangesByUserAndDay);
         hourListView.setAdapter(hourAdapter);
     }
 
     private void createData() {
-        setLocationIds();
         setUserIds();
         setLocationByDay();
         setDayView();
@@ -166,20 +172,23 @@ public class CalendarManagementFragment extends Fragment {
 
     public void previousDayAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusDays(1);
-
+        setLocationIds();
         createData();
     }
+    public void nextDayAction(View view) {
+
+        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusDays(1);
+        setLocationIds();
+        createData();
+    }
+
 
 
     private void setUserIds() {
         int dayNumber = CalendarUtils.getDayOfWeek();
-        List<Long> userIds = userDao.getUserIdsByDayWeek(dayNumber);
+        List<Long> userIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
         this.allUserByIds = userDao.getAllUserByIds(userIds);
-    }
-
-    public void nextDayAction(View view) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusDays(1);
-        createData();
+        this.userTimeRangesByUserAndDay = this.userTimeRangeDao.getTimeRangesByUserAndDay(userIds, dayNumber);
     }
 
     private void nextLocationAction(View v) {

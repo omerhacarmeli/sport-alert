@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.spot.alert.dataobjects.LocationTimeRange;
+import com.spot.alert.dataobjects.User;
 import com.spot.alert.dataobjects.UserTimeRange;
 
 import java.util.List;
@@ -28,4 +29,11 @@ public interface UserTimeRangeDao {
 
     @Query("SELECT * FROM UserTimeRange WHERE userId =:userId")
     List<UserTimeRange> getUserRangesByUserId(Long userId);
+
+    @Query("SELECT DISTINCT(userId) from UserTimeRange where dayWeek=:dayWeek")
+    List<Long> getUserIdsAndDay(int dayWeek);
+
+    @Query("SELECT * FROM UserTimeRange WHERE userId IN (:ids) and dayWeek=:dayWeek")
+    List<UserTimeRange> getTimeRangesByUserAndDay(List<Long> ids,int dayWeek);
+
 }

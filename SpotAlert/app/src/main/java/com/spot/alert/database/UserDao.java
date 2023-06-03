@@ -42,9 +42,6 @@ public interface UserDao {
     @Query("SELECT * FROM User")
     List<User> getUsersAll();
 
-    @Query("SELECT DISTINCT(userId) from UserTimeRange where dayWeek=:dayWeek")
-    List<Long> getUserIdsByDayWeek(int dayWeek);
-
     @Query("SELECT * FROM User WHERE userId IN (:ids)")
     List<User> getAllUserByIds(List<Long> ids);
 }
