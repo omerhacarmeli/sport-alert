@@ -25,7 +25,9 @@ import com.spot.alert.utils.CalendarUtils;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class HourAdapter extends ArrayAdapter<HourEvent> {
@@ -34,29 +36,29 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
     List<UserTimeRange> userTimeRangesByUserAndDay;
 
+    Map<Long, User> userMap;
+
     public HourAdapter(@NonNull Context context, List<HourEvent> hourEvents, List<User> allUserByIds, List<UserTimeRange> userTimeRangesByUserAndDay) {
         super(context, 0, hourEvents);
 
         this.allUserByIds = allUserByIds;
         this.userTimeRangesByUserAndDay = userTimeRangesByUserAndDay;
-
-        User user = new User();
-        user.setUserName("השמה ריקה");
-        user.setUserId(-1);
-
-        this.allUserByIds.add(0, user);
+        this.userMap = new HashMap<>();
+        for (User user : allUserByIds) {
+            this.userMap.put(user.getUserId(), user);
+        }
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        HourEvent event = getItem(position);
+        HourEvent hourEvent = getItem(position);
 
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hour_cell, parent, false);
 
-        setHour(convertView, event.time);
-        setEvents(convertView, event.events);
+        setHour(convertView, hourEvent.time);
+        setEvents(convertView, hourEvent.event);
 
         return convertView;
     }
@@ -66,17 +68,25 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         timeTV.setText(CalendarUtils.formattedShortTime(time));
     }
 
-    private void setEvents(View convertView, List<Event> events) {
+    private void setEvents(View convertView, Event event) {
 
         Spinner spinner = convertView.findViewById(R.id.selectG);
 
-        if (events.isEmpty()) {
+        if (event == null) {
             spinner.setVisibility(View.GONE);
             return;
         }
 
+        List<User> filterUser = filterUserByTimeRanges(event);
+
+        User user = new User();
+        user.setUserName("השמה ריקה");
+        user.setUserId(-1L);
+
+        filterUser.add(0, user);
+
         spinner.setVisibility(View.VISIBLE);
-        ArrayAdapter<User> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, allUserByIds);
+        ArrayAdapter<User> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, filterUser);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
@@ -86,12 +96,12 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isUserSelection) {
-                    if (!events.isEmpty()) {
+                    if (event == null) {
                         User selectedUser = (User) adapter.getItem(position);
                         if (selectedUser.getUserId() != -1) {
-                            events.get(0).setUser(selectedUser);
+                            event.setUser(selectedUser);
                         } else {
-                            events.get(0).setUser(null);
+                            event.setUser(null);
                         }
                     }
                 } else {
@@ -105,11 +115,24 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             }
         });
 
-        int userIndex = getUserIndex(events.get(0).getUser());
+        int userIndex = getUserIndex(event.getUser());
         if (userIndex != -1) {
 
             spinner.setSelection(userIndex);
         }
+    }
+
+    private List<User> filterUserByTimeRanges(Event event) {
+        List<User> userList = new ArrayList<>();
+
+        for (UserTimeRange userTimeRange : this.userTimeRangesByUserAndDay) {
+            int cellHour = event.getTime().getHour();
+            if (cellHour >= userTimeRange.fromTime.intValue() && cellHour < userTimeRange.toTime) {
+                userList.add(userMap.get(userTimeRange.getUserId()));
+            }
+        }
+
+        return userList;
     }
 
     private int getUserIndex(User user) {

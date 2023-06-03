@@ -35,13 +35,13 @@ public class MagicStickManager {
     }
 
     private void insertUsers(UserDao userDao) {
-        userDao.insertUser(new User(1, "omerh@gmail.com", null, "Omer Hacarmeli", "1234", "0554455667"));
-        userDao.insertUser(new User(2, "magicjohnson@gmail.com", null, "Magic Johnson", "1234", "0554455661"));
-        userDao.insertUser(new User(3, "kevindurant@gmail.com", null, "Kevin Durant", "1234", "0554455667"));
-        userDao.insertUser(new User(4, "lionelmessi@gmail.com", null, "Lionel Messi", "1234", "0554455667"));
-        userDao.insertUser(new User(5, "lionelmessi@gmail.com", null, "Lionel Messi", "1234", "0554455667"));
-        userDao.insertUser(new User(6, "stephencurry@gmail.com", null, "Stephen Curry", "1234", "0554455667"));
-        userDao.insertUser(new User(7, "yonatanhh@gmail.com", null, "Yonatan Hacarmeli", "1234", "0554455667"));
-        userDao.insertUser(new User(8, "rotemh@gmail.com", null, "Rotem Hacarmeli", "1234", "0554455667"));
+        userDao.insertUser(new User(1L, "omerh@gmail.com", null, "Omer Hacarmeli", "1234", "0554455667"));
+        userDao.insertUser(new User(2L, "magicjohnson@gmail.com", null, "Magic Johnson", "1234", "0554455661"));
+        userDao.insertUser(new User(3L, "kevindurant@gmail.com", null, "Kevin Durant", "1234", "0554455667"));
+        userDao.insertUser(new User(4L, "lionelmessi@gmail.com", null, "Lionel Messi", "1234", "0554455667"));
+        userDao.insertUser(new User(5L, "lionelmessi@gmail.com", null, "Lionel Messi", "1234", "0554455667"));
+        userDao.insertUser(new User(6L, "stephencurry@gmail.com", null, "Stephen Curry", "1234", "0554455667"));
+        userDao.insertUser(new User(7L, "yonatanhh@gmail.com", null, "Yonatan Hacarmeli", "1234", "0554455667"));
+        userDao.insertUser(new User(8L, "rotemh@gmail.com", null, "Rotem Hacarmeli", "1234", "0554455667"));
     }
 }

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity()
 public class User {
     @PrimaryKey(autoGenerate = true)
-    public int userId;
+    public Long userId;
     @ColumnInfo(name = "email")
     public String email;
 
@@ -35,7 +35,7 @@ public class User {
         this.imageId = imageId;
     }
 
-    public User(int userId, String email, Long imageId, String userName, String password, String phoneNumber) {
+    public User(Long userId, String email, Long imageId, String userName, String password, String phoneNumber) {
         this.userId = userId;
         this.email = email;
         this.imageId = imageId;
@@ -44,11 +44,11 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

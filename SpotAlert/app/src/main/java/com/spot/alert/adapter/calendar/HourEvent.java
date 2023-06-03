@@ -7,12 +7,12 @@ import java.util.List;
 public class HourEvent
 {
     LocalTime time;
-    List<Event> events;
+    Event event;
 
-    public HourEvent(LocalTime time, List<Event> events)
+    public HourEvent(LocalTime time, Event event)
     {
         this.time = time;
-        this.events = events;
+        this.event = event;
     }
 
     public LocalTime getTime()
@@ -25,13 +25,13 @@ public class HourEvent
         this.time = time;
     }
 
-    public List<Event> getEvents()
+    public Event getEvent()
     {
-        return events;
+        return event;
     }
 
-    public void setEvents(List<Event> events)
+    public void setEvent(Event event)
     {
-        this.events = events;
+        this.event = event;
     }
 }

@@ -137,22 +137,23 @@ public class CalendarManagementFragment extends Fragment {
 
         for (int hour = 6; hour < 24; hour++) {
             LocalTime time = LocalTime.of(hour, 0);
-            List<Event> events = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate);
-            HourEvent hourEvent = new HourEvent(time, events);
+            Event event = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate);
+
+            HourEvent hourEvent = new HourEvent(time, event);
             list.add(hourEvent);
         }
 
         for (int hour = 0; hour < 6; hour++) {
             LocalTime time = LocalTime.of(hour, 0);
-            List<Event> events = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate);
-            HourEvent hourEvent = new HourEvent(time, events);
+            Event event = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate);
+            HourEvent hourEvent = new HourEvent(time, event);
             list.add(hourEvent);
         }
 
         return list;
     }
 
-    private List<Event> getEventsForDateAndTime(List<LocationTimeRange> locationTimeRangeList, LocalTime time, LocalDate dateTime) {
+    private Event getEventsForDateAndTime(List<LocationTimeRange> locationTimeRangeList, LocalTime time, LocalDate dateTime) {
 
         ArrayList<Event> events = new ArrayList<>();
 
@@ -162,19 +163,19 @@ public class CalendarManagementFragment extends Fragment {
             if (cellHour >= locationTimeRange.fromTime.intValue() && cellHour < locationTimeRange.toTime) {
 
                 Event event = new Event(null, dateTime, time, locationTimeRange);
-                events.add(event);
+                return event;
             }
         }
 
-        return events;
+        return null;
     }
-
 
     public void previousDayAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusDays(1);
         setLocationIds();
         createData();
     }
+
     public void nextDayAction(View view) {
 
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusDays(1);
@@ -182,13 +183,17 @@ public class CalendarManagementFragment extends Fragment {
         createData();
     }
 
-
-
     private void setUserIds() {
         int dayNumber = CalendarUtils.getDayOfWeek();
         List<Long> userIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
         this.allUserByIds = userDao.getAllUserByIds(userIds);
-        this.userTimeRangesByUserAndDay = this.userTimeRangeDao.getTimeRangesByUserAndDay(userIds, dayNumber);
+        if(!this.allUserByIds.isEmpty()) {
+
+            this.userTimeRangesByUserAndDay = this.userTimeRangeDao.getTimeRangesByUserAndDay(userIds, dayNumber);
+        }
+        else {
+            this.userTimeRangesByUserAndDay = new ArrayList<>();
+        }
     }
 
     private void nextLocationAction(View v) {
