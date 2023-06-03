@@ -130,7 +130,9 @@ public class MainActivity extends AppCompatActivity
             logout();
         }
 
-        moveFragment(fragment);
+        if(fragment!=null) {
+            moveFragment(fragment);
+        }
 
         return true;
     }
