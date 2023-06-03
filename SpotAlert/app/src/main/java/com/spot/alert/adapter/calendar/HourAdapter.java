@@ -1,24 +1,18 @@
 package com.spot.alert.adapter.calendar;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
 
 import com.spot.alert.R;
-import com.spot.alert.database.AppDataBase;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.dataobjects.UserTimeRange;
 import com.spot.alert.utils.CalendarUtils;
@@ -28,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class HourAdapter extends ArrayAdapter<HourEvent> {
 
@@ -96,7 +89,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (isUserSelection) {
-                    if (event == null) {
+                    if (event != null) {
                         User selectedUser = (User) adapter.getItem(position);
                         if (selectedUser.getUserId() != -1) {
                             event.setUser(selectedUser);
@@ -115,7 +108,7 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             }
         });
 
-        int userIndex = getUserIndex(event.getUser());
+        int userIndex = getUserIndex(event.getUser(), filterUser);
         if (userIndex != -1) {
 
             spinner.setSelection(userIndex);
@@ -135,14 +128,14 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         return userList;
     }
 
-    private int getUserIndex(User user) {
+    private int getUserIndex(User user, List<User> filterUser) {
 
         if (user == null) {
             return -1;
         }
 
-        for (int i = 0; i < this.allUserByIds.size(); i++) {
-            if (user.getUserId() == this.allUserByIds.get(i).getUserId()) {
+        for (int i = 0; i < filterUser.size(); i++) {
+            if (user.getUserId() == filterUser.get(i).getUserId()) {
                 return i;
             }
         }
