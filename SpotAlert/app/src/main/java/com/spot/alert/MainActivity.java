@@ -43,12 +43,12 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar mSnackbar = Snackbar.make(view, "התראת מצוקה נשלחה למוקד", Snackbar.LENGTH_LONG);
-                View mView = mSnackbar.getView();
+                Snackbar snackbar = Snackbar.make(view, "התראת מצוקה נשלחה למוקד", Snackbar.LENGTH_LONG);
+                View mView = snackbar.getView();
                 TextView textView = mView.findViewById(com.google.android.material.R.id.snackbar_text);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 textView.setTextColor(Color.RED);
-                mSnackbar.show();
+                snackbar.show();
             }
         });
 
@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        //getMenuInflater().inflate(R.menu.main, menu);
+        return false;
     }
 
     @Override
@@ -130,20 +130,7 @@ public class MainActivity extends AppCompatActivity
             logout();
         }
 
-
-        if (fragment != null) {
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(
-                            R.anim.slide_in,  // enter
-                            R.anim.fade_out,  // exit
-                            R.anim.fade_in,   // popEnter
-                            R.anim.slide_out  // popExit
-                    )
-                    .replace(R.id.frameLayout, fragment).commit();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        moveFragment(fragment);
 
         return true;
     }
@@ -177,22 +164,6 @@ public class MainActivity extends AppCompatActivity
                 .create().show();
     }
 
-    public void moveEditLocation(Location location) {
-
-        Fragment fragment = new EditLocationFragment();
-        moveFragment(fragment);
-    }
-
-    public void moveCreateLocation() {
-        Fragment fragment = new CreateLocationFragment();
-        moveFragment(fragment);
-    }
-
-    public void moveLocation() {
-        LocationFragment fragment = new LocationFragment();
-        moveFragment(fragment);
-    }
-
     private void moveFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -207,6 +178,22 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    public void moveEditLocation(Location location) {
+
+        Fragment fragment = new EditLocationFragment();
+        moveFragment(fragment);
+    }
+
+    public void moveCreateLocation() {
+        Fragment fragment = new CreateLocationFragment();
+        moveFragment(fragment);
+    }
+
+    public void moveLocation() {
+        LocationFragment fragment = new LocationFragment();
+        moveFragment(fragment);
     }
 
     public void moveEditUser(User user) {
