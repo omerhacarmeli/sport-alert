@@ -1,11 +1,12 @@
 package com.spot.alert;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,9 +24,11 @@ import com.spot.alert.database.LocationDao;
 import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.database.UserDao;
 import com.spot.alert.dataobjects.Location;
+import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.utils.CalendarUtils;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -53,6 +56,7 @@ public class CalendarManagementFragment extends Fragment {
     private ImageButton previousLocationAction;
     private int currentLocationIndex = 0;
     private List<Long> locationIds;
+    private List<User> allUserByIds;
 
 
     @Nullable
@@ -91,9 +95,7 @@ public class CalendarManagementFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setDayView();
-        setLocationIds();
-        setLocationByDay();
+        createData();
     }
 
     private void setDayView() {
@@ -104,23 +106,39 @@ public class CalendarManagementFragment extends Fragment {
     }
 
     private void setHourAdapter() {
-        HourAdapter hourAdapter = new HourAdapter(getActivity(), hourEventList());
+        HourAdapter hourAdapter = new HourAdapter(getActivity(), hourEventList(),this.allUserByIds);
         hourListView.setAdapter(hourAdapter);
     }
 
+    private void createData() {
+        setLocationIds();
+        setUserIds();
+        setLocationByDay();
+        setDayView();
+    }
+
     private ArrayList<HourEvent> hourEventList() {
+
+        List<LocationTimeRange> locationTimeRangeList;
+        if (!locationIds.isEmpty()) {
+            Long locationId = locationIds.get(this.currentLocationIndex);
+            locationTimeRangeList = locationTimeRangeDao.getLocationTimeRangesByLocationId(locationId);
+        } else {
+            locationTimeRangeList = new ArrayList<>();
+        }
+
         ArrayList<HourEvent> list = new ArrayList<>();
 
         for (int hour = 6; hour < 24; hour++) {
             LocalTime time = LocalTime.of(hour, 0);
-            ArrayList<Event> events = Event.eventsForDateAndTime(CalendarUtils.selectedDate, time);
+            List<Event> events = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate);
             HourEvent hourEvent = new HourEvent(time, events);
             list.add(hourEvent);
         }
 
         for (int hour = 0; hour < 6; hour++) {
             LocalTime time = LocalTime.of(hour, 0);
-            ArrayList<Event> events = Event.eventsForDateAndTime(CalendarUtils.selectedDate, time);
+            List<Event> events = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate);
             HourEvent hourEvent = new HourEvent(time, events);
             list.add(hourEvent);
         }
@@ -128,51 +146,70 @@ public class CalendarManagementFragment extends Fragment {
         return list;
     }
 
+    private List<Event> getEventsForDateAndTime(List<LocationTimeRange> locationTimeRangeList, LocalTime time, LocalDate dateTime) {
+
+        ArrayList<Event> events = new ArrayList<>();
+
+        for (LocationTimeRange locationTimeRange : locationTimeRangeList) {
+
+            int cellHour = time.getHour();
+            if (cellHour >= locationTimeRange.fromTime.intValue() && cellHour < locationTimeRange.toTime) {
+
+                Event event = new Event("שיבוץ חסר", dateTime, time, locationTimeRange);
+                events.add(event);
+            }
+        }
+
+        return events;
+    }
+
+
     public void previousDayAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusDays(1);
-        setDayView();
-        setLocationIds();
-        setLocationByDay();
+
+        createData();
+    }
+
+
+    private void setUserIds() {
+        int dayNumber = CalendarUtils.getDayOfWeek();
+        List<Long> userIds = userDao.getUserIdsByDayWeek(dayNumber);
+        this.allUserByIds = userDao.getAllUserByIds(userIds);
     }
 
     public void nextDayAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusDays(1);
-        setDayView();
-        setLocationIds();
-        setLocationByDay();
-    }
-
-    private void previousLocationAction(View v) {
-        if (this.currentLocationIndex < this.locationIds.size() - 1) {
-            this.currentLocationIndex++;
-            setLocationByDay();
-        }
-
+        createData();
     }
 
     private void nextLocationAction(View v) {
-        if (this.currentLocationIndex >0) {
+        if (this.currentLocationIndex < this.locationIds.size() - 1) {
+            this.currentLocationIndex++;
+            createData();
+        }
+    }
+
+    private void previousLocationAction(View v) {
+        if (this.currentLocationIndex > 0) {
             this.currentLocationIndex--;
-            setLocationByDay();
+            createData();
         }
     }
 
     private void setLocationByDay() {
-        if(!this.locationIds.isEmpty()) {
+        if (!this.locationIds.isEmpty()) {
             Long locationId = this.locationIds.get(this.currentLocationIndex);
             Location location = this.locationDao.getLocation(locationId);
-            this.currentLocation.setText(location.getName() + "     (" + (this.currentLocationIndex+1) + " מ- " + this.locationIds.size() + ")");
-        }
-        else {
+            this.currentLocation.setText(location.getName() + "     (" + (this.currentLocationIndex + 1) + " מ- " + this.locationIds.size() + ")");
+        } else {
             this.currentLocation.setText("אין שיבוץ להיום");
         }
     }
 
     private void setLocationIds() {
         this.currentLocationIndex = 0;
-        int dayNumber = CalendarUtils.selectedDate.getDayOfWeek().getValue() + 1;
-       this.locationIds = locationTimeRangeDao.getLocationIdsByDayWeek(dayNumber);
-
+        int dayNumber = CalendarUtils.getDayOfWeek();
+        this.locationIds = locationTimeRangeDao.getLocationIdsByDayWeek(dayNumber);
     }
 
     private void loadLiveData() {

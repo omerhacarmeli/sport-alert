@@ -1,8 +1,10 @@
 package com.spot.alert.dataobjects;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
 @Entity()
 public class User {
     @PrimaryKey(autoGenerate = true)
@@ -32,6 +34,7 @@ public class User {
     public void setImageId(Long imageId) {
         this.imageId = imageId;
     }
+
     public User(int userId, String email, Long imageId, String userName, String password, String phoneNumber) {
         this.userId = userId;
         this.email = email;
@@ -79,5 +82,11 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.getUserName();
     }
 }

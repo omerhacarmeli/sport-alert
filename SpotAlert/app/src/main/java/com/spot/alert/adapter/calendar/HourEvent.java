@@ -2,13 +2,14 @@ package com.spot.alert.adapter.calendar;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HourEvent
 {
     LocalTime time;
-    ArrayList<Event> events;
+    List<Event> events;
 
-    public HourEvent(LocalTime time, ArrayList<Event> events)
+    public HourEvent(LocalTime time, List<Event> events)
     {
         this.time = time;
         this.events = events;
@@ -24,12 +25,12 @@ public class HourEvent
         this.time = time;
     }
 
-    public ArrayList<Event> getEvents()
+    public List<Event> getEvents()
     {
         return events;
     }
 
-    public void setEvents(ArrayList<Event> events)
+    public void setEvents(List<Event> events)
     {
         this.events = events;
     }

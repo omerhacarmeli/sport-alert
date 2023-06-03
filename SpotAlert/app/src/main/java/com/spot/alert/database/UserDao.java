@@ -17,8 +17,10 @@ import java.util.List;
 public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertUser(User user);
+
     @Delete
     void deleteUser(User user);
+
     @Update
     void updateUser(User user);
 
@@ -30,10 +32,19 @@ public interface UserDao {
 
     @Query("SELECT COUNT(*) FROM User WHERE email = :email")
     public long isEmailExist(String email);
+
     @Query("SELECT * FROM User WHERE userId= :userId ")
     User getUser(long userId);
+
     @Query("SELECT * FROM User")
     LiveData<List<User>> getUsers();
 
+    @Query("SELECT * FROM User")
+    List<User> getUsersAll();
 
+    @Query("SELECT DISTINCT(userId) from UserTimeRange where dayWeek=:dayWeek")
+    List<Long> getUserIdsByDayWeek(int dayWeek);
+
+    @Query("SELECT * FROM User WHERE userId IN (:ids)")
+    List<User> getAllUserByIds(List<Long> ids);
 }
