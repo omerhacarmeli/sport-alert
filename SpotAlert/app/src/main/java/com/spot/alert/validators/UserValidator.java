@@ -11,7 +11,7 @@ public class UserValidator {
 
         if (!usernamePattern.matcher(username).matches()) {
 
-            return new ValidateResponse(false, "שם משתמש לא תקין");
+            return new ValidateResponse(false, "שם משתמש אינו תקין");
         }
 
         return new ValidateResponse(true, "שם משתמש תקין");
@@ -31,7 +31,7 @@ public class UserValidator {
     public static ValidateResponse validateEmail(String email) {
 
         if (!emailPattern.matcher(email).matches()) {
-            return new ValidateResponse(false, "אימייל לא תקין");
+            return new ValidateResponse(false, "אימייל אינו תקין");
         }
 
         return new ValidateResponse(true, "אימייל תקין");
@@ -40,7 +40,7 @@ public class UserValidator {
     public static ValidateResponse validatePhoneNumber(String phoneNumber) {
         if (!phonePattern.matcher(phoneNumber).matches()) {
 
-            return new ValidateResponse(false, "מספר טלפון לא תקין");
+            return new ValidateResponse(false, "מספר טלפון אינו תקין");
         }
 
         return new ValidateResponse(true, "מספר טלפון תקין");

@@ -8,7 +8,10 @@ import android.provider.Settings;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DecimalFormat;
+
 public class GeoUtils {
+    private static DecimalFormat decimalFormat = new DecimalFormat("#.#####");
 
     public static double getDistanceFromLatLonInKm(LatLng from, LatLng to) {
         return getDistanceFromLatLonInKm(from.latitude, from.longitude, to.latitude, to.longitude);
@@ -55,5 +58,13 @@ public class GeoUtils {
 
                 .create()
                 .show();
+    }
+
+    public static String getFormattedPoint(double point) {
+        return decimalFormat.format(point);
+    }
+
+    public static String getFormattedLatLng(LatLng point) {
+       return "(" + GeoUtils.getFormattedPoint(point.latitude) + "," + GeoUtils.getFormattedPoint(point.longitude) + ")";
     }
 }

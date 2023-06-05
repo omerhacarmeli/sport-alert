@@ -4,14 +4,12 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.ComponentActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -57,10 +54,8 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     private LocationDao locationDao;
     private ImageEntityDao imageEntityDao;
     private LocationReceiver locationReceiver;
-
     private double latitude, longitude;
     private GoogleMap mMap;
-
     private LatLng locationChanged;
 
     private SupportMapFragment supportMapFragment;
@@ -71,8 +66,9 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
     private ClickListener deleteListener;
     private ClickListener editListener;
-
     private ClickListener clickListener;
+
+    private ClickListener testLocationListener;
 
     private Map<Long, Marker> markerMap = new HashMap<>();
 
@@ -105,7 +101,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
-            Log.i("About GPS", "GPS is Enabled in your devide");
+            Log.i("About GPS", "GPS is Enabled in your device");
         } else {
             GeoUtils.alertDialogEnableLocation(getActivity());
         }
@@ -115,9 +111,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         fm.beginTransaction().replace(R.id.map, supportMapFragment).commit();
         supportMapFragment.getMapAsync(this);
 
-
         List<com.spot.alert.dataobjects.Location> list = new ArrayList<>();
-
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         deleteListener = new ClickListener() {
@@ -127,9 +121,8 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
 
-                    if(SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName()))
-                    {
-                        Toast.makeText(getActivity(),  "לא ניתן למחוק את מוקד אבטחה" , Toast.LENGTH_LONG).show();
+                    if (SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName())) {
+                        Toast.makeText(getActivity(), "לא ניתן למחוק את מוקד אבטחה", Toast.LENGTH_LONG).show();
                         return;
                     }
 
@@ -141,9 +134,8 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
                     locationDao.deleteLocation(location);
 
-                    if(location.getImageId()!=null)
-                    {
-                        ImageEntity imageEntity=  new ImageEntity();
+                    if (location.getImageId() != null) {
+                        ImageEntity imageEntity = new ImageEntity();
                         imageEntity.setId(location.getImageId());
                         imageEntityDao.deleteImageEntity(imageEntity);
                     }
@@ -161,7 +153,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
 
                     Bundle bundle = new Bundle();
-                    bundle.putLong("locationId",location.getId());
+                    bundle.putLong("locationId", location.getId());
                     getActivity().getIntent().putExtras(bundle);
 
                     ((MainActivity) getActivity()).moveEditLocation(location);
@@ -187,9 +179,38 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             }
         };
 
+        testLocationListener = new ClickListener() {
+            @Override
+            public void click(Object obj) {
+                if (obj instanceof com.spot.alert.dataobjects.Location) {
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+
+                    if (locationManager.isLocationEnabled()) {
+                        double distanceFromLatLonInKm = GeoUtils.getDistanceFromLatLonInKm(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(latitude, longitude));
+                        int distanceFromLatLonInMeter = (int) (distanceFromLatLonInKm * 1000);
+                        new AlertDialog.Builder(getContext())
+                                .setMessage("המרחק שלך מהנקודה " + distanceFromLatLonInMeter + " מטר")
+                                .setCancelable(true)
+                                .setPositiveButton(
+                                        "סגור",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+
+                                                dialog.cancel();
+                                            }
+                                        }).create()
+                                .show();
+
+                    } else {
+
+                        GeoUtils.alertDialogEnableLocation(getActivity());
+                    }
+                }
+            }
+        };
+
         FloatingActionButton addLocationFB = (FloatingActionButton) view.findViewById(
                 R.id.addLocationFB);
-
 
         addLocationFB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,7 +219,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             }
         });
 
-        adapter = new LocationAdapter(getActivity(), deleteListener, editListener, clickListener);
+        adapter = new LocationAdapter(getActivity(), deleteListener, editListener, clickListener, testLocationListener);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext()));
@@ -219,6 +240,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         loadLiveData();
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -236,12 +258,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     public void onMapReady(GoogleMap googleMap) {
         SpotAlertAppContext.googleMap = googleMap;
         mMap = googleMap;
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng latLng) {
-                locationChanged = latLng;
-            }
-        });
+
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -269,7 +286,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             toast.show();
 
         } else {
-           GeoUtils.alertDialogEnableLocation(getActivity());
+            GeoUtils.alertDialogEnableLocation(getActivity());
         }
     }
 

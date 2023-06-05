@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.spot.alert.R;
+import com.spot.alert.database.AppDataBase;
+import com.spot.alert.database.CalendarManagementDao;
+import com.spot.alert.dataobjects.CalendarManagement;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.dataobjects.UserTimeRange;
 import com.spot.alert.utils.CalendarUtils;
@@ -72,11 +75,8 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
 
         List<User> filterUser = filterUserByTimeRanges(event);
 
-        User user = new User();
-        user.setUserName("השמה ריקה");
-        user.setUserId(-1L);
+        fillUser(filterUser);
 
-        filterUser.add(0, user);
 
         spinner.setVisibility(View.VISIBLE);
         ArrayAdapter<User> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, filterUser);
@@ -92,9 +92,12 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
                     if (event != null) {
                         User selectedUser = (User) adapter.getItem(position);
                         if (selectedUser.getUserId() != -1) {
-                            event.setUser(selectedUser);
+
+                            updateCalendarManagement(getContext(), event, selectedUser);
+
                         } else {
-                            event.setUser(null);
+
+                            deleteCalendarManagement(getContext(), event, selectedUser);
                         }
                     }
                 } else {
@@ -108,10 +111,69 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
             }
         });
 
-        int userIndex = getUserIndex(event.getUser(), filterUser);
+        int userIndex = getUserIndex(event.getCalendarManagement(), filterUser);
         if (userIndex != -1) {
 
             spinner.setSelection(userIndex);
+        }
+    }
+
+    private static void fillUser(List<User> filterUser) {
+
+        User user = new User();
+        user.setUserId(-1L);
+
+        if (filterUser.isEmpty()) {
+            user.setUserName("השמה ריקה");
+        } else {
+            user.setUserName("אין עובד זמין");
+        }
+
+        filterUser.add(0, user);
+    }
+
+    private void deleteCalendarManagement(Context context, Event event, User selectedUser) {
+        if (event.getCalendarManagement() != null) {
+
+            CalendarManagementDao calendarManagementDao = AppDataBase.getDatabase(context).calendarManagementDao();
+            calendarManagementDao.deleteCalendarManagement(event.getCalendarManagement());
+
+            event.setCalendarManagement(null);
+        }
+    }
+
+    private void updateCalendarManagement(Context context, Event event, User selectedUser) {
+        CalendarManagementDao calendarManagementDao = AppDataBase.getDatabase(context).calendarManagementDao();
+
+        if (event.getCalendarManagement() != null) {
+            AppDataBase.databaseWriteExecutor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    CalendarManagement calendarManagement = event.getCalendarManagement();
+                    calendarManagement.setUserId(selectedUser.getUserId());
+                    calendarManagementDao.updateCalendarManagement(calendarManagement);
+                }
+            });
+        } else {
+
+            AppDataBase.databaseWriteExecutor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    CalendarManagement calendarManagement = new CalendarManagement();
+
+                    calendarManagement.setLocationId(event.getLocationTimeRange().getLocationId());
+                    calendarManagement.setUserId(selectedUser.getUserId());
+                    calendarManagement.setLocationTimeRangeId(event.getLocationTimeRange().getId());
+                    calendarManagement.setTime(CalendarUtils.formattedShortTime(event.getTime()));
+                    calendarManagement.setDate(CalendarUtils.formattedDate(event.getDate()));
+
+                    Long id = calendarManagementDao.insertCalendarManagement(calendarManagement);
+
+                    calendarManagement.setId(id);
+
+                    event.setCalendarManagement(calendarManagement);
+                }
+            });
         }
     }
 
@@ -128,14 +190,16 @@ public class HourAdapter extends ArrayAdapter<HourEvent> {
         return userList;
     }
 
-    private int getUserIndex(User user, List<User> filterUser) {
+    private int getUserIndex(CalendarManagement calendarManagement, List<User> filterUser) {
 
-        if (user == null) {
+        if (calendarManagement == null || calendarManagement.getUserId() == null) {
             return -1;
         }
 
+        Long userId = calendarManagement.getUserId();
+
         for (int i = 0; i < filterUser.size(); i++) {
-            if (user.getUserId() == filterUser.get(i).getUserId()) {
+            if (userId == filterUser.get(i).getUserId()) {
                 return i;
             }
         }

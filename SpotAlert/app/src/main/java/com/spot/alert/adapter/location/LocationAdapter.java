@@ -19,21 +19,21 @@ import java.util.List;
 
 import com.spot.alert.R;
 
-public class LocationAdapter
-        extends RecyclerView.Adapter<LocationViewHolder> {
+public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
 
     List<Location> list = Collections.emptyList();
-
     Context context;
     ClickListener deleteListener;
     ClickListener editListener;
     ClickListener clickListener;
+    ClickListener testLocationListener;
 
-    public LocationAdapter(Context context, ClickListener deleteListener, ClickListener editListener, ClickListener clickListener) {
+    public LocationAdapter(Context context, ClickListener deleteListener, ClickListener editListener, ClickListener clickListener, ClickListener testLocationListener) {
         this.context = context;
         this.deleteListener = deleteListener;
         this.editListener = editListener;
         this.clickListener = clickListener;
+        this.testLocationListener = testLocationListener;
     }
 
     @Override
@@ -94,8 +94,7 @@ public class LocationAdapter
 
                 Location location = list.get(position);
 
-                if (SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName()))
-                {
+                if (SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName())) {
                     return true;
                 }
 
@@ -111,6 +110,13 @@ public class LocationAdapter
             }
         });
 
+        viewHolder.testLocationFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                testLocationListener.click(list.get(position));
+            }
+        });
     }
 
     @Override

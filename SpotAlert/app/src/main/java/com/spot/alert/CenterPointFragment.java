@@ -28,7 +28,6 @@ import com.spot.alert.database.LocationDao;
 import com.spot.alert.dataobjects.Location;
 
 public class CenterPointFragment extends Fragment implements OnMapReadyCallback {
-
     private LocationDao locationDao;
 
     private double latitude, longitude;

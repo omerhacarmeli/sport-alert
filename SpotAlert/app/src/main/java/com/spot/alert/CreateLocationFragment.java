@@ -7,13 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,23 +46,16 @@ import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
-import com.spot.alert.utils.BitMapUtils;
+import com.spot.alert.utils.CameraOnClickListenerHandler;
 import com.spot.alert.utils.GeoUtils;
 import com.spot.alert.validators.LocationValidation;
 import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-public class CreateLocationFragment extends Fragment implements OnMapReadyCallback, OnRequestPermissionsResultCallback {
+public class CreateLocationFragment extends Fragment implements OnMapReadyCallback {
 
     public static final String DEFAULT_NAME = "נקודה_1";
     private LocationDao locationDao;
@@ -78,29 +64,19 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
     private ImageEntityDao imageEntityDao;
     private GoogleMap mMap;
-    private Location centerlocation;
-    private Location newlocation;
-
+    private Location centerLocation;
+    private Location newLocation;
     private ImageEntity imageEntity;
     private Marker centerLocationMarker;
-
     private Marker newLocationMarker;
     private TimeRangeAdapter timeRangeAdapter;
     private RecyclerView recyclerView;
     private ClickListener deleteListener;
-
     private EditText createLocationNameEditText;
-
     private EditText createLocationSpotEditText;
-
     private List<ITimeRange> locationTimeRangeList = new ArrayList<>();
-    private DecimalFormat df = new DecimalFormat("#.#####");
-    private String imagePath;
-    private static int CAMERA_REQUEST_CODE = 1111111222;
-
-    ImageView spotImage;
-
-    final long maxBytes = 1024 * 1024;
+    private ImageView locationImage;
+    private CameraOnClickListenerHandler cameraOnClickListenerHandler;
 
     @Nullable
     @Override
@@ -112,25 +88,26 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CameraOnClickListenerHandler.CAMERA_REQUEST_CODE);
         }
+
+        this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this);
 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
         this.locationTimeRangeDao = AppDataBase.getDatabase(getActivity()).locationTimeRangeDao();
         this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
 
-        this.centerlocation = locationDao.getLocationByName(SpotAlertAppContext.CENTER_POINT_STRING);
+        this.centerLocation = locationDao.getLocationByName(SpotAlertAppContext.CENTER_POINT_STRING);
 
         createLocationNameEditText = view.findViewById(R.id.createLocationName);
         createLocationSpotEditText = view.findViewById(R.id.createLocationSpot);
 
         this.imageEntity = new ImageEntity();
 
-        this.newlocation = new Location();
-        this.newlocation.setLabel(DEFAULT_NAME);
-        this.newlocation.setName(DEFAULT_NAME);
+        this.newLocation = new Location();
+        this.newLocation.setLabel(DEFAULT_NAME);
+        this.newLocation.setName(DEFAULT_NAME);
         createLocationNameEditText.setText(DEFAULT_NAME);
         createLocationNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -138,11 +115,11 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
                 if (!hasFocus) {
                     EditText editText = (EditText) v;
 
-                    newlocation.setName(editText.getText().toString());
-                    newlocation.setLabel(editText.getText().toString());
+                    newLocation.setName(editText.getText().toString());
+                    newLocation.setLabel(editText.getText().toString());
 
                     if (newLocationMarker != null) {
-                        newLocationMarker.setTitle(newlocation.getLabel());
+                        newLocationMarker.setTitle(newLocation.getLabel());
                     }
 
                     validateLocationName();
@@ -201,8 +178,8 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
         createLocationApproval.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newlocation.setName(createLocationNameEditText.getText().toString());
-                newlocation.setLabel(createLocationNameEditText.getText().toString());
+                newLocation.setName(createLocationNameEditText.getText().toString());
+                newLocation.setLabel(createLocationNameEditText.getText().toString());
 
                 boolean validateLocation = validateLocationName().isValidate();
                 boolean validateLocationPoint = validateLocationPoint().isValidate();
@@ -217,10 +194,10 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
                     if (imageEntity.getImageData() != null) {
                         Long imageId = imageEntityDao.insertImageEntity(imageEntity);
-                        newlocation.setImageId(imageId);
+                        newLocation.setImageId(imageId);
                     }
 
-                    long locationId = locationDao.insertLocation(newlocation);
+                    long locationId = locationDao.insertLocation(newLocation);
 
                     for (ITimeRange timeRange : locationTimeRangeList) {
                         LocationTimeRange locationTimeRange = (LocationTimeRange) timeRange;
@@ -274,59 +251,9 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
         supportMapFragment.getMapAsync(this);
 
 
-        spotImage = view.findViewById(R.id.pointImage);
-        spotImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    // Create a file to save the image
-                    File imageFile = createImageFile();
-                    if (imageFile != null) {
-                        Uri photoUri = FileProvider.getUriForFile(getActivity(), "com.spot.alert.fileprovider", imageFile);
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-                    }
-                }
+        locationImage = view.findViewById(R.id.pointImage);
 
-            }
-
-            private File createImageFile() {
-                // Create an image file name
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-                String imageFileName = "JPEG_" + timeStamp + "_";
-                File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                File imageFile = null;
-                try {
-                    imageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
-                    imagePath = imageFile.getAbsolutePath();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return imageFile;
-            }
-        });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            // Image captured successfully, you can now retrieve the image using the imagePath
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-
-            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
-            byte[] imageData = outputStream.toByteArray();
-
-            spotImage.setImageBitmap(scaledBitmap);
-            imageEntity.setImageData(imageData);
-        }
+        locationImage.setOnClickListener(cameraOnClickListenerHandler);
     }
 
     private ValidateResponse validateLocationTimeRange() {
@@ -341,12 +268,12 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
     private ValidateResponse validateLocationName() {
 
-        ValidateResponse validateResponse = LocationValidation.validateName(newlocation);
+        ValidateResponse validateResponse = LocationValidation.validateName(newLocation);
 
         if (!validateResponse.isValidate()) {
             createLocationNameEditText.setError(validateResponse.getMsg());
         } else {
-            Location locationByName = locationDao.getLocationByName(newlocation.getName());
+            Location locationByName = locationDao.getLocationByName(newLocation.getName());
 
             if (locationByName != null) {
                 validateResponse = new ValidateResponse(false, "השם של המקום קיים במערכתת בחר שם חדש");
@@ -363,7 +290,7 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
     private ValidateResponse validateLocationPoint() {
 
-        ValidateResponse validateResponse = LocationValidation.validateLocation(newlocation);
+        ValidateResponse validateResponse = LocationValidation.validateLocation(newLocation);
 
         if (!validateResponse.isValidate()) {
             createLocationSpotEditText.setError(validateResponse.getMsg());
@@ -413,17 +340,17 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        if (centerlocation != null) {
+        if (centerLocation != null) {
             updateCenterLocationOnMap();
         }
     }
 
     private void updateNewLocation(LatLng latLng) {
 
-        newlocation.setLatitude(latLng.latitude);
-        newlocation.setLongitude(latLng.longitude);
+        newLocation.setLatitude(latLng.latitude);
+        newLocation.setLongitude(latLng.longitude);
 
-        createLocationSpotEditText.setText("(" + df.format(latLng.latitude) + "," + df.format(latLng.longitude) + ")");
+        createLocationSpotEditText.setText("(" + GeoUtils.getFormattedPoint(latLng.latitude) + "," + GeoUtils.getFormattedPoint(latLng.longitude) + ")");
 
         validateLocationPoint();
 
@@ -432,28 +359,28 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
     private void updateCenterLocationOnMap() {
 
-        LatLng latLng = new LatLng(centerlocation.getLatitude(), centerlocation.getLongitude());
+        LatLng latLng = new LatLng(centerLocation.getLatitude(), centerLocation.getLongitude());
 
         if (this.centerLocationMarker != null) {
             this.centerLocationMarker.setPosition(latLng);
         } else {
-            this.centerLocationMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(centerlocation.getLabel()));
+            this.centerLocationMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(centerLocation.getLabel()));
         }
         this.centerLocationMarker.showInfoWindow();
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, centerlocation.getZoom().floatValue());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, centerLocation.getZoom().floatValue());
         mMap.animateCamera(cameraUpdate);
         mMap.moveCamera(cameraUpdate);
     }
 
     private void updateNewLocationOnMap() {
 
-        LatLng latLng = new LatLng(newlocation.getLatitude(), newlocation.getLongitude());
+        LatLng latLng = new LatLng(newLocation.getLatitude(), newLocation.getLongitude());
 
         if (this.newLocationMarker != null) {
             this.newLocationMarker.setPosition(latLng);
         } else {
-            this.newLocationMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(newlocation.getLabel()));
+            this.newLocationMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(newLocation.getLabel()));
         }
         this.centerLocationMarker.showInfoWindow();
 
@@ -463,13 +390,14 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, requestCode);
-            } else {
-                // Permission denied, handle accordingly (e.g., display an error message)
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CameraOnClickListenerHandler.CAMERA_REQUEST_CODE) {
+            CameraOnClickListenerHandler.CameraImage cameraImage = cameraOnClickListenerHandler.onActivityResultGetCameraImage();
+            if (cameraImage != null) {
+                locationImage.setImageBitmap(cameraImage.getBitmap());
+                imageEntity.setImageData(cameraImage.getImageData());
             }
         }
     }

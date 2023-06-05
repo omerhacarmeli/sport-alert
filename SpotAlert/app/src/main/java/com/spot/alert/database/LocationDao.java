@@ -25,6 +25,7 @@ public interface LocationDao {
 
     @Query("SELECT * FROM Location WHERE id =:id")
     Location getLocation(Long id);
+
     @Query("SELECT * FROM Location WHERE name =:name")
     Location getLocationByName(String name);
 

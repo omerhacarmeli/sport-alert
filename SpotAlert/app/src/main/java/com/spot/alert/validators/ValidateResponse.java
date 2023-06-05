@@ -6,12 +6,10 @@ public class ValidateResponse {
     public ValidateResponse(){
 
     }
-
     public ValidateResponse(boolean validate,String msg ) {
         this.msg = msg;
         this.validate = validate;
     }
-
     public ValidateResponse(boolean validate) {
         this.validate = validate;
     }

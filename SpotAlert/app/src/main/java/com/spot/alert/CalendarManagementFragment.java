@@ -19,11 +19,13 @@ import com.spot.alert.adapter.calendar.Event;
 import com.spot.alert.adapter.calendar.HourAdapter;
 import com.spot.alert.adapter.calendar.HourEvent;
 import com.spot.alert.database.AppDataBase;
+import com.spot.alert.database.CalendarManagementDao;
 import com.spot.alert.database.ImageEntityDao;
 import com.spot.alert.database.LocationDao;
 import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.database.UserDao;
 import com.spot.alert.database.UserTimeRangeDao;
+import com.spot.alert.dataobjects.CalendarManagement;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
@@ -34,8 +36,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class CalendarManagementFragment extends Fragment {
     private UserDao userDao;
@@ -43,7 +47,8 @@ public class CalendarManagementFragment extends Fragment {
 
     private UserTimeRangeDao userTimeRangeDao;
     private LocationTimeRangeDao locationTimeRangeDao;
-    private ImageEntityDao imageEntityDao;
+
+    private CalendarManagementDao calendarManagementDao;
 
     private ClickListener deleteListener;
     private ClickListener editListener;
@@ -62,7 +67,6 @@ public class CalendarManagementFragment extends Fragment {
     private List<User> allUserByIds;
     private List<UserTimeRange> userTimeRangesByUserAndDay;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,7 +79,7 @@ public class CalendarManagementFragment extends Fragment {
 
         this.userDao = AppDataBase.getDatabase(getActivity()).userDao();
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
-        this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
+        this.calendarManagementDao = AppDataBase.getDatabase(getActivity()).calendarManagementDao();
         this.locationTimeRangeDao = AppDataBase.getDatabase(getActivity()).locationTimeRangeDao();
         this.userTimeRangeDao = AppDataBase.getDatabase(getActivity()).userTimeRangeDao();
 
@@ -126,26 +130,35 @@ public class CalendarManagementFragment extends Fragment {
     private ArrayList<HourEvent> hourEventList() {
 
         List<LocationTimeRange> locationTimeRangeList;
+        List<CalendarManagement> calendarManagements;
         if (!locationIds.isEmpty()) {
             Long locationId = locationIds.get(this.currentLocationIndex);
             locationTimeRangeList = locationTimeRangeDao.getLocationTimeRangesByLocationId(locationId);
+            calendarManagements = calendarManagementDao.getCalendarManagements(CalendarUtils.formattedDate(CalendarUtils.selectedDate), locationId);
         } else {
             locationTimeRangeList = new ArrayList<>();
+            calendarManagements = new ArrayList<>();
         }
+
+
+        Map<String, CalendarManagement> calendarManagementMap = getCalendarMapByTime(calendarManagements);
+
 
         ArrayList<HourEvent> list = new ArrayList<>();
 
         for (int hour = 6; hour < 24; hour++) {
             LocalTime time = LocalTime.of(hour, 0);
-            Event event = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate);
 
+            CalendarManagement calendarManagement = calendarManagementMap.get(CalendarUtils.formattedShortTime(time));
+            Event event = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate,calendarManagement);
             HourEvent hourEvent = new HourEvent(time, event);
             list.add(hourEvent);
         }
 
         for (int hour = 0; hour < 6; hour++) {
             LocalTime time = LocalTime.of(hour, 0);
-            Event event = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate);
+            CalendarManagement calendarManagement = calendarManagementMap.get(CalendarUtils.formattedShortTime(time));
+            Event event = getEventsForDateAndTime(locationTimeRangeList, time, CalendarUtils.selectedDate,calendarManagement);
             HourEvent hourEvent = new HourEvent(time, event);
             list.add(hourEvent);
         }
@@ -153,16 +166,24 @@ public class CalendarManagementFragment extends Fragment {
         return list;
     }
 
-    private Event getEventsForDateAndTime(List<LocationTimeRange> locationTimeRangeList, LocalTime time, LocalDate dateTime) {
+    private Map<String, CalendarManagement> getCalendarMapByTime(List<CalendarManagement> calendarManagements) {
+        Map<String, CalendarManagement> calendarManagementMap = new HashMap<>();
+        for (CalendarManagement calendarManagement : calendarManagements) {
 
-        ArrayList<Event> events = new ArrayList<>();
+            calendarManagementMap.put(calendarManagement.getTime(), calendarManagement);
+        }
+
+        return calendarManagementMap;
+    }
+
+    private Event getEventsForDateAndTime(List<LocationTimeRange> locationTimeRangeList, LocalTime time, LocalDate dateTime,CalendarManagement calendarManagement) {
 
         for (LocationTimeRange locationTimeRange : locationTimeRangeList) {
 
             int cellHour = time.getHour();
             if (cellHour >= locationTimeRange.fromTime.intValue() && cellHour < locationTimeRange.toTime) {
 
-                Event event = new Event(null, dateTime, time, locationTimeRange);
+                Event event = new Event(dateTime, time, locationTimeRange,calendarManagement);
                 return event;
             }
         }
@@ -187,11 +208,10 @@ public class CalendarManagementFragment extends Fragment {
         int dayNumber = CalendarUtils.getDayOfWeek();
         List<Long> userIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
         this.allUserByIds = userDao.getAllUserByIds(userIds);
-        if(!this.allUserByIds.isEmpty()) {
+        if (!this.allUserByIds.isEmpty()) {
 
             this.userTimeRangesByUserAndDay = this.userTimeRangeDao.getTimeRangesByUserAndDay(userIds, dayNumber);
-        }
-        else {
+        } else {
             this.userTimeRangesByUserAndDay = new ArrayList<>();
         }
     }

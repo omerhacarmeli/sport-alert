@@ -10,10 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,21 +48,14 @@ import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
-import com.spot.alert.utils.BitMapUtils;
+import com.spot.alert.utils.CameraOnClickListenerHandler;
 import com.spot.alert.utils.GeoUtils;
 import com.spot.alert.validators.LocationValidation;
 import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class EditLocationFragment extends Fragment implements OnMapReadyCallback {
     private LocationDao locationDao;
@@ -85,11 +74,8 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
     private EditText editLocationSpotEditText;
     private List<ITimeRange> locationTimeRangeList = new ArrayList<>();
     private List<ITimeRange> deletedTimeRangeList = new ArrayList<>();
-    private DecimalFormat df = new DecimalFormat("#.#####");
-    private String imagePath;
-    private static int CAMERA_REQUEST_CODE = 1111111222;
-
-    ImageView spotImage;
+    private CameraOnClickListenerHandler cameraOnClickListenerHandler;
+    private ImageView locationImage;
 
     @Nullable
     @Override
@@ -101,6 +87,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this);
 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
         this.locationTimeRangeDao = AppDataBase.getDatabase(getActivity()).locationTimeRangeDao();
@@ -111,27 +98,25 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
         editLocationNameEditText = view.findViewById(R.id.editLocationName);
         editLocationSpotEditText = view.findViewById(R.id.editLocationSpot);
 
-
         Bundle bundle = getActivity().getIntent().getExtras();
         Long locationId = bundle.getLong("locationId");
 
-
         this.editLocation = locationDao.getLocation(locationId);
 
-        spotImage = view.findViewById(R.id.pointImage);
+        locationImage = view.findViewById(R.id.pointImage);
 
         if (this.editLocation.getImageId() != null) {
             this.imageEntity = imageEntityDao.getImageEntity(this.editLocation.getImageId());
             if (this.imageEntity != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageEntity.getImageData(), 0, imageEntity.getImageData().length);
-                spotImage.setImageBitmap(bitmap);
+                locationImage.setImageBitmap(bitmap);
             }
         } else {
             this.imageEntity = new ImageEntity();
         }
 
         editLocationNameEditText.setText(this.editLocation.getName());
-        editLocationSpotEditText.setText("(" + df.format(editLocation.getLatitude()) + "," + df.format(editLocation.getLongitude()) + ")");
+        editLocationSpotEditText.setText("(" + GeoUtils.getFormattedPoint(editLocation.latitude) + "," + GeoUtils.getFormattedPoint(editLocation.longitude) + ")");
 
         this.locationTimeRangeList = mapTimeRangeList(this.locationTimeRangeDao.getLocationTimeRangesByLocationId(this.editLocation.getId()));
 
@@ -143,6 +128,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
 
                     editLocation.setName(editText.getText().toString());
                     editLocation.setLabel(editText.getText().toString());
+
                     if (newLocationMarker != null) {
                         newLocationMarker.setTitle(editLocation.getLabel());
                     }
@@ -238,7 +224,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
 
                     for (ITimeRange deletedLocationTimeRange : deletedTimeRangeList) {
 
-                        AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.deleteLocationTimeRange((LocationTimeRange)deletedLocationTimeRange));
+                        AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.deleteLocationTimeRange((LocationTimeRange) deletedLocationTimeRange));
                     }
 
                     Toast toast = Toast.makeText(getActivity(), "הנקודה נשמרה בהצלחה", Toast.LENGTH_SHORT);
@@ -258,7 +244,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
         recyclerView
                 = (RecyclerView) view.findViewById(
                 R.id.recyclerView);
-        timeRangeAdapter = new  TimeRangeAdapter(getActivity(), deleteListener, null);
+        timeRangeAdapter = new TimeRangeAdapter(getActivity(), deleteListener, null);
         recyclerView.setAdapter(timeRangeAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -285,44 +271,15 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
         supportMapFragment.getMapAsync(this);
 
         timeRangeAdapter.setDataChanged(locationTimeRangeList);
-        spotImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    // Create a file to save the image
-                    File imageFile = createImageFile();
-                    if (imageFile != null) {
-                        Uri photoUri = FileProvider.getUriForFile(getActivity(), "com.spot.alert.fileprovider", imageFile);
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-                    }
-                }
-            }
 
-            private File createImageFile() {
-                // Create an image file name
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-                String imageFileName = "JPEG_" + timeStamp + "_";
-                File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                File imageFile = null;
-                try {
-                    imageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
-                    imagePath = imageFile.getAbsolutePath();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return imageFile;
-            }
-        });
+        locationImage.setOnClickListener(this.cameraOnClickListenerHandler);
     }
 
     private List<ITimeRange> mapTimeRangeList(List<LocationTimeRange> locationTimeRangeList) {
 
         List<ITimeRange> timeRangeList = new ArrayList<>();
 
-        for (LocationTimeRange locationTimeRange: locationTimeRangeList)
-        {
+        for (LocationTimeRange locationTimeRange : locationTimeRangeList) {
             timeRangeList.add(locationTimeRange);
         }
 
@@ -333,20 +290,12 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            // Image captured successfully, you can now retrieve the image using the imagePath
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-
-            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
-            byte[] imageData = outputStream.toByteArray();
-
-            spotImage.setImageBitmap(scaledBitmap);
-            imageEntity.setImageData(imageData);
+        if (requestCode == CameraOnClickListenerHandler.CAMERA_REQUEST_CODE) {
+            CameraOnClickListenerHandler.CameraImage cameraImage = cameraOnClickListenerHandler.onActivityResultGetCameraImage();
+            if (cameraImage != null) {
+                locationImage.setImageBitmap(cameraImage.getBitmap());
+                imageEntity.setImageData(cameraImage.getImageData());
+            }
         }
     }
 
@@ -452,7 +401,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
         editLocation.setLatitude(latLng.latitude);
         editLocation.setLongitude(latLng.longitude);
 
-        editLocationSpotEditText.setText("(" + df.format(latLng.latitude) + "," + df.format(latLng.longitude) + ")");
+        editLocationSpotEditText.setText(GeoUtils.getFormattedLatLng(latLng));
 
         validateLocationPoint();
 

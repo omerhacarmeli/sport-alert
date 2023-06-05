@@ -10,18 +10,20 @@ import androidx.room.Update;
 import com.spot.alert.dataobjects.CalendarManagement;
 import com.spot.alert.dataobjects.ImageEntity;
 
+import java.util.List;
+
 @Dao
 public interface CalendarManagementDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertImageEntity(CalendarManagement calendarManagement);
+    long insertCalendarManagement(CalendarManagement calendarManagement);
 
     @Delete
-    void deleteImageEntity(CalendarManagement calendarManagement);
+    void deleteCalendarManagement(CalendarManagement calendarManagement);
 
     @Update
-    void updateImageEntity(CalendarManagement calendarManagement);
+    void updateCalendarManagement(CalendarManagement calendarManagement);
 
-    @Query("SELECT * FROM CalendarManagement WHERE date =:date and time =:time and locationId =:locationId and userId =:userId")
-    CalendarManagement getCalendarManagement(String date, String time, Long locationId, Long userId);
+    @Query("SELECT * FROM CalendarManagement WHERE date =:date and locationId =:locationId")
+    List<CalendarManagement> getCalendarManagements(String date, Long locationId);
 }

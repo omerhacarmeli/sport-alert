@@ -41,88 +41,87 @@ public class UserFragment extends Fragment {
         return inflater.inflate(R.layout.user_fragment, container, false);
     }
 
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            this.userDao = AppDataBase.getDatabase(getActivity()).userDao();
-           this.imageEntityDao=AppDataBase.getDatabase(getActivity()).imageEntityDao();
-           List<User> list = new ArrayList<>();
-            recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-            deleteListener = new ClickListener() {
-                @Override
-                public void click(Object obj) {
-                    if (obj instanceof User) {
-                        User user = (User) obj;
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.userDao = AppDataBase.getDatabase(getActivity()).userDao();
+        this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
+        List<User> list = new ArrayList<>();
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        deleteListener = new ClickListener() {
+            @Override
+            public void click(Object obj) {
+                if (obj instanceof User) {
+                    User user = (User) obj;
 
-                        userDao.deleteUser(user);
+                    userDao.deleteUser(user);
 
-                        if(user.getImageId()!=null)
-                        {
-                            ImageEntity imageEntity=  new ImageEntity();
-                            imageEntity.setId(user.getImageId());
-                            imageEntityDao.deleteImageEntity(imageEntity);
-                        }
-
-                        Toast.makeText(getActivity(), user.getUserName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show();
+                    if (user.getImageId() != null) {
+                        ImageEntity imageEntity = new ImageEntity();
+                        imageEntity.setId(user.getImageId());
+                        imageEntityDao.deleteImageEntity(imageEntity);
                     }
+
+                    Toast.makeText(getActivity(), user.getUserName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show();
                 }
-            };
+            }
+        };
 
-            editListener = new ClickListener() {
-              @Override
-                public void click(Object obj) {
-                    if (obj instanceof com.spot.alert.dataobjects.Location) {
+        editListener = new ClickListener() {
+            @Override
+            public void click(Object obj) {
+                if (obj instanceof com.spot.alert.dataobjects.Location) {
 
-                        com.spot.alert.dataobjects.User user = (com.spot.alert.dataobjects.User) obj;
+                    com.spot.alert.dataobjects.User user = (com.spot.alert.dataobjects.User) obj;
 
-                        Bundle bundle = new Bundle();
-                        bundle.putLong("userId",user.getUserId());
-                        getActivity().getIntent().putExtras(bundle);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("userId", user.getUserId());
+                    getActivity().getIntent().putExtras(bundle);
 
-                        ((MainActivity) getActivity()).moveEditUser(user);
+                    ((MainActivity) getActivity()).moveEditUser(user);
 
-                        Toast.makeText(getActivity(), "Edit User " + user.getUserName(), Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(getActivity(), "Edit User " + user.getUserName(), Toast.LENGTH_LONG).show();
                 }
-            };
+            }
+        };
 
-         FloatingActionButton addUserFB = (FloatingActionButton) view.findViewById(
-                    R.id.addUserFB);
+        FloatingActionButton addUserFB = (FloatingActionButton) view.findViewById(
+                R.id.addUserFB);
 
 
-            addUserFB.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((MainActivity) getActivity()).moveCreateUser();
+        addUserFB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).moveCreateUser();
+            }
+        });
+
+        adapter = new UserAdapter(getActivity(), deleteListener, editListener);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(getContext()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+
+                if (dy > 0) {
+                    addUserFB.hide();
+                } else {
+                    addUserFB.show();
                 }
-            });
+                super.onScrolled(recyclerView, dx, dy);
 
-            adapter = new UserAdapter(getActivity(), deleteListener, editListener);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(
-                    new LinearLayoutManager(getContext()));
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            }
+        });
 
-                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-
-                    if (dy > 0) {
-                        addUserFB.hide();
-                    } else {
-                        addUserFB.show();
-                    }
-                    super.onScrolled(recyclerView, dx, dy);
-
-                }
-            });
-
-            loadLiveData();
-
-        }
-        private void loadLiveData() {
-            this.userDao.getUsers().observe(getActivity(),(userList)-> {
-                users = userList;
-                adapter.setDataChanged(users);
-            });
-        }
+        loadLiveData();
     }
+
+    private void loadLiveData() {
+        this.userDao.getUsers().observe(getActivity(), (userList) -> {
+            users = userList;
+            adapter.setDataChanged(users);
+        });
+    }
+}
 

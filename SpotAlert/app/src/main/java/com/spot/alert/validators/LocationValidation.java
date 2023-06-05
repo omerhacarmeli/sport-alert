@@ -14,7 +14,7 @@ public class LocationValidation {
             return new ValidateResponse(true, "שם מקום תקין");
         }
 
-        return new ValidateResponse(false, "שם מקום לא תקין");
+        return new ValidateResponse(false, "שם מקום אינו תקין");
     }
 
     public static ValidateResponse validateLocation(Location location) {

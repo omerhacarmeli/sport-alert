@@ -15,9 +15,10 @@ import java.util.List;
 public interface LocationTimeRangeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertLocationTimeRange(LocationTimeRange locationTimeRange);
-    
+
     @Delete
     void deleteLocationTimeRange(LocationTimeRange locationTimeRange);
+
     @Update
     void updateLocationTimeRange(LocationTimeRange locationTimeRange);
 

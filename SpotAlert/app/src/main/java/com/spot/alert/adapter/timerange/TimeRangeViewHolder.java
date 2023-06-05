@@ -31,12 +31,10 @@ public class TimeRangeViewHolder
     TimeRangeViewHolder(View itemView) {
         super(itemView);
 
-        fromTime
-                = (TextView) itemView
+        fromTime = (TextView) itemView
                 .findViewById(R.id.fromTime);
 
-        toTime
-                = (TextView) itemView
+        toTime = (TextView) itemView
                 .findViewById(R.id.toTime);
 
         deleteItem
