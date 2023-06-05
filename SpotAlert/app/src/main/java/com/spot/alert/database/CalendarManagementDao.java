@@ -24,6 +24,16 @@ public interface CalendarManagementDao {
     @Update
     void updateCalendarManagement(CalendarManagement calendarManagement);
 
+    @Query("SELECT * FROM CalendarManagement WHERE date =:date and time =:time and locationId =:locationId and userId =:userId")
+    CalendarManagement getCalendarManagement(String date, String time, Long locationId, Long userId);
+
+
+    @Query("SELECT * FROM CalendarManagement WHERE date =:date and time =:time and userId =:userId")
+    List<CalendarManagement> getCalendarManagementForUser(String date, String time, Long userId);
+
+    @Query("SELECT * FROM CalendarManagement WHERE date =:date and time =:time")
+    List<CalendarManagement> getCalendarManagementForAdminUser(String date, String time);
+
     @Query("SELECT * FROM CalendarManagement WHERE date =:date and locationId =:locationId")
     List<CalendarManagement> getCalendarManagements(String date, Long locationId);
 }

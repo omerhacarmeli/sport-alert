@@ -4,8 +4,10 @@ package com.spot.alert;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Instrumentation;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -230,11 +232,13 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
                         AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.insertLocationTimeRange(locationTimeRange));
                     }
 
+
                     Toast toast = Toast.makeText(getActivity(), "הנקודה נשמרה בהצלחה", Toast.LENGTH_SHORT);
                     toast.show();
                     ((MainActivity) getActivity()).moveLocation();
                 }
             }
+
         });
 
         ActivityCompat.requestPermissions(

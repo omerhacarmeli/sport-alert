@@ -4,7 +4,9 @@ package com.spot.alert;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -293,6 +295,7 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
 
         locationImage.setOnClickListener(this.cameraOnClickListenerHandler);
     }
+
 
     private List<ITimeRange> mapTimeRangeList(List<LocationTimeRange> locationTimeRangeList) {
 
