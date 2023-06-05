@@ -5,13 +5,13 @@ import java.util.regex.Pattern;
 public class UserValidator {
     public static Pattern emailPattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}");
     public static Pattern phonePattern = Pattern.compile("^(\\(\\d{3}\\)|\\d{3})-?\\d{3}-?\\d{4}$");
-    public static Pattern usernamePattern = Pattern.compile("[A-Za-z]\\w{2,20}$");
+    public static Pattern usernamePattern = Pattern.compile("[A-Za-z\\u0590-\\u05fe]\\w{2,20}$");
 
     public static ValidateResponse validateUserName(String username) {
 
         if (!usernamePattern.matcher(username).matches()) {
 
-            return new ValidateResponse(false, "שם משתמש לא תקין");
+            return new ValidateResponse(false, "שם משתמש אינו תקין");
         }
 
         return new ValidateResponse(true, "שם משתמש תקין");
@@ -31,7 +31,7 @@ public class UserValidator {
     public static ValidateResponse validateEmail(String email) {
 
         if (!emailPattern.matcher(email).matches()) {
-            return new ValidateResponse(false, "אימייל לא תקין");
+            return new ValidateResponse(false, "אימייל אינו תקין");
         }
 
         return new ValidateResponse(true, "אימייל תקין");
@@ -40,7 +40,7 @@ public class UserValidator {
     public static ValidateResponse validatePhoneNumber(String phoneNumber) {
         if (!phonePattern.matcher(phoneNumber).matches()) {
 
-            return new ValidateResponse(false, "מספר טלפון לא תקין");
+            return new ValidateResponse(false, "מספר טלפון אינו תקין");
         }
 
         return new ValidateResponse(true, "מספר טלפון תקין");

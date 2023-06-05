@@ -3,16 +3,25 @@ package com.spot.alert.dataobjects;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-@Entity(primaryKeys = {"date", "time", "locationId", "userId"}, foreignKeys = {@ForeignKey(entity = Location.class,
+@Entity(foreignKeys = {@ForeignKey(entity = Location.class,
         parentColumns = "id",
         childColumns = "locationId",
         onDelete = ForeignKey.CASCADE), @ForeignKey(entity = User.class,
         parentColumns = "userId",
         childColumns = "userId",
+        onDelete = ForeignKey.CASCADE), @ForeignKey(entity = LocationTimeRange.class,
+        parentColumns = "id",
+        childColumns = "locationTimeRangeId",
         onDelete = ForeignKey.CASCADE)
 })
 public class CalendarManagement {
+
+
+    @PrimaryKey(autoGenerate = true)
+    public Long id;
     @NonNull
     private String date;
     @NonNull
@@ -21,6 +30,17 @@ public class CalendarManagement {
     private Long locationId;
     @NonNull
     private Long userId;
+
+    @NonNull
+    private Long locationTimeRangeId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getDate() {
         return date;
@@ -52,5 +72,14 @@ public class CalendarManagement {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    @NonNull
+    public Long getLocationTimeRangeId() {
+        return locationTimeRangeId;
+    }
+
+    public void setLocationTimeRangeId(@NonNull Long locationTimeRangeId) {
+        this.locationTimeRangeId = locationTimeRangeId;
     }
 }

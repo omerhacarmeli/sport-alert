@@ -21,15 +21,12 @@ import com.spot.alert.validators.ValidateResponse;
 import java.util.Calendar;
 
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-    TextView textView;
-    TextView errorView;
-
-    long dateTime;
-    int minutes;
-    int hours;
-    ITimeRange timeRange;
-    String fromto;
-    boolean ignoreTime;
+    private TextView textView;
+    private TextView errorView;
+    private int minutes;
+    private int hours;
+    private ITimeRange timeRange;
+    private String fromto;
 
     public TimePickerFragment(TextView textView, TextView errorView, ITimeRange timeRange, String fromto) {
         this.textView = textView;
@@ -51,15 +48,6 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
 
-    /*    if (selectedMinute % 15 != 0) {
-
-            Toast toast = Toast.makeText(getActivity(), "הבחירת הדקות אינה תקינה, הדקות צריכות להיות בחלקי 15 דקות", Toast.LENGTH_SHORT);
-            toast.show();
-            ignoreTime = true;
-            return;
-        }*/
-
-        ignoreTime = false;
         minutes = selectedMinute;
         hours = selectedHour;
 
@@ -91,45 +79,17 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         validateTimeRange();
     }
 
-
-
-    public boolean checkTimeInputValidation5() {
-        if (timeRange.getToTime() == null) {
-            return true;
-        }
-        if (timeRange.getFromTime() > timeRange.getToTime()) {
-            Toast toast = Toast.makeText(getActivity(), "הבחירת השעות אינה תקינה, הנא בחר שוב", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     private ValidateResponse validateTimeRange() {
         ValidateResponse validateResponse = TimeRangeValidation.validateTimeRange(timeRange);
 
         if (!validateResponse.isValidate()) {
             errorView.setError("טווח שעות אינו תקין");
             errorView.setText("טווח שעות אינו תקין");
-        }
-        else {
+        } else {
             errorView.setError(null);
             errorView.setText(null);
         }
 
         return validateResponse;
-    }
-
-    public int getMinutes() {
-        return this.minutes;
-    }
-
-    public int getHours() {
-        return this.hours;
-    }
-
-    public boolean isIgnoreTime() {
-        return this.ignoreTime;
     }
 }

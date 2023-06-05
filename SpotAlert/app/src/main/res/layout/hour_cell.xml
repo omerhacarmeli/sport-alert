@@ -31,7 +31,6 @@
             android:dropDownWidth="match_parent"
             style="@style/SpinnerStyle"/>
 
-
     </LinearLayout>
 
 </LinearLayout>

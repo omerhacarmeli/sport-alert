@@ -14,4 +14,11 @@ public class SpotAlertAppContext {
 
     public static final long MAX_IMAGE_SIZE = 1024 * 1024;
 
+    public static final String LOCATION_CHANNEL_ID = "locationChannelId";
+    public static final String LOCATION_CHANNEL_NAME = "locationChannelName";
+
+    public static final String CHECK_FOR_SHIFTING = "checkForShifting";
+
+
+
 }

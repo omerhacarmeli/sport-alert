@@ -1,6 +1,8 @@
 package com.spot.alert;
 
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.content.FileProvider;
@@ -38,6 +42,7 @@ import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.dataobjects.UserTimeRange;
 import com.spot.alert.utils.BitMapUtils;
+import com.spot.alert.utils.CameraOnClickListenerHandler;
 import com.spot.alert.utils.UserUtils;
 import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
@@ -51,7 +56,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class CreateUserFragment extends Fragment implements OnRequestPermissionsResultCallback {
+public class CreateUserFragment extends Fragment {
     private UserDao userDao;
     private UserTimeRangeDao userTimeRangeDao;
     private ImageEntityDao imageEntityDao;
@@ -61,12 +66,13 @@ public class CreateUserFragment extends Fragment implements OnRequestPermissions
     private RecyclerView recyclerView;
     private ClickListener deleteListener;
     private List<ITimeRange> userTimeRangeList = new ArrayList<>();
-    private String imagePath;
     private EditText userName;
     private EditText phone;
     private EditText email;
-    private static int CAMERA_REQUEST_CODE = 111111123;
-    ImageView userImage;
+
+    private ImageView userImage;
+
+    private CameraOnClickListenerHandler cameraOnClickListenerHandler;
 
     @Nullable
     @Override
@@ -78,6 +84,21 @@ public class CreateUserFragment extends Fragment implements OnRequestPermissions
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+
+                        CameraOnClickListenerHandler.CameraImage cameraImage = cameraOnClickListenerHandler.onActivityResultGetCameraImage();
+                        if (cameraImage != null) {
+                            userImage.setImageBitmap(cameraImage.getBitmap());
+                            imageEntity.setImageData(cameraImage.getImageData());
+                        }
+                    }
+                }
+        );
+
+        this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this, startCamera);
 
         this.userDao = AppDataBase.getDatabase(getActivity()).userDao();
         this.userTimeRangeDao = AppDataBase.getDatabase(getActivity()).userTimeRangeDao();
@@ -137,7 +158,7 @@ public class CreateUserFragment extends Fragment implements OnRequestPermissions
                 ValidateResponse validateUserNameResponse = UserUtils.validateUserName(newUser, userName);
                 ValidateResponse validateEmailResponse = UserUtils.validateEmail(userDao, newUser, email);
                 ValidateResponse validatePhoneResponse = UserUtils.validatePhone(newUser, phone);
-                ValidateResponse validateUserTimeRangeResponse  = validateUserTimeRange();
+                ValidateResponse validateUserTimeRangeResponse = validateUserTimeRange();
 
                 if (!validateUserNameResponse.isValidate() ||
                         !validateEmailResponse.isValidate() ||
@@ -187,57 +208,7 @@ public class CreateUserFragment extends Fragment implements OnRequestPermissions
         });
 
         userImage = view.findViewById(R.id.userImage);
-        userImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    // Create a file to save the image
-                    File imageFile = createImageFile();
-                    if (imageFile != null) {
-                        Uri photoUri = FileProvider.getUriForFile(getActivity(), "com.spot.alert.fileprovider", imageFile);
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-                    }
-                }
-            }
-
-            private File createImageFile() {
-                // Create an image file name
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-                String imageFileName = "JPEG_" + timeStamp + "_";
-                File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                File imageFile = null;
-                try {
-                    imageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
-                    imagePath = imageFile.getAbsolutePath();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return imageFile;
-            }
-        });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            // Image captured successfully, you can now retrieve the image using the imagePath
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-
-            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
-            byte[] imageData = outputStream.toByteArray();
-
-            userImage.setImageBitmap(scaledBitmap);
-            imageEntity.setImageData(imageData);
-        }
+        userImage.setOnClickListener(cameraOnClickListenerHandler);
     }
 
     private ValidateResponse validateUserTimeRange() {
@@ -248,17 +219,5 @@ public class CreateUserFragment extends Fragment implements OnRequestPermissions
         }
 
         return validateResponse;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, requestCode);
-            } else {
-                // Permission denied, handle accordingly (e.g., display an error message)
-            }
-        }
     }
 }

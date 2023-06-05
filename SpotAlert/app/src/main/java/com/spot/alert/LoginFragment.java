@@ -25,8 +25,8 @@ import com.spot.alert.validators.ValidateResponse;
 
 public class LoginFragment extends Fragment {
 
-    UserDao userDao;
-    ProgressBar bar;
+    private UserDao userDao;
+    private ProgressBar bar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,53 +56,51 @@ public class LoginFragment extends Fragment {
         Button loginButton = view.findViewById(R.id.buttonLogin);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        EditText email = view.findViewById(R.id.login_email);
-                        EditText password = view.findViewById(R.id.login_password);
-                        String strEmail = String.valueOf(email.getText());
-                        String strPassword = String.valueOf(password.getText());
+            @Override
+            public void onClick(View v) {
+                EditText email = view.findViewById(R.id.login_email);
+                EditText password = view.findViewById(R.id.login_password);
+                String strEmail = String.valueOf(email.getText());
+                String strPassword = String.valueOf(password.getText());
 
-                        if (SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL.equals(strEmail)) {
+                if (SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL.equals(strEmail)) {
 
-                            successLogin(SpotAlertAppContext.SPOT_ALERT_ADMIN_USER);
-                            return;
-                        }
+                    successLogin(SpotAlertAppContext.SPOT_ALERT_ADMIN_USER);
+                    return;
+                }
 
-                        if (!validateInput(email, password)) {
-                            return;
-                        }
-                        User user = userDao.login(strEmail, strPassword);
-                        if (user != null) {
-                            successLogin(user);
-                        } else {
-                            Toast toast = Toast.makeText(getActivity(), "שם המשתמש או הסיסמה אינם נכונים", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    }
-
-
-                    private boolean validateInput(EditText email, EditText password) {
-                        ValidateResponse validateEmailResponse = UserValidator.validateEmail(email.getText().toString());
-
-                        if (!validateEmailResponse.isValidate()) {
-                            email.setError(validateEmailResponse.getMsg());
-                        }
-
-                        ValidateResponse validatePasswordResponse = UserValidator.validatePassword(password.getText().toString());
-
-                        if (!validatePasswordResponse.isValidate()) {
-                            password.setError(validatePasswordResponse.getMsg());
-                        }
-
-                        if (!validateEmailResponse.isValidate() || !validatePasswordResponse.isValidate()) {
-                            return false;
-                        }
-                        return true;
-                    }
-                });
+                if (!validateInput(email, password)) {
+                    return;
+                }
+                User user = userDao.login(strEmail, strPassword);
+                if (user != null) {
+                    successLogin(user);
+                } else {
+                    Toast toast = Toast.makeText(getActivity(), "שם המשתמש או הסיסמה אינם נכונים", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
 
 
+            private boolean validateInput(EditText email, EditText password) {
+                ValidateResponse validateEmailResponse = UserValidator.validateEmail(email.getText().toString());
+
+                if (!validateEmailResponse.isValidate()) {
+                    email.setError(validateEmailResponse.getMsg());
+                }
+
+                ValidateResponse validatePasswordResponse = UserValidator.validatePassword(password.getText().toString());
+
+                if (!validatePasswordResponse.isValidate()) {
+                    password.setError(validatePasswordResponse.getMsg());
+                }
+
+                if (!validateEmailResponse.isValidate() || !validatePasswordResponse.isValidate()) {
+                    return false;
+                }
+                return true;
+            }
+        });
     }
 
     public void successLogin(User user) {
@@ -112,7 +110,7 @@ public class LoginFragment extends Fragment {
         bar.setProgress(0, true);
         bar.setVisibility(View.VISIBLE);
         int delayTime = 500;
-        new CountDownTimer(500 , delayTime / 100) {
+        new CountDownTimer(500, delayTime / 100) {
             int counter = 0;
 
             public void onTick(long millisUntilFinished) {

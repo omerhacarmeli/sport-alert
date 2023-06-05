@@ -1,5 +1,6 @@
 package com.spot.alert.adapter.calendar;
 
+import com.spot.alert.dataobjects.CalendarManagement;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
 
@@ -8,17 +9,19 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Event {
-    private User user;
     private LocalDate date;
     private LocalTime time;
 
+    CalendarManagement calendarManagement;
+
     LocationTimeRange locationTimeRange;
 
-    public Event(User user, LocalDate date, LocalTime time, LocationTimeRange locationTimeRange) {
-        this.user = user;
+    public Event(LocalDate date, LocalTime time, LocationTimeRange locationTimeRange,CalendarManagement calendarManagement) {
+
         this.date = date;
         this.time = time;
         this.locationTimeRange = locationTimeRange;
+        this.calendarManagement = calendarManagement ;
     }
 
     public LocationTimeRange getLocationTimeRange() {
@@ -27,14 +30,6 @@ public class Event {
 
     public void setLocationTimeRange(LocationTimeRange locationTimeRange) {
         this.locationTimeRange = locationTimeRange;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public LocalDate getDate() {
@@ -51,5 +46,13 @@ public class Event {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public CalendarManagement getCalendarManagement() {
+        return calendarManagement;
+    }
+
+    public void setCalendarManagement(CalendarManagement calendarManagement) {
+        this.calendarManagement = calendarManagement;
     }
 }

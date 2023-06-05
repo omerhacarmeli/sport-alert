@@ -2,9 +2,11 @@ package com.spot.alert;
 
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
+import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.database.UserDao;
 import com.spot.alert.database.UserTimeRangeDao;
 import com.spot.alert.dataobjects.Location;
+import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.dataobjects.UserTimeRange;
 
@@ -16,6 +18,19 @@ public class MagicStickManager {
         insertUsers(dataBase.userDao());
         insertUsersTimeRange(dataBase.userTimeRangeDao());
         insertLocations(dataBase.locationDao());
+        insertLocationsTimeRange(dataBase.locationTimeRangeDao());
+    }
+
+    private void insertLocationsTimeRange(LocationTimeRangeDao locationTimeRangeDao) {
+
+        int seq = 0;
+
+        for (long locationId = 2; locationId < 5; locationId++) {
+            for (int day = 1; day < 8; day++) {
+                seq++;
+                locationTimeRangeDao.insertLocationTimeRange(new LocationTimeRange(seq, 8.00, 14.00, day, locationId));
+            }
+        }
     }
 
     private void insertLocations(LocationDao locationDao) {
@@ -28,10 +43,17 @@ public class MagicStickManager {
 
     private void insertUsersTimeRange(UserTimeRangeDao userTimeRangeDao) {
         //(int Long, Double fromTime, Double toTime, int dayWeek, Long userId)
-        userTimeRangeDao.insertUserTimeRange(new UserTimeRange(1,9.30,14.15,6,1L));
-        userTimeRangeDao.insertUserTimeRange(new UserTimeRange(2,16.00,18.45,6,1L));
-        userTimeRangeDao.insertUserTimeRange(new UserTimeRange(3,11.30,18.15,6,2L));
 
+        int seq = 0;
+
+        for (long userId = 1; userId < 9; userId++) {
+            for (int day = 1; day < 8; day++) {
+                seq++;
+                userTimeRangeDao.insertUserTimeRange(new UserTimeRange(seq, 6.00, 17.00, day, userId));
+                seq++;
+                userTimeRangeDao.insertUserTimeRange(new UserTimeRange(seq, 18.15, 20.45, day, userId));
+            }
+        }
     }
 
     private void insertUsers(UserDao userDao) {

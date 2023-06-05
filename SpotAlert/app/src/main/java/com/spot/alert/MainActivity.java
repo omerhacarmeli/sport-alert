@@ -1,8 +1,19 @@
 package com.spot.alert;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+
+import static com.spot.alert.SpotAlertAppContext.LOCATION_CHANNEL_ID;
+import static com.spot.alert.SpotAlertAppContext.LOCATION_CHANNEL_NAME;
+
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +26,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -23,8 +35,11 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.spot.alert.adapter.timerange.ITimeRange;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,9 +85,61 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+        // Get the AlarmManager service
+        createNotificationChannel();
+        setAlarmManager();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         LocationFragment fragment = new LocationFragment();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
+
+
+    }
+
+
+    private void createNotificationChannel() {
+
+        if (ActivityCompat.checkSelfPermission(this,POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            // The permission to post notifications is granted
+            // Your code logic here
+        } else {
+            // The permission is not granted
+            // You can request the permission from the user
+            ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 11122);
+        }
+
+
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+        NotificationChannel channel = new NotificationChannel(LOCATION_CHANNEL_ID, LOCATION_CHANNEL_NAME, importance);
+
+        // Set any additional notification channel settings (e.g., sound, vibration, etc.)
+        channel.enableVibration(true);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+
+    private void setAlarmManager() {
+
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        // Create an intent for your alarm receiver
+        Intent intent = new Intent(this, AlarmManagerReceiver.class);
+
+        // Set any extra data you want to pass to your receiver (optional)
+        intent.putExtra("action", SpotAlertAppContext.CHECK_FOR_SHIFTING);
+
+        // Create a PendingIntent to be triggered when the alarm fires
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Set the alarm to trigger every 1 hour starting from the current time
+        long intervalMillis = AlarmManager.INTERVAL_HALF_HOUR;
+        long triggerAtMillis = System.currentTimeMillis() + 5000;
+
+        // Set the alarm using the AlarmManager
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, 1000*30, pendingIntent);
+
     }
 
     @Override
@@ -130,7 +197,7 @@ public class MainActivity extends AppCompatActivity
             logout();
         }
 
-        if(fragment!=null) {
+        if (fragment != null) {
             moveFragment(fragment);
         }
 

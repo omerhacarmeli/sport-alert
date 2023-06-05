@@ -7,35 +7,34 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spot.alert.R;
 
 public class LocationViewHolder
-	extends RecyclerView.ViewHolder {
-	TextView locationName;
+        extends RecyclerView.ViewHolder {
+    TextView locationName;
+    ImageButton deleteItem;
+    ImageButton editItem;
+    FloatingActionButton testLocationFAB;
+    View view;
 
-	TextView activeLocation;
+    LocationViewHolder(View itemView) {
+        super(itemView);
 
-	ImageButton deleteItem;
+        locationName
+                = (TextView) itemView
+                .findViewById(R.id.locationName);
 
-	ImageButton editItem;
+        deleteItem
+                = (ImageButton) itemView
+                .findViewById(R.id.deleteItemButton);
+        editItem
+                = (ImageButton) itemView
+                .findViewById(R.id.editItemButton);
 
-	View view;
+        testLocationFAB = itemView
+                .findViewById(R.id.testLocationFab);
 
-	LocationViewHolder(View itemView)
-	{
-		super(itemView);
-		locationName
-			= (TextView)itemView
-				.findViewById(R.id.locationName);
-
-		deleteItem
-				= (ImageButton)itemView
-				.findViewById(R.id.deleteItemButton);
-		editItem
-			= (ImageButton)itemView
-				.findViewById(R.id.editItemButton);
-
-
-		view = itemView;
-	}
+        view = itemView;
+    }
 }

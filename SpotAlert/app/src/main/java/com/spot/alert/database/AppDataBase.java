@@ -16,7 +16,7 @@ import com.spot.alert.dataobjects.UserTimeRange;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Location.class, LocationTimeRange.class, UserTimeRange.class, ImageEntity.class, CalendarManagement.class}, version = 11)
+@Database(entities = {User.class, Location.class, LocationTimeRange.class, UserTimeRange.class, ImageEntity.class, CalendarManagement.class}, version = 13)
 public abstract class AppDataBase extends RoomDatabase {
 
     private static final int NUMBER_OF_THREADS = 4;

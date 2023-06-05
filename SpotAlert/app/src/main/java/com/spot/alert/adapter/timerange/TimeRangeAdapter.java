@@ -121,7 +121,7 @@ public class TimeRangeAdapter
 
 
                 } else {
-                    Toast.makeText(context, "קודם צריך להגדיר שעת התחלה", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "אנא הגדר שעת התחלה", Toast.LENGTH_LONG).show();
 
                 }
             }

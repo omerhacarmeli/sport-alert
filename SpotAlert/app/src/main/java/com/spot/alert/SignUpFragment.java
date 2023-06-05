@@ -24,8 +24,7 @@ import com.spot.alert.validators.UserValidator;
 import com.spot.alert.validators.ValidateResponse;
 
 public class SignUpFragment extends Fragment {
-    UserDao userDao;
-
+    private UserDao userDao;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
