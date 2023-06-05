@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public class UserValidator {
     public static Pattern emailPattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}");
     public static Pattern phonePattern = Pattern.compile("^(\\(\\d{3}\\)|\\d{3})-?\\d{3}-?\\d{4}$");
-    public static Pattern usernamePattern = Pattern.compile("[A-Za-z]\\w{2,20}$");
+    public static Pattern usernamePattern = Pattern.compile("[A-Za-z\\u0590-\\u05fe]\\w{2,20}$");
 
     public static ValidateResponse validateUserName(String username) {
 

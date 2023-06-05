@@ -13,9 +13,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
+import com.spot.alert.CreateLocationFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,6 +31,9 @@ import java.util.Locale;
 public class CameraOnClickListenerHandler implements View.OnClickListener {
 
     public static int CAMERA_REQUEST_CODE = 111111123;
+
+    private ActivityResultLauncher<Intent> startCamera;
+
     private Context context;
 
     private Fragment fragment;
@@ -34,9 +41,10 @@ public class CameraOnClickListenerHandler implements View.OnClickListener {
     private File imageFile;
 
 
-    public CameraOnClickListenerHandler(Context context, Fragment fragment) {
+    public CameraOnClickListenerHandler(Context context, Fragment fragment, ActivityResultLauncher<Intent> startCamera) {
         this.context = context;
         this.fragment = fragment;
+        this.startCamera = startCamera;
     }
 
     @Override
@@ -60,16 +68,16 @@ public class CameraOnClickListenerHandler implements View.OnClickListener {
             return;
         }
 
-
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(this.context.getPackageManager()) != null) {
             // Create a file to save the image
             imageFile = createImageFile();
+
             if (imageFile != null) {
                 Uri photoUri = FileProvider.getUriForFile(this.context, "com.spot.alert.fileprovider", imageFile);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 
-                (this.fragment).startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+                startCamera.launch(cameraIntent);
             }
         }
     }

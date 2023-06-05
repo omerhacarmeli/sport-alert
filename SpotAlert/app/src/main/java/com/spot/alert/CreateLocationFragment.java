@@ -1,8 +1,11 @@
 package com.spot.alert;
 
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +21,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -78,6 +85,8 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     private ImageView locationImage;
     private CameraOnClickListenerHandler cameraOnClickListenerHandler;
 
+    private ActivityResultLauncher<Intent> startCamera;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -92,7 +101,22 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CameraOnClickListenerHandler.CAMERA_REQUEST_CODE);
         }
 
-        this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this);
+        ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+
+                        CameraOnClickListenerHandler.CameraImage cameraImage = cameraOnClickListenerHandler.onActivityResultGetCameraImage();
+                        if (cameraImage != null) {
+                            locationImage.setImageBitmap(cameraImage.getBitmap());
+                            imageEntity.setImageData(cameraImage.getImageData());
+                        }
+
+                    }
+                }
+        );
+
+        this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this, startCamera);
 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
         this.locationTimeRangeDao = AppDataBase.getDatabase(getActivity()).locationTimeRangeDao();
@@ -393,12 +417,6 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CameraOnClickListenerHandler.CAMERA_REQUEST_CODE) {
-            CameraOnClickListenerHandler.CameraImage cameraImage = cameraOnClickListenerHandler.onActivityResultGetCameraImage();
-            if (cameraImage != null) {
-                locationImage.setImageBitmap(cameraImage.getBitmap());
-                imageEntity.setImageData(cameraImage.getImageData());
-            }
-        }
+
     }
 }
