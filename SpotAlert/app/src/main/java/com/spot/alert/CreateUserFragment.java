@@ -128,68 +128,69 @@ public class CreateUserFragment extends Fragment {
             }
         };
 
-        Button createUserApproval = view.findViewById(R.id.createUserApproval);
-        Button createUserCancel = view.findViewById(R.id.createUserCancel);
-        createUserCancel.setOnClickListener(new View.OnClickListener() {
+        Button createUserApproval = view.findViewById(R.id.createUserApproval);// button save the data and create a new user
+        Button createUserCancel = view.findViewById(R.id.createUserCancel);// button exit from CreateUserFragment and doesn't save any data
+        createUserCancel.setOnClickListener(new View.OnClickListener() {//cancel new user
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(getActivity()).setMessage("האם אתה מעוניין לצאת ללא שמירת הנתונים?")
-                        .setCancelable(true).setPositiveButton(
+                new AlertDialog.Builder(getActivity()).setMessage("האם אתה מעוניין לצאת ללא שמירת הנתונים?")//in here we ask the user he is sure
+                        .setCancelable(true).setPositiveButton(//if yes
                                 "כן",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        ((MainActivity) getActivity()).moveUser();
+                                        ((MainActivity) getActivity()).moveUser();// the user creation is canceled and we go back to the previous screen
                                     }
                                 })
-                        .setNegativeButton(
+                        .setNegativeButton(// if no
                                 " לא",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
+                                        dialog.cancel();// the alert dialog is cancel
                                     }
                                 })
                         .create().show();
             }
         });
 
-        createUserApproval.setOnClickListener(new View.OnClickListener() {
+        createUserApproval.setOnClickListener(new View.OnClickListener() {// button save the data and create a new user
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {//in here we check if all the inputs are validate
                 ValidateResponse validateUserNameResponse = UserUtils.validateUserName(newUser, userName);
                 ValidateResponse validateEmailResponse = UserUtils.validateEmail(userDao, newUser, email);
                 ValidateResponse validatePhoneResponse = UserUtils.validatePhone(newUser, phone);
                 ValidateResponse validateUserTimeRangeResponse = validateUserTimeRange();
 
+                // we check if one of the inputs are not validate
                 if (!validateUserNameResponse.isValidate() ||
                         !validateEmailResponse.isValidate() ||
                         !validatePhoneResponse.isValidate() ||
                         !validateUserTimeRangeResponse.isValidate()) {
-                    Toast toast = Toast.makeText(getActivity(), "נתוני המשתמש אינם תקינים", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity(), "נתוני המשתמש אינם תקינים", Toast.LENGTH_SHORT);//a toast message: not validate
                     toast.show();
                     return;
-                } else {
+                } else {// if they are all validate
 
-                    if (imageEntity.getImageData() != null) {
-                        Long imageId = imageEntityDao.insertImageEntity(imageEntity);
-                        newUser.setImageId(imageId);
+                    if (imageEntity.getImageData() != null) { // check is there is a image in the data
+                        Long imageId = imageEntityDao.insertImageEntity(imageEntity);// insert the image in to the data base and take the image id
+                        newUser.setImageId(imageId);//connecting between the user and the image
                     }
 
-                    long userId = userDao.insertUser(newUser);
+                    long userId = userDao.insertUser(newUser);// insert the new user in to the data base and take the id
 
-                    for (ITimeRange timeRange : userTimeRangeList) {
-                        UserTimeRange userTimeRange = (UserTimeRange) timeRange;
-                        userTimeRange.setUserId(userId);
-                        AppDataBase.databaseWriteExecutor.submit(() -> userTimeRangeDao.insertUserTimeRange(userTimeRange));
+                    for (ITimeRange timeRange : userTimeRangeList) {// a loop of UserTimeRange list
+                        UserTimeRange userTimeRange = (UserTimeRange) timeRange;//casting between the UserTimeRange and timeRange
+                        userTimeRange.setUserId(userId);//connecting between the user and the timeRange
+                        AppDataBase.databaseWriteExecutor.submit(() -> userTimeRangeDao.insertUserTimeRange(userTimeRange));// insert to the data base in async way
                     }
 
-                    Toast toast = Toast.makeText(getActivity(), "המשתמש נשמר בהצלחה", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity(), "המשתמש נשמר בהצלחה", Toast.LENGTH_SHORT);// toast text user has been save succesfuly
                     toast.show();
                     ((MainActivity) getActivity()).moveUser();
                 }
             }
         });
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);//
         timeRangeAdapter = new TimeRangeAdapter(getActivity(), deleteListener);
         recyclerView.setAdapter(timeRangeAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

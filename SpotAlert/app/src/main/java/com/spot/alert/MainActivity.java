@@ -2,9 +2,6 @@ package com.spot.alert;
 
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 
-import static com.spot.alert.SpotAlertAppContext.LOCATION_CHANNEL_ID;
-import static com.spot.alert.SpotAlertAppContext.LOCATION_CHANNEL_NAME;
-
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -50,23 +47,23 @@ public class MainActivity extends AppCompatActivity
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
 
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_main); //הליאוט הוא של main
+        Toolbar toolbar = findViewById(R.id.toolbar);//-tool barפה יוצרים את ה
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);// פנ יוצרים את הפאב
+        fab.setOnClickListener(new View.OnClickListener() {// בעת לחיצה
             @Override
             public void onClick(View view) {
-                Snackbar snackbar = Snackbar.make(view, "התראת מצוקה נשלחה למוקד", Snackbar.LENGTH_LONG);
-                View mView = snackbar.getView();
-                TextView textView = mView.findViewById(com.google.android.material.R.id.snackbar_text);
-                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                textView.setTextColor(Color.RED);
+                Snackbar snackbar = Snackbar.make(view, "התראת מצוקה נשלחה למוקד", Snackbar.LENGTH_LONG);//מופיע התראה למטה
+                View mView = snackbar.getView();//viewפה לוקחים את ה
+                TextView textView = mView.findViewById(com.google.android.material.R.id.snackbar_text);//כאן זה הקופסאת טקסט
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);//כאן שמים אותו במרכז
+                textView.setTextColor(Color.RED);// כאן צובעים אותו בצבע אדום
                 snackbar.show();
             }
         });
-
+        //טיפול בסגירה ופתיחה של הdrawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         //this toggle is to open to open the navigation drawer
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -78,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_location);
 
-//check that user current user is admin if no the magic will not appear on menu
+       //בדוק שהמשתמש הנוכחי הוא אדמין אם לא הקסם לא יופיע בתפריט
         if (!SpotAlertAppContext.ACTIVE_USER.getEmail().equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL)) {
             MenuItem item = navigationView.getMenu().findItem(R.id.nav_magic_stick);
             item.setVisible(false);
@@ -108,13 +105,9 @@ public class MainActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 11122);
         }
 
-
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
-        NotificationChannel channel = new NotificationChannel(LOCATION_CHANNEL_ID, LOCATION_CHANNEL_NAME, importance);
-
-        // Set any additional notification channel settings (e.g., sound, vibration, etc.)
-        channel.enableVibration(true);
+        NotificationChannel channel = new NotificationChannel(SpotAlertAppContext.LOCATION_CHANNEL_ID, SpotAlertAppContext.LOCATION_CHANNEL_NAME, importance);
 
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
@@ -123,22 +116,17 @@ public class MainActivity extends AppCompatActivity
     private void setAlarmManager() {
 
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-
-        // Create an intent for your alarm receiver
+        // צור כוונה למקלט כשזמן ההתראה מגיע
         Intent intent = new Intent(this, AlarmManagerReceiver.class);
 
-        // Set any extra data you want to pass to your receiver (optional)
-        intent.putExtra("action", SpotAlertAppContext.CHECK_FOR_SHIFTING);
-
-        // Create a PendingIntent to be triggered when the alarm fires
+        // הגדר כל מידע נוסף שתרצה להעביר למקלט שלך (אופציונלי)
+        intent.putExtra("action", SpotAlertAppContext.CHECK_FOR_SHIFTING);//פרמטרים של ההודעה יכול להיות כל ערך שנחליט
+        // צור PendingIntent שתופעל כאשר האזעקה מופעלת
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        // Set the alarm to trigger every 1 hour starting from the current time
-        long intervalMillis = AlarmManager.INTERVAL_HALF_HOUR;
+        //עושים התראה עם דיליי 5 שניות
         long triggerAtMillis = System.currentTimeMillis() + 5000;
-
-        // Set the alarm using the AlarmManager
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, 1000*30, pendingIntent);
+        // הגדר את האזעקה באמצעות AlarmManager
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, 1000 * 30, pendingIntent);
 
     }
 
@@ -155,50 +143,48 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main, menu);
+        // לנפח את התפריט; זה מוסיף פריטים לסרגל הפעולות אם הוא קיים
         return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // טיפול בפריט בסרגל הפעולה לחץ כאן. סרגל הפעולה יהיה
+        // לטפל אוטומטית בלחיצות על כפתור הבית/מעלה, כל כך הרבה זמן
+        // כפי שאתה מציין פעילות אב ב-AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {//כאן עושים את הבחירה לאיזה מסך לעבור מה-navigation drawer
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Fragment fragment = null;
+        Fragment fragment = null;//בהתחלה עושים את הפרגמנט נל
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if (id == R.id.nav_location) {
-            fragment = new LocationFragment();
-        } else if (id == R.id.nav_guards) {
-            fragment = new UserFragment();
+        if (id == R.id.nav_location) {// אם ההזהות שווה למיקום
+            fragment = new LocationFragment();//פרגמנט יהיה שווה למיקום
+        } else if (id == R.id.nav_guards) {// אם ההזהות שווה לשומרים פרגמנט
+            fragment = new UserFragment();//פרגמנט יהיה שווה לשומר פרגמנט
         } else if (id == R.id.nav_calendar_management) {
-            fragment = new CalendarManagementFragment();
-        } else if (id == R.id.nav_magic_stick) {
-            magicStick();
-        } else if (id == R.id.nav_center) {
-            fragment = new CenterPointFragment();
-        } else if (id == R.id.logout) {
-            logout();
+
+        } else if (id == R.id.nav_magic_stick) {//אם הזהות שווה למקל הקסם
+            magicStick();// עוברים לפונקציה
+        } else if (id == R.id.nav_center) {//אם ההזהות שווה למיקום מוקד
+            fragment = new CenterPointFragment();//פרגמנט יהיה שווה למוקד פרגמנט
+        } else if (id == R.id.logout) {//אם ההזהות שווה ליצאה
+            logout();// עוברים לפונקציית יצאה
         }
 
-        if (fragment != null) {
-            moveFragment(fragment);
+        if (fragment != null) { //כאן בודקים אם הפרגמנט הוא שונה מנל
+            moveFragment(fragment);//אם הוא כן אז עוברים לפונקציה שמעבירה מסך
         }
 
         return true;

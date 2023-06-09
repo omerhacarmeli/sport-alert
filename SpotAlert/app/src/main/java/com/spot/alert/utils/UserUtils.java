@@ -8,87 +8,86 @@ import com.spot.alert.validators.UserValidator;
 import com.spot.alert.validators.ValidateResponse;
 
 public class UserUtils {
-    public static ValidateResponse validateUserName(User user, EditText userName) {
+    //בדיקת שם משתמש
+    public static ValidateResponse validateUserName(User user, EditText userName) {//שולח את משתמש ואת השם משתמש
+        String strUserName = String.valueOf(userName.getText());//הופף את השם משתמש לסתרינג
+        ValidateResponse validateResponse = UserValidator.validateUserName(strUserName);//בודק האם השם משתמש תקין
 
-        String strUserName = String.valueOf(userName.getText());
-
-        ValidateResponse validateResponse = UserValidator.validateUserName(strUserName);
-
-        if (!validateResponse.isValidate()) {
-            userName.setError(validateResponse.getMsg());
-        } else {
-            user.setUserName(strUserName);
+        if (!validateResponse.isValidate()) {//אם לא תקין
+            userName.setError(validateResponse.getMsg());//עושים טעות ומציגים הערה
+        } else {//אם כן תקין
+            user.setUserName(strUserName);//מכניסים את השם משתמש
         }
 
-        return validateResponse;
+        return validateResponse;// מחזירים את הולידציה
     }
+    //בדיקת סיסמה
+    public static ValidateResponse validatePassword(User user, EditText password) {//שולח את משתמש ואת סיסמה
 
-    public static ValidateResponse validatePassword(User user, EditText password) {
+        String strPassword = String.valueOf(password.getText());//הופף את סיסמה לסתרינג
 
-        String strPassword = String.valueOf(password.getText());
+        ValidateResponse validateResponse = UserValidator.validatePassword(strPassword);//בודק האם הסיסמה תקין
 
-        ValidateResponse validateResponse = UserValidator.validatePassword(strPassword);
-
-        if (!validateResponse.isValidate()) {
-            password.setError(validateResponse.getMsg());
-        } else {
-            user.setPassword(strPassword);
+        if (!validateResponse.isValidate()) {//אם לא תקין
+            password.setError(validateResponse.getMsg());//עושים טעות ומציגים הערה
+        } else {//אם כן תקין
+            user.setPassword(strPassword);//מכניסים את סיסמה
         }
-
-        return validateResponse;
+        return validateResponse;// מחזירים את הולידציה
     }
 
-    public static ValidateResponse validateVerifyPassword(User user, EditText verifyPassword, EditText password) {
+    //בדיקת סיסמה שניה
+    public static ValidateResponse validateVerifyPassword(User user, EditText verifyPassword, EditText password) {//שולח את משתמש, את סיסמה ואתה הבדיקת סיסמה
 
-        String strVerifyPassword = String.valueOf(verifyPassword.getText());
-        String strPassword = String.valueOf(password.getText());
+        String strVerifyPassword = String.valueOf(verifyPassword.getText());//הופף את בדיקת הסיסמה לסתרינג
+        String strPassword = String.valueOf(password.getText());//הופף את סיסמה לסתרינג
 
         ValidateResponse validateResponse = new ValidateResponse();
-        if (!strVerifyPassword.equals(strPassword)) {
-            validateResponse.setValidate(false);
-            validateResponse.setMsg("הסיסמה אינה תואמת");
-            verifyPassword.setError(validateResponse.getMsg());
+        if (!strVerifyPassword.equals(strPassword)) {// בודק האם הסיסמאות הן אינם תואמות
+            validateResponse.setValidate(false);//עושה ולידציה שהיא פולס
+            validateResponse.setMsg("הסיסמה אינה תואמת");//מכניס את ההודעת שגיאה
+            verifyPassword.setError(validateResponse.getMsg());//מכניס את הגיאה
 
-        } else {
-            validateResponse.setValidate(true);
+        } else {// אם כן תקין
+            validateResponse.setValidate(true);// מכניס את הערכים
         }
-        return validateResponse;
+        return validateResponse;//מחזיר את הולידציה
     }
 
-    public static ValidateResponse validateEmail(UserDao userDao, User user, EditText email) {
+    //בדיקת אימייל
+    public static ValidateResponse validateEmail(UserDao userDao, User user, EditText email) {//שולח את משתמש ואת האימייל
 
-        String strEmail = String.valueOf(email.getText());
+        String strEmail = String.valueOf(email.getText());//הופף את האימייל לסתרינג
+        ValidateResponse validateResponse = UserValidator.validateEmail(strEmail);//בודק האם האימייל תקין
+        if (!validateResponse.isValidate()) {//אם לא תקין
+            email.setError(validateResponse.getMsg());//מציגים טעות והערה
+        } else {//אם תקין
+            long userExist = userDao.isEmailExist(email.getText().toString());//בודק אם האימייל כבר קיים במערכת
 
-        ValidateResponse validateResponse = UserValidator.validateEmail(strEmail);
-
-        if (!validateResponse.isValidate()) {
-            email.setError(validateResponse.getMsg());
-        } else {
-            long userExist = userDao.isEmailExist(email.getText().toString());
-
-            if (userExist > 0) {
-                validateResponse.setValidate(false);
-                validateResponse.setMsg("משתמש זה קיים במערכת");
+            if (userExist > 0) {//אם זה גדול מ-0 אז זה אומר שיש כבר אחד כזה מערכת
+                validateResponse.setValidate(false);//מכניס שלילי
+                validateResponse.setMsg("משתמש זה קיים במערכת");//מכניס הודעה שגיאה של קיים
                 email.setError(validateResponse.getMsg());
-            } else {
-                user.setEmail(strEmail);
+            } else {//אם לא קיים ותקין
+                user.setEmail(strEmail);//מכניס את האימייל
             }
         }
 
-        return validateResponse;
+        return validateResponse;//שולח את הולידציה
     }
 
-    public static ValidateResponse validatePhone(User user, EditText phone) {
-        String strPhone = String.valueOf(phone.getText());
+    //בדיקת טלפון
+    public static ValidateResponse validatePhone(User user, EditText phone) {//שולח את משתמש ואת הטלפון
+        String strPhone = String.valueOf(phone.getText());//הופף את הטלפון לסתרינג
 
-        ValidateResponse validateResponse = UserValidator.validatePhoneNumber(strPhone);
+        ValidateResponse validateResponse = UserValidator.validatePhoneNumber(strPhone);//בודק האם הטלפון תקין
 
-        if (!validateResponse.isValidate()) {
-            phone.setError(validateResponse.getMsg());
-        } else {
-            user.setPhoneNumber(strPhone);
+        if (!validateResponse.isValidate()) {//בודק האם תקין
+            phone.setError(validateResponse.getMsg());//עושים טעות ומציגים הערה
+        } else {//אם כן תקין
+            user.setPhoneNumber(strPhone);//מכניסים את הטלפון
         }
 
-        return validateResponse;
+        return validateResponse;//שולחים את הולידציה
     }
 }

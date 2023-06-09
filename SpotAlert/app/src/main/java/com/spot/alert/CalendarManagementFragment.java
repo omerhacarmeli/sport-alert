@@ -41,7 +41,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class CalendarManagementFragment extends Fragment {
+public class
+CalendarManagementFragment extends Fragment {
     private UserDao userDao;
     private LocationDao locationDao;
 

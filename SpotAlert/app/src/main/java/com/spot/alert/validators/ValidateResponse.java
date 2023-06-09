@@ -1,15 +1,16 @@
 package com.spot.alert.validators;
 
-public class ValidateResponse {
-    private String msg;
-    private boolean validate;
-    public ValidateResponse(){
+public class ValidateResponse {//קלאס זה מחזיק שני ערכים
+    private String msg;//הודעה
+    private boolean validate;// והולידציה של האם הוא שלילי או חיובי. כלומר תקין או לא תקין
+    public ValidateResponse(){//קונסטרקטור ריק
 
     }
-    public ValidateResponse(boolean validate,String msg ) {
+    public ValidateResponse(boolean validate,String msg ) {//קונסטרקטור
         this.msg = msg;
         this.validate = validate;
     }
+    //setters and getters
     public ValidateResponse(boolean validate) {
         this.validate = validate;
     }

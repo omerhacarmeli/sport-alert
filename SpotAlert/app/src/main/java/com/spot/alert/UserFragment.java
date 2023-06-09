@@ -51,8 +51,8 @@ public class UserFragment extends Fragment {
         deleteListener = new ClickListener() {
             @Override
             public void click(Object obj) {
-                if (obj instanceof User) {
-                    User user = (User) obj;
+                if (obj instanceof User) {//לבדוק האם האובייקט שקיבלנו הוא מסוג משתמש
+                    User user = (User) obj;//כאן אנחנו עושים כאסטינג
 
                     userDao.deleteUser(user);
 
@@ -70,7 +70,7 @@ public class UserFragment extends Fragment {
         editListener = new ClickListener() {
             @Override
             public void click(Object obj) {
-                if (obj instanceof com.spot.alert.dataobjects.Location) {
+                if (obj instanceof com.spot.alert.dataobjects.User) {
 
                     com.spot.alert.dataobjects.User user = (com.spot.alert.dataobjects.User) obj;
 
@@ -96,18 +96,20 @@ public class UserFragment extends Fragment {
             }
         });
 
-        adapter = new UserAdapter(getActivity(), deleteListener, editListener);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext()));
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+        //כאן יוצרים את המשתמש הדאפטר, נותנים לו את שני הליסנרים של מחיקה ועריכת משתמש
+        //התפקיד של הדאפטר לעדכן את הריסיקל ברשימת המשתמשים ולעדן את התצוגה
+        adapter = new UserAdapter(getActivity(), deleteListener, editListener);
+        recyclerView.setAdapter(adapter);//כאן עושים סט לאדפטר
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {// זה עובד בזמןש הוא גוללים
+
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) { //מעלים את הפאב בגלילה למטה ומחזיר בגלילה למעלה
 
                 if (dy > 0) {
-                    addUserFB.hide();
+                    addUserFB.hide();//מסתירים אותו בגלילה למטה
                 } else {
-                    addUserFB.show();
+                    addUserFB.show();//מציגים אותו בגלילה למטה
                 }
                 super.onScrolled(recyclerView, dx, dy);
 
@@ -117,10 +119,11 @@ public class UserFragment extends Fragment {
         loadLiveData();
     }
 
-    private void loadLiveData() {
-        this.userDao.getUsers().observe(getActivity(), (userList) -> {
+    private void loadLiveData() {//טעינת דטה
+        this.userDao.getUsers().observe(getActivity(), (userList) -> {//מחזיר לייב דטה שיודע לטפל ברשימה של משתמשים
+            //בכל פעם שיש עידכון על המשתמשים הלייב דטה יביא לי רשימה חדשה
             users = userList;
-            adapter.setDataChanged(users);
+            adapter.setDataChanged(users);//מעדכן את הדאפטר
         });
     }
 }

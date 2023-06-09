@@ -16,7 +16,6 @@
             android:id="@+id/nav_calendar_management"
             android:icon="@drawable/baseline_person_pin_circle_24"
             android:title="ניהול יומן" />
-
     </group>
 
     <item android:title="הגדרות">

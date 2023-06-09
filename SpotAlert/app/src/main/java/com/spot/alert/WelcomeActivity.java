@@ -16,49 +16,49 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        changeFragmentToLogin();
+        changeFragmentToLogin();//שולח לפונקציה הראשונה של ששולחת אותי למסך של כניסה למערכת
     }
 
     public void changeFragmentToLogin() {
-        LoginFragment logInFragment = new LoginFragment();
+        LoginFragment logInFragment = new LoginFragment();//יוצר אובייקט מסוג של loginFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();//מבצע עברה של פרגמת לפרגמת אחר
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);//עושה את האנימציה של פאיד במעבר למסך הבא
         transaction.replace(R.id.myFragmentContainerView, logInFragment,
-                "logInFragment");
+                "logInFragment");// עובר למסך של כניסה
 
         transaction.commit();
     }
 
-    public void changeFragmentToSingUp() {
+    public void changeFragmentToSingUp() {//פונקציה זו היא זו ששולחת אותי למסך של הרשמה
 
-        SignUpFragment signUpFragment = new SignUpFragment();
+        SignUpFragment signUpFragment = new SignUpFragment();//יוצר אובייקט מסוג של signUpFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();//מבצע עברה של פרגמת לפרגמת אחר
+        transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);//מבצעת את המעבר אם אנימציה
 
         transaction.replace(R.id.myFragmentContainerView, signUpFragment,
-                "signUpFragment");
+                "signUpFragment");//מבצעת את העברה למסך של הרשמה
         transaction.commit();
     }
 
     @Override
-    public void onBackPressed() {
-        new AlertDialog.Builder(this).setMessage("האם אתה מעוניין לצאת מהאפליקציה?")
-                .setCancelable(true).setPositiveButton(
+    public void onBackPressed() {// פונקציה זו לאחר שלוחצים על כפתור החזור שואל האם לצאת מהאפלקציה
+        new AlertDialog.Builder(this).setMessage("האם אתה מעוניין לצאת מהאפליקציה?")//פה אני מכין את ההודעה למשתמש
+                .setCancelable(true).setPositiveButton(//בודק האם התשובה היא כן
                         "כן",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                finishAffinity();
+                                finishAffinity();// פקודה זו סוגרת את האפלקציה
                             }
                         })
-                .setNegativeButton(
+                .setNegativeButton(//בודק האם התשובה היא שלילית
                         " לא",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
+                            public void onClick(DialogInterface dialog, int id) {//אם התשובה היא שלילית אני לא עושה כלום
+                                dialog.cancel();//מבטל את ה-alertDialog
                             }
                         })
-                .create().show();
+                .create().show();//פקודה זו מראה את הכל על המסך
     }
 }

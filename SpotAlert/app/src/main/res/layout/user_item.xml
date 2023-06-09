@@ -52,7 +52,7 @@
         android:layout_marginStart="65dp"
         android:layout_marginTop="40dp"
         android:visibility="visible"
-        android:text="נקודת אבטחה"
+        android:text="userName will be change when set a user in the user adaper"
         android:textColor="@color/white"
         android:textSize="24sp" />
 
