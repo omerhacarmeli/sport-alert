@@ -19,6 +19,17 @@ import androidx.room.PrimaryKey;
 })
 public class CalendarManagement {
 
+    public CalendarManagement(Long id, @NonNull String date, @NonNull String time, @NonNull Long locationId, @NonNull Long userId, @NonNull Long locationTimeRangeId) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.locationId = locationId;
+        this.userId = userId;
+        this.locationTimeRangeId = locationTimeRangeId;
+    }
+
+    public CalendarManagement() {
+    }
 
     @PrimaryKey(autoGenerate = true)
     public Long id;
