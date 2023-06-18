@@ -83,7 +83,7 @@ public class CreateUserFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-/*
+
         ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -96,9 +96,9 @@ public class CreateUserFragment extends Fragment {
                         }
                     }
                 }
-        );*/
+        );
 
-       /* this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this, startCamera);*/
+       this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this, startCamera);
 
         this.userDao = AppDataBase.getDatabase(getActivity()).userDao();//bring the data base to userDao
         this.userTimeRangeDao = AppDataBase.getDatabase(getActivity()).userTimeRangeDao();//
