@@ -49,15 +49,12 @@ public class TimeRangeAdapter
     }
 
     @Override
-    public TimeRangeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TimeRangeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {// creating new view and holder
 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        View timeRangeView = inflater.inflate(R.layout.timerange_item, parent, false);//create view of user item
-
-        TimeRangeViewHolder viewHolder = new TimeRangeViewHolder(timeRangeView);// here we give the object of the holder
-
+        View timeRangeView = inflater.inflate(R.layout.timerange_item, parent, false);//create view of user timeRange item
+        TimeRangeViewHolder viewHolder = new TimeRangeViewHolder(timeRangeView);// here we create the object of the holder
         return viewHolder;
     }
 
@@ -65,7 +62,7 @@ public class TimeRangeAdapter
     public void onBindViewHolder(final TimeRangeViewHolder viewHolder, final int position) {// updete the reacelce view
         final int index = viewHolder.getAdapterPosition();
       //creating adapter for dropdown list of days (days from string Resource)
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context.getApplicationContext(), R.array.days, R.layout.spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context.getApplicationContext(), R.array.days, R.layout.spinner_item);// it create an ArrayAdapter to the drop down list
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         viewHolder.spinnerDays.setAdapter(adapter);
 
@@ -73,10 +70,10 @@ public class TimeRangeAdapter
 
         validateTimeRange(viewHolder.errorView, timeRange);// check if the time range is validate
 
-        viewHolder.spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        viewHolder.spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {// here we are doing a listener to the drop down days
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                timeRange.setDayWeek(position + 1);
+                timeRange.setDayWeek(position + 1);// adding 1 to the day because its starts with number 0
             }
 
             @Override
@@ -85,7 +82,7 @@ public class TimeRangeAdapter
             }
         });
 
-        if (timeRange.getFromTime() != null) {// if start time the that was peak is not empty
+        if (timeRange.getFromTime() != null) {// if start time the that was pick is not empty
 
             viewHolder.fromTime.setText(TimeRangeUtils.getTimeLabel(timeRange.getFromTime())); //set the time range and show the time
         } else {// if it is empty
@@ -98,16 +95,16 @@ public class TimeRangeAdapter
             viewHolder.toTime.setText("----:----");// leave empty
         }
 
-        viewHolder.fromTimePickerImage.setOnClickListener(new View.OnClickListener() {//clock
+        viewHolder.fromTimePickerImage.setOnClickListener(new View.OnClickListener() {//clock, taking the FromTime
             @Override
             public void onClick(View view) {
-                //craeting time piker fragmernt, he gets textView of from time, error, time range and fromto
+                //creating time piker fragment, he gets textView of from time, error, time range and fromto
                 TimePickerFragment fromDatePickerFragment = new TimePickerFragment(viewHolder.fromTime, viewHolder.errorView, timeRange, SpotAlertAppContext.FROM_TIME);
-                fromDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");//how we open the fragment time pieker
+                fromDatePickerFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "DATE PICK");//how we open the fragment time picker
             }
         });
 
-        viewHolder.toTimePickerImage.setOnClickListener(new View.OnClickListener() {
+        viewHolder.toTimePickerImage.setOnClickListener(new View.OnClickListener() {//clock, taking the ToTIme
             @Override
             public void onClick(View view) {
 
@@ -134,7 +131,7 @@ public class TimeRangeAdapter
                 viewHolder.view.startAnimation(anim);
 
                 new Handler().postDelayed(() -> {
-                    deleteListener.click(timeRange);//we send the time range we want to dlete to the parant fragment it can be create user, update location and delete
+                    deleteListener.click(timeRange);//we send the time range we want to delete to the parant fragment it can be create user, update location and delete
 
                 }, anim.getDuration());
             }
@@ -184,7 +181,7 @@ public class TimeRangeAdapter
             errorView.setError("טווח שעות אינו תקין");
             errorView.setText("טווח שעות אינו תקין");
         } else {
-            errorView.setError(null);
+                        errorView.setError(null);
             errorView.setText(null);
         }
 

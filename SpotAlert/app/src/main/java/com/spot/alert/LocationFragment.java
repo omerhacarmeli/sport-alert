@@ -84,28 +84,28 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.locationReceiver = new LocationReceiver(this);
+        this.locationReceiver = new LocationReceiver(this);// making a objrct of LocationReceiver
 
-        this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
-        this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
-
+        this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();//bringing the data base
+        this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();//bringing the image from he the data base
+        // in here I'm asking for premission to use the loction on the phone
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
                 , android.Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
 
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);//using the location manager
 
         // Request location updates
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {//check if the location in on
 
             Log.i("About GPS", "GPS is Enabled in your device");
         } else {
             GeoUtils.alertDialogEnableLocation(getActivity());
         }
-
+//getting the map fragment
         FragmentManager fm = getActivity().getSupportFragmentManager();
         supportMapFragment = SupportMapFragment.newInstance();
         fm.beginTransaction().replace(R.id.map, supportMapFragment).commit();
@@ -113,82 +113,84 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
         List<com.spot.alert.dataobjects.Location> list = new ArrayList<>();
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        deleteListener = new ClickListener() {
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView); //referencing the recycleView
+        deleteListener = new ClickListener() { //creating a delete listener
             @Override
             public void click(Object obj) {
-                if (obj instanceof com.spot.alert.dataobjects.Location) {
+                if (obj instanceof com.spot.alert.dataobjects.Location) { // checking if it is from location kind
 
-                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;//casting giving the object to location
 
-                    if (SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName())) {
-                        Toast.makeText(getActivity(), "לא ניתן למחוק את מוקד אבטחה", Toast.LENGTH_LONG).show();
-                        return;
+                    if (SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName())) { //checking if it is from center point
+                        Toast.makeText(getActivity(), "לא ניתן למחוק את מוקד אבטחה", Toast.LENGTH_LONG).show(); //toast message of can't delete the point
+                        return; // getting out if the delete listener
                     }
-
+                    // removing the marker from the map
                     if (markerMap.get(location.getId()) != null) {
 
-                        Marker removedMarker = markerMap.remove(location.getId());
-                        removedMarker.remove();
+                        Marker removedMarker = markerMap.remove(location.getId()); // bringing the id
+                        removedMarker.remove();// removing the marker from the map
                     }
 
-                    locationDao.deleteLocation(location);
-
-                    if (location.getImageId() != null) {
-                        ImageEntity imageEntity = new ImageEntity();
-                        imageEntity.setId(location.getImageId());
-                        imageEntityDao.deleteImageEntity(imageEntity);
+                    locationDao.deleteLocation(location); // deleting the location from the map
+                     // deleting the image of the place from the data base
+                    if (location.getImageId() != null) { //check if it is difference from null
+                        ImageEntity imageEntity = new ImageEntity(); // creating an object of imageEntity
+                        imageEntity.setId(location.getImageId()); // setting the id of the deleting location
+                        imageEntityDao.deleteImageEntity(imageEntity); // deleting the image of the place
                     }
 
-                    Toast.makeText(getActivity(), location.getName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), location.getName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show();//toast message of sucsseful deleting
                 }
             }
         };
 
-        editListener = new ClickListener() {
+        editListener = new ClickListener() {// crating an edit listener of edit location
             @Override
             public void click(Object obj) {
-                if (obj instanceof com.spot.alert.dataobjects.Location) {
+                if (obj instanceof com.spot.alert.dataobjects.Location) {// checking if it is from location kind
 
-                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj; // giving the object to location
 
                     Bundle bundle = new Bundle();
                     bundle.putLong("locationId", location.getId());
                     getActivity().getIntent().putExtras(bundle);
 
-                    ((MainActivity) getActivity()).moveEditLocation(location);
+                    ((MainActivity) getActivity()).moveEditLocation(location); //moving to moveEditLocation class
 
                     Toast.makeText(getActivity(), "Edit Location " + location.getName(), Toast.LENGTH_LONG).show();
                 }
             }
         };
 
-        clickListener = new ClickListener() {
+        clickListener = new ClickListener() { // click listener of markerring the map
             @Override
             public void click(Object obj) {
-                if (obj instanceof com.spot.alert.dataobjects.Location) {
-                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+                if (obj instanceof com.spot.alert.dataobjects.Location) {// checking if it is from location kind
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;// giving the object to location
 
-                    if (markerMap.get(location.getId()) != null) {
-                        markerMap.get(location.getId()).showInfoWindow();
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-                        mMap.animateCamera(cameraUpdate);
-                        mMap.moveCamera(cameraUpdate);
+                    if (markerMap.get(location.getId()) != null) {// checking if the marker is difference from null
+                        markerMap.get(location.getId()).showInfoWindow();// giving the name of the place on the map
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())); // updating the Longitude and Latitude on the camera
+                        mMap.animateCamera(cameraUpdate); // update animation
+                        mMap.moveCamera(cameraUpdate);// update camera
                     }
                 }
             }
         };
 
-        testLocationListener = new ClickListener() {
+        testLocationListener = new ClickListener() {// in this function we give to the user an informetion on how far he is from the spot
             @Override
             public void click(Object obj) {
-                if (obj instanceof com.spot.alert.dataobjects.Location) {
-                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;
+                if (obj instanceof com.spot.alert.dataobjects.Location) {// checking if it is from location kind
+                    com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;// giving the object to location
 
-                    if (locationManager.isLocationEnabled()) {
+                    if (locationManager.isLocationEnabled()) {//return if location is on or off
+                        //bring the location in kilometers
                         double distanceFromLatLonInKm = GeoUtils.getDistanceFromLatLonInKm(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(latitude, longitude));
+                        //locations in meters
                         int distanceFromLatLonInMeter = (int) (distanceFromLatLonInKm * 1000);
-                        new AlertDialog.Builder(getContext())
+                        new AlertDialog.Builder(getContext())//telling the user how far he is from the location
                                 .setMessage("המרחק שלך מהנקודה " + distanceFromLatLonInMeter + " מטר")
                                 .setCancelable(true)
                                 .setPositiveButton(
@@ -210,39 +212,37 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         };
 
         FloatingActionButton addLocationFB = (FloatingActionButton) view.findViewById(
-                R.id.addLocationFB);
+                R.id.addLocationFB);//giving referance to the adding location fab
 
-        addLocationFB.setOnClickListener(new View.OnClickListener() {
+        addLocationFB.setOnClickListener(new View.OnClickListener() {//making listener to the fab
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).moveCreateLocation();
+                ((MainActivity) getActivity()).moveCreateLocation();//moving to CreatingLocation
             }
         });
 
-        adapter = new LocationAdapter(getActivity(), deleteListener, editListener, clickListener, testLocationListener);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext()));
+        adapter = new LocationAdapter(getActivity(), deleteListener, editListener, clickListener, testLocationListener);//crating an adapter to the location
+        recyclerView.setAdapter(adapter);//here we are doing set to the recycleView
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) { //in here we are making that the addingLocationFab will not appear if we are in the buttom of the recylcer view
 
                 if (dy > 0) {
-                    addLocationFB.hide();
+                    addLocationFB.hide();// will not appear
                 } else {
-                    addLocationFB.show();
+                    addLocationFB.show();//will appear
                 }
                 super.onScrolled(recyclerView, dx, dy);
 
             }
         });
 
-        loadLiveData();
-
+        loadLiveData();//here updating the the list
     }
 
     @Override
-    public void onStart() {
+    public void onStart() {//starts when the fragment is starts working
         super.onStart();
         IntentFilter intentFilter = new IntentFilter(LocationManager.MODE_CHANGED_ACTION);
         getActivity().registerReceiver(locationReceiver, intentFilter);
@@ -255,19 +255,17 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap) {//in here when the map is ready googleMaps will gives us the map
         SpotAlertAppContext.googleMap = googleMap;
         mMap = googleMap;
-
-
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);//for pressing on the map and moving
+        mMap.getUiSettings().setZoomControlsEnabled(true);//zoom
 
         updateLocationsOnMap();
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {// in here we are giving the latitude and longitude the location
         // Get the latitude and longitude
         latitude = location.getLatitude();
         longitude = location.getLongitude();
@@ -277,7 +275,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     }
 
     @Override
-    public void onLocationStateChange() {
+    public void onLocationStateChange() {// a function that checks if the location is Off or On
 
         if (locationManager.isLocationEnabled()) {
 
@@ -293,26 +291,27 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     private void loadLiveData() {
         this.locationDao.getLocations().observe(getActivity(), new Observer<List<com.spot.alert.dataobjects.Location>>() {
             @Override
-            public void onChanged(List<com.spot.alert.dataobjects.Location> locationList) {
-
+            public void onChanged(List<com.spot.alert.dataobjects.Location> locationList) { //sign to live data observe
+                 //מחזיר לייב דטה שיודע לטפל ברשימה של משתמשים
+                //בכל פעם שיש עידכון על המשתמשים הלייב דטה יביא לי רשימה חדשה
                 locations = locationList;
 
-                adapter.setDataChanged(locations);
+                adapter.setDataChanged(locations); //update the adapter witha new list
 
-                updateLocationsOnMap();
+                updateLocationsOnMap(); //update the location on the map
             }
         });
     }
 
     private void updateLocationsOnMap() {
-        if (mMap != null && locations != null && !locations.isEmpty()) {
+        if (mMap != null && locations != null && !locations.isEmpty()) { //if non of the object are empties
 
             com.spot.alert.dataobjects.Location center = locations.get(0);
 
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.getLatitude(), center.getLongitude()), center.getZoom().floatValue());
 
             mMap.animateCamera(cameraUpdate);
-            mMap.moveCamera(cameraUpdate);
+            mMap.moveCamera(cameraUpdate);//aimetion for movement
 
             List<Marker> markers = new ArrayList<>();
 

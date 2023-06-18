@@ -83,7 +83,7 @@ public class CreateUserFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+/*
         ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -96,34 +96,34 @@ public class CreateUserFragment extends Fragment {
                         }
                     }
                 }
-        );
+        );*/
 
-        this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this, startCamera);
+       /* this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this, startCamera);*/
 
-        this.userDao = AppDataBase.getDatabase(getActivity()).userDao();
-        this.userTimeRangeDao = AppDataBase.getDatabase(getActivity()).userTimeRangeDao();
+        this.userDao = AppDataBase.getDatabase(getActivity()).userDao();//bring the data base to userDao
+        this.userTimeRangeDao = AppDataBase.getDatabase(getActivity()).userTimeRangeDao();//
         this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
 
-        userName = view.findViewById(R.id.signup_user);
-        email = view.findViewById(R.id.signup_email);
-        phone = view.findViewById(R.id.signup_phonenumber);
+        userName = view.findViewById(R.id.signup_user);//taking the userName
+        email = view.findViewById(R.id.signup_email);//taking the email
+        phone = view.findViewById(R.id.signup_phonenumber);//taking the phone
 
 
-        this.newUser = new User();
+        this.newUser = new User();//creating a new user of User object
 
         this.imageEntity = new ImageEntity();
-        deleteListener = new ClickListener() {
+        deleteListener = new ClickListener() {//after deleting the
             @Override
-            public void click(Object obj) {
+            public void click(Object obj) {//delete time
                 if (obj instanceof ITimeRange) {
 
                     ITimeRange timeRange = (ITimeRange) obj;
 
-                    userTimeRangeList.remove(timeRange);
+                    userTimeRangeList.remove(timeRange);// removing the time range from the list
 
-                    timeRangeAdapter.setDataChanged(userTimeRangeList);
+                    timeRangeAdapter.setDataChanged(userTimeRangeList);// setting the new list
 
-                    Toast.makeText(getActivity(), "הגדרת שעה נמחקה בהצלחה", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "הגדרת שעה נמחקה בהצלחה", Toast.LENGTH_LONG).show();// toast message of
                 }
             }
         };
@@ -190,29 +190,29 @@ public class CreateUserFragment extends Fragment {
             }
         });
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);//
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);// reference of recycleView
         timeRangeAdapter = new TimeRangeAdapter(getActivity(), deleteListener);
         recyclerView.setAdapter(timeRangeAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         FloatingActionButton addTimeRangeFB = (FloatingActionButton) view.findViewById(
-                R.id.addTimeRageFB);
+                R.id.addTimeRageFB);// fab of crating a new time range
 
-        addTimeRangeFB.setOnClickListener(new View.OnClickListener() {
+        addTimeRangeFB.setOnClickListener(new View.OnClickListener() {// listener of creating a new time range
             @Override
             public void onClick(View v) {
-                ITimeRange timeRange = new UserTimeRange();
-                timeRange.setDayWeek(1);
-                userTimeRangeList.add(timeRange);
-                timeRangeAdapter.setDataChanged(userTimeRangeList);
+                ITimeRange timeRange = new UserTimeRange();// object time range
+                timeRange.setDayWeek(1);// setting the first day as day 1
+                userTimeRangeList.add(timeRange);// adding the new time range to the list
+                timeRangeAdapter.setDataChanged(userTimeRangeList);// setting the adapter
             }
         });
 
-        userImage = view.findViewById(R.id.userImage);
+        userImage = view.findViewById(R.id.userImage);// reference of image
         userImage.setOnClickListener(cameraOnClickListenerHandler);
     }
 
-    private ValidateResponse validateUserTimeRange() {
+    private ValidateResponse validateUserTimeRange() {// checking if the time range is validate
         ValidateResponse validateResponse = TimeRangeValidation.validateTimeRange(userTimeRangeList);
 
         if (!validateResponse.isValidate()) {

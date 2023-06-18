@@ -231,8 +231,6 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
                         locationTimeRange.setLocationId(locationId);
                         AppDataBase.databaseWriteExecutor.submit(() -> locationTimeRangeDao.insertLocationTimeRange(locationTimeRange));
                     }
-
-
                     Toast toast = Toast.makeText(getActivity(), "הנקודה נשמרה בהצלחה", Toast.LENGTH_SHORT);
                     toast.show();
                     ((MainActivity) getActivity()).moveLocation();
@@ -241,19 +239,14 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
         });
 
-        ActivityCompat.requestPermissions(
-                getActivity(), new String[]
+        ActivityCompat.requestPermissions(getActivity(), new String[]
                         {
                                 android.Manifest.permission.ACCESS_FINE_LOCATION
                                 , android.Manifest.permission.ACCESS_COARSE_LOCATION
                         }, PackageManager.PERMISSION_GRANTED);
 
-        recyclerView
-                = (RecyclerView) view.findViewById(
-                R.id.recyclerView);
-        timeRangeAdapter = new
-
-                TimeRangeAdapter(getActivity(), deleteListener);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        timeRangeAdapter = new TimeRangeAdapter(getActivity(), deleteListener);
         recyclerView.setAdapter(timeRangeAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

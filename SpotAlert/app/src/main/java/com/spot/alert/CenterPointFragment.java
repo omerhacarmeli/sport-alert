@@ -1,17 +1,23 @@
 package com.spot.alert;
 
 
+import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -26,6 +32,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.LocationDao;
 import com.spot.alert.dataobjects.Location;
+import com.spot.alert.utils.GeoUtils;
+import com.spot.alert.validators.LocationValidation;
+import com.spot.alert.validators.ValidateResponse;
 
 public class CenterPointFragment extends Fragment implements OnMapReadyCallback {
     private LocationDao locationDao;
@@ -37,6 +46,9 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
     private LatLng latLng;
 
     private Marker marker;
+    private  EditText editTextLongtitude;
+    private  EditText editTextLatitude;
+
 
     @Nullable
     @Override
@@ -51,12 +63,12 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
         this.location = locationDao.getLocationByName(SpotAlertAppContext.CENTER_POINT_STRING);
 
-        EditText widthEditText = view.findViewById(R.id.width);
-        EditText lengthEditText = view.findViewById(R.id.length);
+        editTextLongtitude = view.findViewById(R.id.width);
+        editTextLatitude = view.findViewById(R.id.length);
         EditText zoomEditText = view.findViewById(R.id.zoom);
         if (location != null) {
-            widthEditText.setText(String.valueOf(location.getLatitude()));
-            lengthEditText.setText(String.valueOf(location.getLongitude()));
+            editTextLatitude.setText(String.valueOf(location.getLatitude()));
+            editTextLongtitude.setText(String.valueOf(location.getLongitude()));
             zoomEditText.setText(String.valueOf(location.getZoom()));
         }
 
@@ -65,8 +77,8 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             @Override
             public void onClick(View view) {
 
-                Double latitude = Double.parseDouble(widthEditText.getText().toString());
-                Double longitude = Double.parseDouble(lengthEditText.getText().toString());
+                Double latitude = Double.parseDouble(editTextLatitude.getText().toString());
+                Double longitude = Double.parseDouble(editTextLongtitude.getText().toString());
                 Double zoom = Double.parseDouble(zoomEditText.getText().toString());
 
                 if (location == null) {
@@ -92,6 +104,14 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
                 updateLocationOnMap(location);
             }
         });
+        ImageButton locationItemButton = view.findViewById(R.id.locationItemButton);
+
+        locationItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectLocation();
+            }
+        });
 
         ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
                 , android.Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
@@ -102,9 +122,18 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         supportMapFragment.getMapAsync(this);
     }
 
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+
+                updateNewLocation(latLng);
+            }
+        });
 
         if(location != null)
         {
@@ -125,6 +154,56 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,location.getZoom().floatValue());
         mMap.animateCamera(cameraUpdate);
         mMap.moveCamera(cameraUpdate);
+    }
+    private void selectLocation() {
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        // Request location updates
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+        }
+
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            android.location.Location spotLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if (spotLocation != null) {
+                updateNewLocation(new LatLng(spotLocation.getLatitude(), spotLocation.getLongitude()));
+            }
+
+        } else {
+
+            Toast.makeText(getActivity(), "המיקום לא נבחר, יש צורך להדליק את המיקום במכשיר", Toast.LENGTH_LONG).show();
+            GeoUtils.alertDialogEnableLocation(getActivity());
+        }
+    }
+    private void updateNewLocation(LatLng latLng) {
+
+        location.setLatitude(latLng.latitude);
+       location.setLongitude(latLng.longitude);
+
+        editTextLatitude.setText(GeoUtils.getFormattedPoint(latLng.latitude));
+        editTextLongtitude.setText(GeoUtils.getFormattedPoint(latLng.longitude));
+
+        validateLocationPoint();
+
+        updateLocationOnMap(location);
+    }
+    private ValidateResponse validateLocationPoint() {
+
+        ValidateResponse validateResponse = LocationValidation.validateLocation(location);
+
+        if (!validateResponse.isValidate()) {
+            editTextLongtitude.setError(validateResponse.getMsg());
+            editTextLatitude.setError(validateResponse.getMsg());
+        } else {
+            editTextLongtitude.setError(null);
+            editTextLatitude.setError(null);
+
+        }
+
+        return validateResponse;
     }
 
 }

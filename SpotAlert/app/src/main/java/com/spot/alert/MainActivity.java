@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_location);
 
-       //בדוק שהמשתמש הנוכחי הוא אדמין אם לא הקסם לא יופיע בתפריט
+        //בדוק שהמשתמש הנוכחי הוא אדמין אם לא הקסם לא יופיע בתפריט
         if (!SpotAlertAppContext.ACTIVE_USER.getEmail().equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL)) {
             MenuItem item = navigationView.getMenu().findItem(R.id.nav_magic_stick);
             item.setVisible(false);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         setAlarmManager();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        LocationFragment fragment = new LocationFragment();
+        UserFragment fragment = new UserFragment();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
 
 
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
 
     private void createNotificationChannel() {
 
-        if (ActivityCompat.checkSelfPermission(this,POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
             // The permission to post notifications is granted
             // Your code logic here
         } else {
@@ -181,13 +181,43 @@ public class MainActivity extends AppCompatActivity
             fragment = new CenterPointFragment();//פרגמנט יהיה שווה למוקד פרגמנט
         } else if (id == R.id.logout) {//אם ההזהות שווה ליצאה
             logout();// עוברים לפונקציית יצאה
+        } else if (id == R.id.nav_zoki) {//אם ההזהות שווה ליצאה
+
+
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);//פה אני יוצר אלרט ואני שואל האם הוא בטוח לגבי יצירת המשתמש
+            builder1.setMessage("האם אתה מעוניי לעבור למוקד??");//ההודעה
+            builder1.setCancelable(true);//אם הוא לוחץ ביטול
+            builder1.setPositiveButton(//במקרה של אם כן
+                    "כן",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+ 
+                            moveCenterPoint();
+                        }
+                    });
+            builder1.setNegativeButton(//במקרה שהמשתמש לוחץ לא, האפליקציה לא עושה כלום
+                    " לא",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();//ביטול
+                        }
+                    });
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
         }
 
         if (fragment != null) { //כאן בודקים אם הפרגמנט הוא שונה מנל
             moveFragment(fragment);//אם הוא כן אז עוברים לפונקציה שמעבירה מסך
         }
 
+
         return true;
+    }
+
+    private void moveCenterPoint() {
+        Fragment fragment = new CenterPointFragment();
+        moveFragment(fragment);
     }
 
     private void magicStick() {

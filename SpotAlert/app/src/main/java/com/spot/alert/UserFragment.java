@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,30 +45,29 @@ public class UserFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.userDao = AppDataBase.getDatabase(getActivity()).userDao();
-        this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
-        List<User> list = new ArrayList<>();
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        deleteListener = new ClickListener() {
+        this.userDao = AppDataBase.getDatabase(getActivity()).userDao();//bring the data base to userDao
+        this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();//
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);//refernce of the recycleView
+        deleteListener = new ClickListener() {//deleting users
             @Override
             public void click(Object obj) {
                 if (obj instanceof User) {//לבדוק האם האובייקט שקיבלנו הוא מסוג משתמש
                     User user = (User) obj;//כאן אנחנו עושים כאסטינג
 
-                    userDao.deleteUser(user);
-
+                    userDao.deleteUser(user);//deleting the user from the data base
+                    //deleting the image
                     if (user.getImageId() != null) {
                         ImageEntity imageEntity = new ImageEntity();
                         imageEntity.setId(user.getImageId());
                         imageEntityDao.deleteImageEntity(imageEntity);
                     }
 
-                    Toast.makeText(getActivity(), user.getUserName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), user.getUserName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show(); //toast message that the user has been deleted
                 }
             }
         };
 
-        editListener = new ClickListener() {
+        editListener = new ClickListener() {//updating users
             @Override
             public void click(Object obj) {
                 if (obj instanceof com.spot.alert.dataobjects.User) {
@@ -85,7 +85,7 @@ public class UserFragment extends Fragment {
             }
         };
 
-        FloatingActionButton addUserFB = (FloatingActionButton) view.findViewById(
+        FloatingActionButton addUserFB = (FloatingActionButton) view.findViewById(//fab of adding new users
                 R.id.addUserFB);
 
 
@@ -96,9 +96,8 @@ public class UserFragment extends Fragment {
             }
         });
 
-
         //כאן יוצרים את המשתמש הדאפטר, נותנים לו את שני הליסנרים של מחיקה ועריכת משתמש
-        //התפקיד של הדאפטר לעדכן את הריסיקל ברשימת המשתמשים ולעדן את התצוגה
+        //התפקיד של הדאפטר לעדכן את הריסיקל ברשימת המשתמשים ולעדכן את התצוגה
         adapter = new UserAdapter(getActivity(), deleteListener, editListener);
         recyclerView.setAdapter(adapter);//כאן עושים סט לאדפטר
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -120,10 +119,17 @@ public class UserFragment extends Fragment {
     }
 
     private void loadLiveData() {//טעינת דטה
-        this.userDao.getUsers().observe(getActivity(), (userList) -> {//מחזיר לייב דטה שיודע לטפל ברשימה של משתמשים
-            //בכל פעם שיש עידכון על המשתמשים הלייב דטה יביא לי רשימה חדשה
-            users = userList;
-            adapter.setDataChanged(users);//מעדכן את הדאפטר
+        //sign to live data observe
+        this.userDao.getUsers().observe(getActivity(), new Observer<List<User>>() {
+            @Override
+            public void onChanged(List<User> userList) {//בזמן שינוי
+                //מחזיר לייב דטה שיודע לטפל ברשימה של משתמשים
+                //בכל פעם שיש עידכון על המשתמשים הלייב דטה יביא לי רשימה חדשה
+                users = userList;
+
+                adapter.setDataChanged(users);//מעדכן את הדאפטר עם הרשימה החדשה
+
+            }
         });
     }
 }

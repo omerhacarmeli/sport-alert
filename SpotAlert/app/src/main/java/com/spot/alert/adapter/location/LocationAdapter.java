@@ -39,10 +39,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
     @Override
     public LocationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        Context context
-                = parent.getContext();
-        LayoutInflater inflater
-                = LayoutInflater.from(context);
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
 
         View locationView = inflater.inflate(R.layout.location_item, parent, false);
 
@@ -55,8 +53,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
     public void onBindViewHolder(final LocationViewHolder viewHolder, final int position) {
         final int index = viewHolder.getAdapterPosition();
 
-        viewHolder.locationName
-                .setText(list.get(position).name);
+        viewHolder.locationName.setText(list.get(position).name);
 
         viewHolder.editItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +72,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
                 viewHolder.view.startAnimation(anim);
 
                 new Handler().postDelayed(() -> {
-                    deleteListener.click(list.get(position));
+
+
 
                 }, anim.getDuration());
             }

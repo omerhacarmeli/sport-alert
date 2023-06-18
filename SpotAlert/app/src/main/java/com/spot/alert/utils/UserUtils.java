@@ -7,7 +7,7 @@ import com.spot.alert.dataobjects.User;
 import com.spot.alert.validators.UserValidator;
 import com.spot.alert.validators.ValidateResponse;
 
-public class UserUtils {
+public class  UserUtils {
     //בדיקת שם משתמש
     public static ValidateResponse validateUserName(User user, EditText userName) {//שולח את משתמש ואת השם משתמש
         String strUserName = String.valueOf(userName.getText());//הופף את השם משתמש לסתרינג

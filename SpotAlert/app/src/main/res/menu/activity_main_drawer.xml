@@ -34,6 +34,10 @@
                 android:id="@+id/logout"
                 android:icon="@drawable/baseline_logout_24"
                 android:title="להתנתק" />
+            <item
+                android:id="@+id/nav_zoki"
+                android:icon="@drawable/baseline_accessibility_new_24"
+                android:title="zoki" />
         </menu>
     </item>
 

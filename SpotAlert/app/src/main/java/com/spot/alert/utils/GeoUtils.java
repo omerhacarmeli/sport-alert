@@ -34,10 +34,10 @@ public class GeoUtils {
         return deg * (Math.PI / 180);
     }
 
-    public static void alertDialogEnableLocation(Context context) {
+    public static void alertDialogEnableLocation(Context context) {// here we are doing the alertDialog for the location permission
 
         new AlertDialog.Builder(context)
-                .setMessage("המיקום של המכשיר כבוי, האם אתה מעונין להדליק?")
+                .setMessage("המיקום של המכשיר כבוי, האם אתה מעונין להדליק?")//message
                 .setCancelable(true)
                 .setPositiveButton(
                         "כן",
