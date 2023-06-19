@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="300dp"
+    android:minHeight="400dp"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:id="@+id/userImage"
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.800" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/customborder"
+            android:gravity="center"
+            android:text="פרטי משתמש"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.095" />
+
+
+        <EditText xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/signup_email"
+            android:layout_width="211dp"
+            android:layout_height="48dp"
+            android:width="24dp"
+            android:background="@drawable/rounded_corner_view"
+            android:drawableLeft="@drawable/baseline_email_24"
+            android:ems="10"
+            android:hint="אימייל"
+            android:inputType="textEmailAddress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.195" />
+
+        <EditText
+            android:id="@+id/signup_user"
+            android:layout_width="211dp"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_corner_view"
+            android:drawableLeft="@drawable/baseline_person_24"
+            android:ems="10"
+            android:hint="שם המשתמש"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.295" />
+
+        <EditText
+            android:id="@+id/signup_phonenumber"
+            android:layout_width="211dp"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_corner_view"
+            android:drawableLeft="@drawable/baseline_phone_24"
+            android:ems="10"
+            android:hint="טלפון"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.395" />
+
+
+        <Button
+            android:id="@+id/createUserCancel"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:text="ביטול"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.976" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

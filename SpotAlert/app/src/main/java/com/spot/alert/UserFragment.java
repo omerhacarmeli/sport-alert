@@ -1,5 +1,7 @@
 package com.spot.alert;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +24,6 @@ import com.spot.alert.database.UserDao;
 import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.dataobjects.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserFragment extends Fragment {
@@ -73,11 +73,15 @@ public class UserFragment extends Fragment {
 
                     com.spot.alert.dataobjects.User user = (com.spot.alert.dataobjects.User) obj;
 
+                    showUserDialog(user);
+/*
                     Bundle bundle = new Bundle();
                     bundle.putLong("userId", user.getUserId());
                     getActivity().getIntent().putExtras(bundle);
 
                     ((MainActivity) getActivity()).moveEditUser(user);
+
+ */
                 }
             }
         };
@@ -113,6 +117,21 @@ public class UserFragment extends Fragment {
         });
 
         loadLiveData();
+    }
+
+    private void showUserDialog(User user) {
+
+
+        if (user.getImageId() != null) {
+           ImageEntity imageEntity = imageEntityDao.getImageEntity(user.getImageId());
+            if (imageEntity != null) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageEntity.getImageData(), 0, imageEntity.getImageData().length);
+                UserDialog userDialog = new UserDialog(getActivity(),bitmap);
+                userDialog.show();
+            }
+        } else {
+            Toast.makeText(getActivity(), user.getUserName() + "תמונה לא קיימת", Toast.LENGTH_LONG).show(); //toast message that the user has been deleted
+        }
     }
 
     private void loadLiveData() {//טעינת דטה

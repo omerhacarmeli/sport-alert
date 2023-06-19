@@ -24,4 +24,9 @@
         <item name="android:textSize">28sp</item> <!-- Set your desired text size -->
         <item name="android:textColor">#FFFFFF</item> <!-- Set your desired text color -->
     </style>
+
+    <style name="UserDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="windowFixedWidthMajor">90%</item>
+        <item name="windowFixedWidthMinor">90%</item>
+    </style>
 </resources>
