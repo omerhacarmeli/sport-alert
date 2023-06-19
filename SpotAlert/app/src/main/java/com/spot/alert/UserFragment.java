@@ -73,15 +73,13 @@ public class UserFragment extends Fragment {
 
                     com.spot.alert.dataobjects.User user = (com.spot.alert.dataobjects.User) obj;
 
-                    showUserDialog(user);
-/*
+                    //showUserDialog(user);
+
                     Bundle bundle = new Bundle();
                     bundle.putLong("userId", user.getUserId());
                     getActivity().getIntent().putExtras(bundle);
 
                     ((MainActivity) getActivity()).moveEditUser(user);
-
- */
                 }
             }
         };
@@ -132,6 +130,8 @@ public class UserFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), user.getUserName() + "תמונה לא קיימת", Toast.LENGTH_LONG).show(); //toast message that the user has been deleted
         }
+
+
     }
 
     private void loadLiveData() {//טעינת דטה
