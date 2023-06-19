@@ -2,7 +2,6 @@
 package com.spot.alert.adapter.timerange;
 
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;

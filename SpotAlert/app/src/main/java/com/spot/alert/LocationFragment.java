@@ -56,22 +56,15 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     private LocationReceiver locationReceiver;
     private double latitude, longitude;
     private GoogleMap mMap;
-    private LatLng locationChanged;
-
     private SupportMapFragment supportMapFragment;
     private LocationManager locationManager;
-
     private LocationAdapter adapter;
     private RecyclerView recyclerView;
-
     private ClickListener deleteListener;
     private ClickListener editListener;
     private ClickListener clickListener;
-
     private ClickListener testLocationListener;
-
     private Map<Long, Marker> markerMap = new HashMap<>();
-
     private List<com.spot.alert.dataobjects.Location> locations;
 
     @Nullable
@@ -157,8 +150,6 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                     getActivity().getIntent().putExtras(bundle);
 
                     ((MainActivity) getActivity()).moveEditLocation(location); //moving to moveEditLocation class
-
-                    Toast.makeText(getActivity(), "Edit Location " + location.getName(), Toast.LENGTH_LONG).show();
                 }
             }
         };

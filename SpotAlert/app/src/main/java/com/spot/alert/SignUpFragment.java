@@ -32,7 +32,6 @@ import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.utils.CameraOnClickListenerHandler;
 import com.spot.alert.utils.UserUtils;
-import com.spot.alert.validators.UserValidator;
 import com.spot.alert.validators.ValidateResponse;
 
 public class SignUpFragment extends Fragment {

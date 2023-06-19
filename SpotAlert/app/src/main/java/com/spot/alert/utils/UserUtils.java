@@ -7,7 +7,7 @@ import com.spot.alert.dataobjects.User;
 import com.spot.alert.validators.UserValidator;
 import com.spot.alert.validators.ValidateResponse;
 
-public class  UserUtils {
+public class UserUtils {
     //בדיקת שם משתמש
     public static ValidateResponse validateUserName(User user, EditText userName) {//שולח את משתמש ואת השם משתמש
         String strUserName = String.valueOf(userName.getText());//הופף את השם משתמש לסתרינג
@@ -21,6 +21,7 @@ public class  UserUtils {
 
         return validateResponse;// מחזירים את הולידציה
     }
+
     //בדיקת סיסמה
     public static ValidateResponse validatePassword(User user, EditText password) {//שולח את משתמש ואת סיסמה
 
@@ -62,6 +63,15 @@ public class  UserUtils {
         if (!validateResponse.isValidate()) {//אם לא תקין
             email.setError(validateResponse.getMsg());//מציגים טעות והערה
         } else {//אם תקין
+
+            if (user.getUserId() != null) {
+                User userSelected = userDao.getUser(user.getUserId());
+                if(userSelected.getEmail().equals(user.getEmail()));
+                {
+                    return validateResponse;//מכניס את האימייל
+                }
+            }
+
             long userExist = userDao.isEmailExist(email.getText().toString());//בודק אם האימייל כבר קיים במערכת
 
             if (userExist > 0) {//אם זה גדול מ-0 אז זה אומר שיש כבר אחד כזה מערכת

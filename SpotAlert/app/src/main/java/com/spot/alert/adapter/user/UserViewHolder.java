@@ -13,7 +13,6 @@ public class UserViewHolder
     TextView userName;
     ImageButton deleteItem;
     ImageButton editItem;
-
     View view;
 
     UserViewHolder(View itemView) {

@@ -1,7 +1,6 @@
 package com.spot.alert.validators;
 
 import java.util.regex.Pattern;
-
 public class UserValidator {
     public static Pattern emailPattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}");//דפוס של בדיקת האם האימייל הוא תקין
     public static Pattern phonePattern = Pattern.compile("^(\\(\\d{3}\\)|\\d{3})-?\\d{3}-?\\d{4}$");//דפוס של בדיקת האם הטלפון הוא תקין
@@ -9,10 +8,15 @@ public class UserValidator {
 
     public static ValidateResponse validateUserName(String username) {//הפונקציה הזו בודקת האם השם משתמש הוא תקין
 
-        if (!usernamePattern.matcher(username).matches()) {//כאן בודקים האם השם משמתמש שהכניס לא תואם לדפוס
-            // אם לא תואם מכניסים את ההודעת השגיאה ושלילי
-            return new ValidateResponse(false, "שם משתמש אינו תקין");
+        String[] userNames = username.split(" ");
+
+        for (String name : userNames) {
+            if (!usernamePattern.matcher(name).matches()) {//כאן בודקים האם השם משמתמש שהכניס לא תואם לדפוס
+                // אם לא תואם מכניסים את ההודעת השגיאה ושלילי
+                return new ValidateResponse(false, "שם משתמש אינו תקין");
+            }
         }
+
 
         return new ValidateResponse(true, "שם משתמש תקין");//אם כן תואם מכניסים הודעה של תקין וחיובי
 

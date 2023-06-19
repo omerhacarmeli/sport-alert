@@ -12,9 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.spot.alert.adapter.timerange.ITimeRange;
-import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.TimeRangeUtils;
-import com.spot.alert.validators.LocationValidation;
 import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
 

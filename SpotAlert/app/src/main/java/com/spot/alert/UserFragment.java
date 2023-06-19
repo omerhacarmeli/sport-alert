@@ -30,7 +30,6 @@ public class UserFragment extends Fragment {
     private UserDao userDao;
     private UserAdapter adapter;
     private ImageEntityDao imageEntityDao;
-
     private RecyclerView recyclerView;
     private ClickListener deleteListener;
     private ClickListener editListener;
@@ -79,8 +78,6 @@ public class UserFragment extends Fragment {
                     getActivity().getIntent().putExtras(bundle);
 
                     ((MainActivity) getActivity()).moveEditUser(user);
-
-                    Toast.makeText(getActivity(), "Edit User " + user.getUserName(), Toast.LENGTH_LONG).show();
                 }
             }
         };

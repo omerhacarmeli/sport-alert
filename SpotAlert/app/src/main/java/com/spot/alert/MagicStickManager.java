@@ -14,7 +14,6 @@ import com.spot.alert.dataobjects.UserTimeRange;
 import com.spot.alert.utils.CalendarUtils;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class MagicStickManager {
     CalendarManagementDao calendarManagementDao;

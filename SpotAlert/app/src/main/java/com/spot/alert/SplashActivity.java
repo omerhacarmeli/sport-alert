@@ -1,7 +1,5 @@
 package com.spot.alert;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +7,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
+import androidx.appcompat.app.AppCompatActivity;
 //this screen is the first screen of the application, there is a lottie animetion and the name of app
 public class SplashActivity extends AppCompatActivity {
     @Override

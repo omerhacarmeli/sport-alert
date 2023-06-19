@@ -4,10 +4,7 @@ package com.spot.alert;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Instrumentation;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,8 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -68,9 +63,7 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
     public static final String DEFAULT_NAME = "נקודה_1";
     private LocationDao locationDao;
-
     private LocationTimeRangeDao locationTimeRangeDao;
-
     private ImageEntityDao imageEntityDao;
     private GoogleMap mMap;
     private Location centerLocation;
@@ -86,8 +79,6 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     private List<ITimeRange> locationTimeRangeList = new ArrayList<>();
     private ImageView locationImage;
     private CameraOnClickListenerHandler cameraOnClickListenerHandler;
-
-    private ActivityResultLauncher<Intent> startCamera;
 
     @Nullable
     @Override

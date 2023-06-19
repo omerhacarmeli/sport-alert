@@ -8,7 +8,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
 
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.List;
 public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertUser(User user);
-
     @Delete
     void deleteUser(User user);
 

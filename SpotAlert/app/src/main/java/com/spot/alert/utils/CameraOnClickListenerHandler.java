@@ -17,9 +17,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
-import com.spot.alert.CreateLocationFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

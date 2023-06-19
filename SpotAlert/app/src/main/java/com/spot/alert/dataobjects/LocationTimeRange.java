@@ -7,8 +7,6 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import com.spot.alert.adapter.timerange.ITimeRange;
-
-
 @Entity(foreignKeys = @ForeignKey(entity = Location.class,
         parentColumns = "id",
         childColumns = "locationId",

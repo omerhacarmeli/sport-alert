@@ -15,13 +15,11 @@ import android.widget.Toast;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.spot.alert.TimePickerFragment;
 import com.spot.alert.R;
 import com.spot.alert.SpotAlertAppContext;
+import com.spot.alert.TimePickerFragment;
 import com.spot.alert.adapter.ClickListener;
-import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.utils.TimeRangeUtils;
-import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.TimeRangeValidation;
 import com.spot.alert.validators.ValidateResponse;
 

@@ -38,17 +38,13 @@ import com.spot.alert.validators.ValidateResponse;
 
 public class CenterPointFragment extends Fragment implements OnMapReadyCallback {
     private LocationDao locationDao;
-
-    private double latitude, longitude;
     private GoogleMap mMap;
     private Location location;
 
     private LatLng latLng;
-
     private Marker marker;
-    private  EditText editTextLongtitude;
+    private  EditText editTextLongitude;
     private  EditText editTextLatitude;
-
 
     @Nullable
     @Override
@@ -63,12 +59,12 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao();
         this.location = locationDao.getLocationByName(SpotAlertAppContext.CENTER_POINT_STRING);
 
-        editTextLongtitude = view.findViewById(R.id.width);
+        editTextLongitude = view.findViewById(R.id.width);
         editTextLatitude = view.findViewById(R.id.length);
         EditText zoomEditText = view.findViewById(R.id.zoom);
         if (location != null) {
             editTextLatitude.setText(String.valueOf(location.getLatitude()));
-            editTextLongtitude.setText(String.valueOf(location.getLongitude()));
+            editTextLongitude.setText(String.valueOf(location.getLongitude()));
             zoomEditText.setText(String.valueOf(location.getZoom()));
         }
 
@@ -78,7 +74,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             public void onClick(View view) {
 
                 Double latitude = Double.parseDouble(editTextLatitude.getText().toString());
-                Double longitude = Double.parseDouble(editTextLongtitude.getText().toString());
+                Double longitude = Double.parseDouble(editTextLongitude.getText().toString());
                 Double zoom = Double.parseDouble(zoomEditText.getText().toString());
 
                 if (location == null) {
@@ -184,7 +180,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
        location.setLongitude(latLng.longitude);
 
         editTextLatitude.setText(GeoUtils.getFormattedPoint(latLng.latitude));
-        editTextLongtitude.setText(GeoUtils.getFormattedPoint(latLng.longitude));
+        editTextLongitude.setText(GeoUtils.getFormattedPoint(latLng.longitude));
 
         validateLocationPoint();
 
@@ -195,10 +191,10 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         ValidateResponse validateResponse = LocationValidation.validateLocation(location);
 
         if (!validateResponse.isValidate()) {
-            editTextLongtitude.setError(validateResponse.getMsg());
+            editTextLongitude.setError(validateResponse.getMsg());
             editTextLatitude.setError(validateResponse.getMsg());
         } else {
-            editTextLongtitude.setError(null);
+            editTextLongitude.setError(null);
             editTextLatitude.setError(null);
 
         }

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import com.spot.alert.SpotAlertAppContext;
 
 public class BitMapUtils {
-
     public static Bitmap scaleBitmap(final Bitmap input ) {
         final int currentWidth = input.getWidth();
         final int currentHeight = input.getHeight();

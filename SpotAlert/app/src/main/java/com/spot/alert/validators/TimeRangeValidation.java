@@ -1,11 +1,8 @@
 package com.spot.alert.validators;
 
 import com.spot.alert.adapter.timerange.ITimeRange;
-import com.spot.alert.dataobjects.Location;
-import com.spot.alert.dataobjects.LocationTimeRange;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class TimeRangeValidation {
 

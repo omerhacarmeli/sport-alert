@@ -9,7 +9,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.spot.alert.dataobjects.Location;
-import com.spot.alert.dataobjects.User;
 
 import java.util.List;
 

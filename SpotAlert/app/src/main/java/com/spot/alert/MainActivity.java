@@ -32,11 +32,8 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.spot.alert.adapter.timerange.ITimeRange;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -282,6 +279,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void moveEditUser(User user) {
+
+        EditUserFragment fragment = new EditUserFragment();
+        moveFragment(fragment);
     }
 
     public void moveCreateUser() {

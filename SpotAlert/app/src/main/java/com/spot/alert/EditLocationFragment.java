@@ -4,9 +4,7 @@ package com.spot.alert;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -92,6 +90,10 @@ public class EditLocationFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CameraOnClickListenerHandler.CAMERA_REQUEST_CODE);
+        }
 
         ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),

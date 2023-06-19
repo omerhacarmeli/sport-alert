@@ -1,7 +1,5 @@
 package com.spot.alert;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,8 +11,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.spot.alert.database.AppDataBase;
@@ -24,10 +20,8 @@ import com.spot.alert.validators.UserValidator;
 import com.spot.alert.validators.ValidateResponse;
 
 public class LoginFragment extends Fragment {
-
     private UserDao userDao;
     private ProgressBar bar;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -3,9 +3,13 @@ package com.spot.alert;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,8 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,33 +47,37 @@ import com.spot.alert.validators.ValidateResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateUserFragment extends Fragment {
+public class EditUserFragment extends Fragment {
     private UserDao userDao;
     private UserTimeRangeDao userTimeRangeDao;
     private ImageEntityDao imageEntityDao;
-    private User newUser;
+    private User editUser;
     private ImageEntity imageEntity;
     private TimeRangeAdapter timeRangeAdapter;
     private RecyclerView recyclerView;
     private ClickListener deleteListener;
     private List<ITimeRange> userTimeRangeList = new ArrayList<>();
-    private EditText userName;
-    private EditText phone;
-    private EditText email;
-
+    private List<ITimeRange> deletedTimeRangeList = new ArrayList<>();
+    private EditText userNameEditText;
+    private EditText phoneEditText;
+    private EditText emailEditText;
     private ImageView userImage;
-
     private CameraOnClickListenerHandler cameraOnClickListenerHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.create_user_fragment, container, false);
+        return inflater.inflate(R.layout.edit_user_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CameraOnClickListenerHandler.CAMERA_REQUEST_CODE);
+        }
 
         ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -89,22 +99,50 @@ public class CreateUserFragment extends Fragment {
         this.userTimeRangeDao = AppDataBase.getDatabase(getActivity()).userTimeRangeDao();//
         this.imageEntityDao = AppDataBase.getDatabase(getActivity()).imageEntityDao();
 
-        userName = view.findViewById(R.id.signup_user);//taking the userName
-        email = view.findViewById(R.id.signup_email);//taking the email
-        phone = view.findViewById(R.id.signup_phonenumber);//taking the phone
-
-
-        this.newUser = new User();//creating a new user of User object
+        userNameEditText = view.findViewById(R.id.editUser_user);//taking the userName
+        emailEditText = view.findViewById(R.id.editUser_email);//taking the email
+        phoneEditText = view.findViewById(R.id.editUser_phonenumber);//taking the phone
 
         this.imageEntity = new ImageEntity();
+
+        Bundle bundle = getActivity().getIntent().getExtras();
+        Long userId = bundle.getLong("userId");
+
+        this.editUser = userDao.getUser(userId);
+
+        userNameEditText.setText(this.editUser.getUserName());
+        emailEditText.setText(this.editUser.getEmail());
+        phoneEditText.setText(this.editUser.getPhoneNumber());
+
+        userImage = view.findViewById(R.id.userImage);
+
+        if (this.editUser.getImageId() != null) {
+            this.imageEntity = imageEntityDao.getImageEntity(this.editUser.getImageId());
+            if (this.imageEntity != null) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageEntity.getImageData(), 0, imageEntity.getImageData().length);
+                userImage.setImageBitmap(bitmap);
+            }
+        } else {
+            this.imageEntity = new ImageEntity();
+        }
+
+
+        this.userTimeRangeList = mapTimeRangeList(this.userTimeRangeDao.getUserRangesByUserId(this.editUser.getUserId()));
+
+
+
         deleteListener = new ClickListener() {//after deleting the
             @Override
             public void click(Object obj) {//delete time
-                if (obj instanceof ITimeRange) {
+                if (obj instanceof UserTimeRange) {
 
-                    ITimeRange timeRange = (ITimeRange) obj;
+                    UserTimeRange userTimeRange = (UserTimeRange) obj;
 
-                    userTimeRangeList.remove(timeRange);// removing the time range from the list
+                    userTimeRangeList.remove(userTimeRange);// removing the time range from the list
+
+                    if (userTimeRange.getId() != null) {
+                        deletedTimeRangeList.add(userTimeRange);
+                    }
 
                     timeRangeAdapter.setDataChanged(userTimeRangeList);// setting the new list
 
@@ -140,9 +178,9 @@ public class CreateUserFragment extends Fragment {
         createUserApproval.setOnClickListener(new View.OnClickListener() {// button save the data and create a new user
             @Override
             public void onClick(View view) {//in here we check if all the inputs are validate
-                ValidateResponse validateUserNameResponse = UserUtils.validateUserName(newUser, userName);
-                ValidateResponse validateEmailResponse = UserUtils.validateEmail(userDao, newUser, email);
-                ValidateResponse validatePhoneResponse = UserUtils.validatePhone(newUser, phone);
+                ValidateResponse validateUserNameResponse = UserUtils.validateUserName(editUser, userNameEditText);
+                ValidateResponse validateEmailResponse = UserUtils.validateEmail(userDao, editUser, emailEditText);
+                ValidateResponse validatePhoneResponse = UserUtils.validatePhone(editUser, phoneEditText);
                 ValidateResponse validateUserTimeRangeResponse = validateUserTimeRange();
 
                 // we check if one of the inputs are not validate
@@ -157,15 +195,20 @@ public class CreateUserFragment extends Fragment {
 
                     if (imageEntity.getImageData() != null) { // check is there is a image in the data
                         Long imageId = imageEntityDao.insertImageEntity(imageEntity);// insert the image in to the data base and take the image id
-                        newUser.setImageId(imageId);//connecting between the user and the image
+                        editUser.setImageId(imageId);//connecting between the user and the image
                     }
 
-                    long userId = userDao.insertUser(newUser);// insert the new user in to the data base and take the id
+                    userDao.updateUser(editUser);// insert the new user in to the data base and take the id
 
                     for (ITimeRange timeRange : userTimeRangeList) {// a loop of UserTimeRange list
                         UserTimeRange userTimeRange = (UserTimeRange) timeRange;//casting between the UserTimeRange and timeRange
                         userTimeRange.setUserId(userId);//connecting between the user and the timeRange
                         AppDataBase.databaseWriteExecutor.submit(() -> userTimeRangeDao.insertUserTimeRange(userTimeRange));// insert to the data base in async way
+                    }
+
+                    for (ITimeRange timeRange : deletedTimeRangeList) {
+
+                        AppDataBase.databaseWriteExecutor.submit(() -> userTimeRangeDao.deleteUserTimeRange((UserTimeRange) timeRange));
                     }
 
                     Toast toast = Toast.makeText(getActivity(), "המשתמש נשמר בהצלחה", Toast.LENGTH_SHORT);// toast text user has been save succesfuly
@@ -193,8 +236,21 @@ public class CreateUserFragment extends Fragment {
             }
         });
 
+        timeRangeAdapter.setDataChanged(userTimeRangeList);
+
         userImage = view.findViewById(R.id.userImage);// reference of image
         userImage.setOnClickListener(cameraOnClickListenerHandler);
+    }
+
+    private List<ITimeRange> mapTimeRangeList(List<UserTimeRange> userTimeRangeList) {
+
+        List<ITimeRange> timeRangeList = new ArrayList<>();
+
+        for (UserTimeRange userTimeRange : userTimeRangeList) {
+            timeRangeList.add(userTimeRange);
+        }
+
+        return timeRangeList;
     }
 
     private ValidateResponse validateUserTimeRange() {// checking if the time range is validate

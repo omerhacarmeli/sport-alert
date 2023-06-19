@@ -9,7 +9,6 @@ import androidx.room.Update;
 
 import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.dataobjects.Location;
-
 @Dao
 public interface ImageEntityDao {
 

@@ -11,9 +11,7 @@ import android.view.animation.AnimationUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.spot.alert.R;
-import com.spot.alert.SpotAlertAppContext;
 import com.spot.alert.adapter.ClickListener;
-import com.spot.alert.adapter.location.LocationViewHolder;
 import com.spot.alert.dataobjects.User;
 
 import java.util.Collections;
@@ -26,13 +24,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
     ClickListener deleteListener;
     ClickListener editListener;
 
-    ClickListener clickListener;
 
     public UserAdapter(Context context, ClickListener deleteListener, ClickListener editListener) {
         this.context = context;
         this.deleteListener = deleteListener;
         this.editListener = editListener;
-        //this.clickListener = clickListener;
     }
 
     @Override

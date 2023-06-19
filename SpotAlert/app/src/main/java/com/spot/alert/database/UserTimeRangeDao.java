@@ -7,8 +7,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.spot.alert.dataobjects.LocationTimeRange;
-import com.spot.alert.dataobjects.User;
 import com.spot.alert.dataobjects.UserTimeRange;
 
 import java.util.List;

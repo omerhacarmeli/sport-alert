@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.spot.alert.R;
 import com.spot.alert.SpotAlertAppContext;
 import com.spot.alert.adapter.ClickListener;
 import com.spot.alert.dataobjects.Location;
@@ -17,10 +18,7 @@ import com.spot.alert.dataobjects.Location;
 import java.util.Collections;
 import java.util.List;
 
-import com.spot.alert.R;
-
 public class LocationAdapter extends RecyclerView.Adapter<LocationViewHolder> {
-
     List<Location> list = Collections.emptyList();
     Context context;
     ClickListener deleteListener;
