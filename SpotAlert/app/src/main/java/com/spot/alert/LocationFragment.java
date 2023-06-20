@@ -294,7 +294,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         });
     }
 
-    private void updateLocationsOnMap() {
+    private void updateLocationsOnMap() { // updating the locations on the map after updates
         if (mMap != null && locations != null && !locations.isEmpty()) { //if non of the object are empties
 
             com.spot.alert.dataobjects.Location center = locations.get(0);
@@ -302,11 +302,11 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.getLatitude(), center.getLongitude()), center.getZoom().floatValue());
 
             mMap.animateCamera(cameraUpdate);
-            mMap.moveCamera(cameraUpdate);//aimetion for movement
+            mMap.moveCamera(cameraUpdate);//animetion for movement
 
-            List<Marker> markers = new ArrayList<>();
+            List<Marker> markers = new ArrayList<>();// take the list of the markers
 
-            for (com.spot.alert.dataobjects.Location location : locations) {
+            for (com.spot.alert.dataobjects.Location location : locations) { //goes over the list of location
 
                 if (!markerMap.containsKey(location.getId())) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
