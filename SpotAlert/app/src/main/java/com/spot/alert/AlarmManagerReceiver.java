@@ -31,7 +31,7 @@ import java.util.List;
 
 public class AlarmManagerReceiver extends BroadcastReceiver {
 
-    private List<User> users = new ArrayList<>();
+    private static  List<Long> userIds = new ArrayList<>();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -55,11 +55,11 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
             int dayNumber = CalendarUtils.getDayOfWeek();
 
-            List<Long> userIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
+            List<Long> allUserIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
+            if (diffInUsersList(allUserIds)) {
 
-            List<User> allUserByIds = userDao.getAllUserByIds(userIds);
+            List<User> allUserByIds = userDao.getAllUserByIds(allUserIds);
 
-            if (diffInUsersList(allUserByIds)) {
 
                 StringBuilder sb = new StringBuilder();
                 sb.append("רשימת הזקיפים להיום: ");
@@ -73,15 +73,15 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
         }
     }
 
-    private boolean diffInUsersList(List<User> allUserByIds) {
+    private boolean diffInUsersList(List<Long> allUserIds) {
 
-        if (allUserByIds.size() != users.size()) {
+        if (allUserIds.size() != userIds.size()) {
 
-            users = allUserByIds;
+            userIds = allUserIds;
             return true;
         }
 
-        users = allUserByIds;
+        userIds = allUserIds;
 
         return false;
     }
