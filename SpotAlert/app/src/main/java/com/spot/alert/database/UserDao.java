@@ -35,9 +35,9 @@ public interface UserDao {
     @Query("SELECT * FROM User WHERE userId= :userId ")
     User getUser(long userId);
 
+    //בכל פעם שיש עידכון על המשתמשים הלייב דטה יביא לי רשימה חדשה
     @Query("SELECT * FROM User")
     LiveData<List<User>> getUsers();//מחזיר לייב דטה שיודע לטפל ברשימה של משתמשים
-    //בכל פעם שיש עידכון על המשתמשים הלייב דטה יביא לי רשימה חדשה
 
     @Query("SELECT * FROM User WHERE userId IN (:ids)")
     List<User> getAllUserByIds(List<Long> ids);

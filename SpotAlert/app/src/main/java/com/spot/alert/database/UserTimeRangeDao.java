@@ -30,8 +30,4 @@ public interface UserTimeRangeDao {
 
     @Query("SELECT DISTINCT(userId) from UserTimeRange where dayWeek=:dayWeek")
     List<Long> getUserIdsAndDay(int dayWeek);
-
-    @Query("SELECT * FROM UserTimeRange WHERE dayWeek=:dayWeek and userId IN (:ids)")
-    List<UserTimeRange> getTimeRangesByUserAndDay(List<Long> ids,int dayWeek);
-
 }

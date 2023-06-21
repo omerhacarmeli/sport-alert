@@ -18,15 +18,21 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.spot.alert.database.AppDataBase;
+import com.spot.alert.database.UserDao;
+import com.spot.alert.database.UserTimeRangeDao;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.utils.CalendarUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlarmManagerReceiver extends BroadcastReceiver {
+
+    private List<User> users = new ArrayList<>();
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -41,79 +47,60 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
             return;
         }
 
-        /*if (SpotAlertAppContext.ACTIVE_USER != null) {
-
-            String formattedDate = CalendarUtils.formattedDate(LocalDate.now());
-            String formattedShortTime = CalendarUtils.formattedShortTime(LocalTime.now().plusHours(1).withMinute(0).withSecond(0));
-
-            Location location = AppDataBase.getDatabase(context).locationDao().getLocation(calendarManagement.getLocationId());
-
-            AppDataBase.getDatabase(context).userTimeRangeDao().get
-            userTimeRangeDao
+        if (SpotAlertAppContext.ACTIVE_USER != null) {
 
 
-            User user = SpotAlertAppContext.ACTIVE_USER;
-
-            StringBuilder sb = new StringBuilder();
-            if (adminState) {
-                user = AppDataBase.getDatabase(context).userDao().getUser(calendarManagement.getUserId());
-                sb.append("בשעה ").append(formattedShortTime).append(" יש ל ").append(user.getUserName()).append(" משמרת ").append(" במיקום: ").append(location.getName());
-            } else {
-                sb.append("בשעה ").append(formattedShortTime).append(" יש לך ").append(" משמרת ").append(" במיקום: ").append(location.getName());
-            }
-
-
+            UserTimeRangeDao userTimeRangeDao = AppDataBase.getDatabase(context).userTimeRangeDao();
+            UserDao userDao = AppDataBase.getDatabase(context).userDao();
 
             int dayNumber = CalendarUtils.getDayOfWeek();
+
             List<Long> userIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
-            this.allUserByIds = userDao.getAllUserByIds(userIds);
-            if (!this.allUserByIds.isEmpty()) {
 
-                this.userTimeRangesByUserAndDay = this.userTimeRangeDao.getTimeRangesByUserAndDay(userIds, dayNumber);
+            List<User> allUserByIds = userDao.getAllUserByIds(userIds);
 
-
-            boolean adminState = false;
-*/
-            /*
-            List<CalendarManagement> calendarManagementForUser = null;
-            if (SpotAlertAppContext.ACTIVE_USER.equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_USER)) {
-                calendarManagementForUser = AppDataBase.getDatabase(context).calendarManagementDao().getCalendarManagementForAdminUser(formattedDate, formattedShortTime);
-                adminState = true;
-            } else {
-                calendarManagementForUser = AppDataBase.getDatabase(context).calendarManagementDao().getCalendarManagementForUser(formattedDate, formattedShortTime, SpotAlertAppContext.ACTIVE_USER.getUserId());
-            }
-
-            for (CalendarManagement calendarManagement : calendarManagementForUser) {
-
-                Location location = AppDataBase.getDatabase(context).locationDao().getLocation(calendarManagement.getLocationId());
-
-                User user = SpotAlertAppContext.ACTIVE_USER;
+            if (diffInUsersList(allUserByIds)) {
 
                 StringBuilder sb = new StringBuilder();
-                if (adminState) {
-                    user = AppDataBase.getDatabase(context).userDao().getUser(calendarManagement.getUserId());
-                    sb.append("בשעה ").append(formattedShortTime).append(" יש ל ").append(user.getUserName()).append(" משמרת ").append(" במיקום: ").append(location.getName());
-                } else {
-                    sb.append("בשעה ").append(formattedShortTime).append(" יש לך ").append(" משמרת ").append(" במיקום: ").append(location.getName());
+                sb.append("רשימת הזקיפים להיום: ");
+
+                for (User user : allUserByIds) {
+                    sb.append(user.getUserName() + ",");
                 }
 
-
-                sendNotification(context, location, sb.toString());
+                sendNotification(context, sb.toString());
             }
-
-             */
-
+        }
     }
 
-    private static void sendNotification(Context context, Location location, String msg) {
+    private boolean diffInUsersList(List<User> allUserByIds) {
+
+        if (allUserByIds.size() != users.size()) {
+
+            users = allUserByIds;
+            return true;
+        }
+
+        users = allUserByIds;
+
+        return false;
+    }
+
+
+    private static void sendNotification(Context context, String msg) {
         Intent tapResultIntent = new Intent(context, MainActivity.class);
         tapResultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = getActivity(context, 0, tapResultIntent, FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
 
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        bigTextStyle.bigText(msg); // Set the expanded message
+        bigTextStyle.setSummaryText("תזכורת לגבי זקיפים"); // Set a summary for the expanded message
+
         Notification notification = new
                 NotificationCompat.Builder(context, SpotAlertAppContext.LOCATION_CHANNEL_ID)
-                .setContentTitle("תזכורת לתחילת משמרת")
+                .setContentTitle("תזכורת לגבי זקיפים")
                 .setContentText(msg)
+                .setStyle(bigTextStyle)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setAutoCancel(true)
@@ -122,7 +109,6 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-
 
         notificationManager.notify(1, notification);
     }

@@ -126,7 +126,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                     }
 
                     locationDao.deleteLocation(location); // deleting the location from the map
-                     // deleting the image of the place from the data base
+                    // deleting the image of the place from the data base
                     if (location.getImageId() != null) { //check if it is difference from null
                         ImageEntity imageEntity = new ImageEntity(); // creating an object of imageEntity
                         imageEntity.setId(location.getImageId()); // setting the id of the deleting location
@@ -278,11 +278,12 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             GeoUtils.alertDialogEnableLocation(getActivity());
         }
     }
+
     private void loadLiveData() {
         this.locationDao.getLocations().observe(getActivity(), new Observer<List<com.spot.alert.dataobjects.Location>>() {
             @Override
             public void onChanged(List<com.spot.alert.dataobjects.Location> locationList) { //sign to live data observe
-                 //מחזיר לייב דטה שיודע לטפל ברשימה של משתמשים
+                //מחזיר לייב דטה שיודע לטפל ברשימה של משתמשים
                 //בכל פעם שיש עידכון על המשתמשים הלייב דטה יביא לי רשימה חדשה
                 locations = locationList;
 
@@ -296,7 +297,11 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
     private void updateLocationsOnMap() { // updating the locations on the map after updates
         if (mMap != null && locations != null && !locations.isEmpty()) { //if non of the object are empties
 
-            com.spot.alert.dataobjects.Location center = locations.get(0);
+            com.spot.alert.dataobjects.Location center = getCenterPoint(locations);
+
+            if (center == null || center.getLatitude() == null || center.getLongitude() == null) {
+                return;
+            }
 
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.getLatitude(), center.getLongitude()), center.getZoom().floatValue());
 
@@ -322,6 +327,18 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
             markers.get(0).showInfoWindow();
         }
+    }
+
+    private com.spot.alert.dataobjects.Location getCenterPoint(List<com.spot.alert.dataobjects.Location> locations) {
+
+        for (com.spot.alert.dataobjects.Location location : locations) {
+            if (SpotAlertAppContext.CENTER_POINT_STRING.equals(location.getName()))
+            {
+                return location;
+            }
+        }
+
+        return null;
     }
 
     @Override

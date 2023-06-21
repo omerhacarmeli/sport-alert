@@ -22,16 +22,7 @@ public interface LocationTimeRangeDao {
     @Update
     void updateLocationTimeRange(LocationTimeRange locationTimeRange);
 
-    @Query("SELECT * FROM LocationTimeRange WHERE id =:id")
-    LocationTimeRange getLocationTimeRange(Long id);
 
     @Query("SELECT * FROM LocationTimeRange WHERE locationId =:locationId")
     List<LocationTimeRange> getLocationTimeRangesByLocationId(Long locationId);
-
-    @Query("SELECT DISTINCT(locationId) from LocationTimeRange where dayWeek=:dayWeek")
-    List<Long> getLocationIdsByDayWeek(int dayWeek);
-
-    @Query("SELECT DISTINCT(userId) from UserTimeRange where dayWeek=:dayWeek")
-    List<Long> getUserIdsByDayWeek(int dayWeek);
-
 }

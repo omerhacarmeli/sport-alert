@@ -83,9 +83,10 @@ public class MainActivity extends AppCompatActivity
         setAlarmManager();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        UserFragment fragment = new UserFragment();
+        LocationFragment fragment = new LocationFragment();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
     }
+
     private void createNotificationChannel() {
 
         if (ActivityCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
@@ -117,7 +118,6 @@ public class MainActivity extends AppCompatActivity
         long triggerAtMillis = System.currentTimeMillis() + 5000;
         // הגדר את האזעקה באמצעות AlarmManager
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, 1000 * 30, pendingIntent);
-
     }
 
     @Override
