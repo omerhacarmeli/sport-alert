@@ -62,7 +62,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         editTextLongitude = view.findViewById(R.id.width);
         editTextLatitude = view.findViewById(R.id.length);
         EditText zoomEditText = view.findViewById(R.id.zoom);
-        if (location != null && location.getLatitude()!=null && location.getLongitude()!=null) {
+        if (location != null && location.getLatitude() != null && location.getLongitude() != null) {
             editTextLatitude.setText(String.valueOf(location.getLatitude()));
             editTextLongitude.setText(String.valueOf(location.getLongitude()));
             zoomEditText.setText(String.valueOf(location.getZoom()));
@@ -127,12 +127,15 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             }
         });
 
-        if (location != null && location.getLatitude()!=null && location.getLongitude()!=null) {
-            updateLocationOnMap(location);
-        }
+
+        updateLocationOnMap(location);
     }
 
     private void updateLocationOnMap(Location location) {
+
+        if (location == null || location.getLatitude() == null || location.getLongitude() == null) {
+            return;
+        }
 
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
