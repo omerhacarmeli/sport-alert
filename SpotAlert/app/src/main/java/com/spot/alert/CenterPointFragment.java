@@ -43,8 +43,8 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
 
     private LatLng latLng;
     private Marker marker;
-    private  EditText editTextLongitude;
-    private  EditText editTextLatitude;
+    private EditText editTextLongitude;
+    private EditText editTextLatitude;
 
     @Nullable
     @Override
@@ -62,10 +62,19 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         editTextLongitude = view.findViewById(R.id.width);
         editTextLatitude = view.findViewById(R.id.length);
         EditText zoomEditText = view.findViewById(R.id.zoom);
-        if (location != null) {
+        if (location != null && location.getLatitude()!=null && location.getLongitude()!=null) {
             editTextLatitude.setText(String.valueOf(location.getLatitude()));
             editTextLongitude.setText(String.valueOf(location.getLongitude()));
             zoomEditText.setText(String.valueOf(location.getZoom()));
+        } else {
+            location = new Location();
+            location.setLabel(SpotAlertAppContext.CENTER_POINT_STRING);
+            location.setLevel(1);
+            location.setRadius(10);
+            location.setName(SpotAlertAppContext.CENTER_POINT_STRING);
+            location.setId(locationDao.insertLocation(location));
+
+            selectLocation();
         }
 
         Button approval = view.findViewById(R.id.createLocationApproval);
@@ -77,25 +86,13 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
                 Double longitude = Double.parseDouble(editTextLongitude.getText().toString());
                 Double zoom = Double.parseDouble(zoomEditText.getText().toString());
 
-                if (location == null) {
-                    location = new Location();
-                    location.setLabel(SpotAlertAppContext.CENTER_POINT_STRING);
-                    location.setLevel(1);
-                    location.setRadius(10);
-                    location.setName(SpotAlertAppContext.CENTER_POINT_STRING);
-                    location.setLatitude(latitude);
-                    location.setLongitude(longitude);
-                    location.setZoom(zoom);
-                    location.setId(locationDao.insertLocation(location));
-                } else {
-                    location.setLatitude(latitude);
-                    location.setLongitude(longitude);
-                    location.setZoom(zoom);
-                    locationDao.updateLocation(location);
+                location.setLatitude(latitude);
+                location.setLongitude(longitude);
+                location.setZoom(zoom);
+                locationDao.updateLocation(location);
 
-                    Toast toast = Toast.makeText(getActivity(), "מוקד נשמר בהצלחה", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
+                Toast toast = Toast.makeText(getActivity(), "מוקד נשמר בהצלחה", Toast.LENGTH_SHORT);
+                toast.show();
 
                 updateLocationOnMap(location);
             }
@@ -119,7 +116,6 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
     }
 
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -131,8 +127,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             }
         });
 
-        if(location != null)
-        {
+        if (location != null && location.getLatitude()!=null && location.getLongitude()!=null) {
             updateLocationOnMap(location);
         }
     }
@@ -147,10 +142,11 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             this.marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.getLabel()));
         }
         this.marker.showInfoWindow();
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,location.getZoom().floatValue());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, location.getZoom().floatValue());
         mMap.animateCamera(cameraUpdate);
         mMap.moveCamera(cameraUpdate);
     }
+
     private void selectLocation() {
 
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -174,10 +170,11 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             GeoUtils.alertDialogEnableLocation(getActivity());
         }
     }
+
     private void updateNewLocation(LatLng latLng) {
 
         location.setLatitude(latLng.latitude);
-       location.setLongitude(latLng.longitude);
+        location.setLongitude(latLng.longitude);
 
         editTextLatitude.setText(GeoUtils.getFormattedPoint(latLng.latitude));
         editTextLongitude.setText(GeoUtils.getFormattedPoint(latLng.longitude));
@@ -186,6 +183,7 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
 
         updateLocationOnMap(location);
     }
+
     private ValidateResponse validateLocationPoint() {
 
         ValidateResponse validateResponse = LocationValidation.validateLocation(location);
