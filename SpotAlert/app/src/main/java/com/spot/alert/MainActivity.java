@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity
             item.setVisible(false);
         }
 
-
         // Get the AlarmManager service
         createNotificationChannel();
         setAlarmManager();
@@ -86,8 +85,6 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         UserFragment fragment = new UserFragment();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
-
-
     }
 
 
@@ -111,11 +108,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setAlarmManager() {
-
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         // צור כוונה למקלט כשזמן ההתראה מגיע
         Intent intent = new Intent(this, AlarmManagerReceiver.class);
-
         // הגדר כל מידע נוסף שתרצה להעביר למקלט שלך (אופציונלי)
         intent.putExtra("action", SpotAlertAppContext.CHECK_FOR_SHIFTING);//פרמטרים של ההודעה יכול להיות כל ערך שנחליט
         // צור PendingIntent שתופעל כאשר האזעקה מופעלת
@@ -170,8 +165,6 @@ public class MainActivity extends AppCompatActivity
             fragment = new LocationFragment();//פרגמנט יהיה שווה למיקום
         } else if (id == R.id.nav_guards) {// אם ההזהות שווה לשומרים פרגמנט
             fragment = new UserFragment();//פרגמנט יהיה שווה לשומר פרגמנט
-        } else if (id == R.id.nav_calendar_management) {
-
         } else if (id == R.id.nav_magic_stick) {//אם הזהות שווה למקל הקסם
             magicStick();// עוברים לפונקציה
         } else if (id == R.id.nav_center) {//אם ההזהות שווה למיקום מוקד
@@ -180,15 +173,14 @@ public class MainActivity extends AppCompatActivity
             logout();// עוברים לפונקציית יצאה
         } else if (id == R.id.nav_zoki) {//אם ההזהות שווה ליצאה
 
-
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);//פה אני יוצר אלרט ואני שואל האם הוא בטוח לגבי יצירת המשתמש
-            builder1.setMessage("האם אתה מעוניי לעבור למוקד??");//ההודעה
+            builder1.setMessage("האם אתה מעוניין לעבור למוקד??");//ההודעה
             builder1.setCancelable(true);//אם הוא לוחץ ביטול
             builder1.setPositiveButton(//במקרה של אם כן
                     "כן",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
- 
+
                             moveCenterPoint();
                         }
                     });

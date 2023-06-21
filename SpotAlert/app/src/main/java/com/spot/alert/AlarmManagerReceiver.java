@@ -18,7 +18,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.spot.alert.database.AppDataBase;
-import com.spot.alert.dataobjects.CalendarManagement;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
 import com.spot.alert.utils.CalendarUtils;
@@ -47,8 +46,35 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
             String formattedDate = CalendarUtils.formattedDate(LocalDate.now());
             String formattedShortTime = CalendarUtils.formattedShortTime(LocalTime.now().plusHours(1).withMinute(0).withSecond(0));
 
+            Location location = AppDataBase.getDatabase(context).locationDao().getLocation(calendarManagement.getLocationId());
+
+            AppDataBase.getDatabase(context).userTimeRangeDao().get
+            userTimeRangeDao
+
+
+            User user = SpotAlertAppContext.ACTIVE_USER;
+
+            StringBuilder sb = new StringBuilder();
+            if (adminState) {
+                user = AppDataBase.getDatabase(context).userDao().getUser(calendarManagement.getUserId());
+                sb.append("בשעה ").append(formattedShortTime).append(" יש ל ").append(user.getUserName()).append(" משמרת ").append(" במיקום: ").append(location.getName());
+            } else {
+                sb.append("בשעה ").append(formattedShortTime).append(" יש לך ").append(" משמרת ").append(" במיקום: ").append(location.getName());
+            }
+
+
+
+            int dayNumber = CalendarUtils.getDayOfWeek();
+            List<Long> userIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
+            this.allUserByIds = userDao.getAllUserByIds(userIds);
+            if (!this.allUserByIds.isEmpty()) {
+
+                this.userTimeRangesByUserAndDay = this.userTimeRangeDao.getTimeRangesByUserAndDay(userIds, dayNumber);
+
+
             boolean adminState = false;
 
+            /*
             List<CalendarManagement> calendarManagementForUser = null;
             if (SpotAlertAppContext.ACTIVE_USER.equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_USER)) {
                 calendarManagementForUser = AppDataBase.getDatabase(context).calendarManagementDao().getCalendarManagementForAdminUser(formattedDate, formattedShortTime);
@@ -74,13 +100,12 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
                 sendNotification(context, location, sb.toString());
             }
+
+             */
         }
     }
 
     private static void sendNotification(Context context, Location location, String msg) {
-
-        long[] vibrationPattern = {0, 300, 200, 300};
-
         Intent tapResultIntent = new Intent(context, MainActivity.class);
         tapResultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = getActivity(context, 0, tapResultIntent, FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
@@ -92,7 +117,6 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setAutoCancel(true)
-                .setVibrate(vibrationPattern)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .build();

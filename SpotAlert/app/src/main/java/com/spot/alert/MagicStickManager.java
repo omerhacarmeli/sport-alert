@@ -1,12 +1,10 @@
 package com.spot.alert;
 
 import com.spot.alert.database.AppDataBase;
-import com.spot.alert.database.CalendarManagementDao;
 import com.spot.alert.database.LocationDao;
 import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.database.UserDao;
 import com.spot.alert.database.UserTimeRangeDao;
-import com.spot.alert.dataobjects.CalendarManagement;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
@@ -16,7 +14,6 @@ import com.spot.alert.utils.CalendarUtils;
 import java.time.LocalDate;
 
 public class MagicStickManager {
-    CalendarManagementDao calendarManagementDao;
     LocationTimeRangeDao locationTimeRangeDao;
     LocationDao locationDao;
     UserDao userDao;
@@ -29,24 +26,11 @@ public class MagicStickManager {
         userTimeRangeDao = dataBase.userTimeRangeDao();
         locationDao = dataBase.locationDao();
         locationTimeRangeDao = dataBase.locationTimeRangeDao();
-        calendarManagementDao = dataBase.calendarManagementDao();
 
         insertUsers();
         insertUsersTimeRange();
         insertLocations();
         insertLocationsTimeRange();
-    }
-
-    private void insertCalendarManagement(long locationId, long locationTimeRangeId) {
-        String date = CalendarUtils.formattedDate(LocalDate.now());
-        for (int i = 8; i < 22; i++) {
-
-            try {
-                calendarManagementDao.insertCalendarManagement(new CalendarManagement(null, date, i + ":00", locationId, 1L, locationTimeRangeId));
-            } catch (Exception e) {
-
-            }
-        }
     }
 
     private void insertLocationsTimeRange() {
@@ -57,8 +41,6 @@ public class MagicStickManager {
             for (int day = 1; day < 8; day++) {
                 seq++;
                 locationTimeRangeDao.insertLocationTimeRange(new LocationTimeRange(seq, 8.00, 22.00, day, locationId));
-
-                insertCalendarManagement(locationId, seq);
             }
         }
     }

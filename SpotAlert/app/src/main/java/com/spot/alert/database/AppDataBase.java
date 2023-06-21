@@ -6,7 +6,6 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.spot.alert.dataobjects.CalendarManagement;
 import com.spot.alert.dataobjects.ImageEntity;
 import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.LocationTimeRange;
@@ -16,7 +15,7 @@ import com.spot.alert.dataobjects.UserTimeRange;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Location.class, LocationTimeRange.class, UserTimeRange.class, ImageEntity.class, CalendarManagement.class}, version = 14)
+@Database(entities = {User.class, Location.class, LocationTimeRange.class, UserTimeRange.class, ImageEntity.class}, version = 14)
 public abstract class AppDataBase extends RoomDatabase {
 
     private static final int NUMBER_OF_THREADS = 4;
@@ -31,8 +30,6 @@ public abstract class AppDataBase extends RoomDatabase {
     public abstract UserTimeRangeDao userTimeRangeDao();
 
     public abstract ImageEntityDao imageEntityDao();
-    public abstract CalendarManagementDao calendarManagementDao();
-
     private static volatile AppDataBase INSTANCE;
 
     public static AppDataBase getDatabase(final Context context) {

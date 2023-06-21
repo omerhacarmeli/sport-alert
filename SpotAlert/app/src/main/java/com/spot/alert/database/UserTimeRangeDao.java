@@ -22,11 +22,8 @@ public interface UserTimeRangeDao {
     @Update
     void updateUserTimeRange(UserTimeRange userTimeRange);
 
-    @Query("SELECT * FROM UserTimeRange WHERE id =:id")
-    UserTimeRange getUserTimeRange(Long id);
-
-    @Query("SELECT * FROM UserTimeRange WHERE userId =:userId")
-    List<UserTimeRange> getUserRangesByUserId(Long userId);
+    @Query("SELECT * FROM UserTimeRange WHERE userId =:userId and dayWeek=:dayWeek and ")
+    List<UserTimeRange> getUserRangesByUserIdAndDayAndTime(Long userId,int dayWeek);
 
     @Query("SELECT DISTINCT(userId) from UserTimeRange where dayWeek=:dayWeek")
     List<Long> getUserIdsAndDay(int dayWeek);

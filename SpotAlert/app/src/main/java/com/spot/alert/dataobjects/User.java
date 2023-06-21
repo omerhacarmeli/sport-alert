@@ -6,22 +6,19 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 @Entity()
 public class User {//קלאס של משתמש
+
     @PrimaryKey(autoGenerate = true)//מפתח ראשי הוא ID
     public Long userId;
     @ColumnInfo(name = "email")//עמודה של אימייל
     public String email;
-
     @ColumnInfo(name = "imageId")
     private Long imageId;
     @ColumnInfo(name = "userName", defaultValue = "")
     public String userName;
-
     @ColumnInfo(name = "password")
     public String password;
-
     @ColumnInfo(name = "phoneNumber")
     public String phoneNumber;
-
 
     public User() {
     }
