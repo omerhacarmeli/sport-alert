@@ -79,7 +79,7 @@ public class CameraOnClickListenerHandler implements View.OnClickListener {
         }
     }
 
-    private File 0createImageFile() {
+    private File createImageFile() {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";

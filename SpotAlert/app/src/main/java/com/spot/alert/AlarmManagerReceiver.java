@@ -41,7 +41,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
             return;
         }
 
-        if (SpotAlertAppContext.ACTIVE_USER != null) {
+        /*if (SpotAlertAppContext.ACTIVE_USER != null) {
 
             String formattedDate = CalendarUtils.formattedDate(LocalDate.now());
             String formattedShortTime = CalendarUtils.formattedShortTime(LocalTime.now().plusHours(1).withMinute(0).withSecond(0));
@@ -73,7 +73,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
 
             boolean adminState = false;
-
+*/
             /*
             List<CalendarManagement> calendarManagementForUser = null;
             if (SpotAlertAppContext.ACTIVE_USER.equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_USER)) {
@@ -102,7 +102,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
             }
 
              */
-        }
+
     }
 
     private static void sendNotification(Context context, Location location, String msg) {
