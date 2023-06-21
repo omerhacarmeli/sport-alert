@@ -5,10 +5,10 @@ import java.text.DecimalFormat;
 public class TimeRangeUtils {
 
     private static DecimalFormat df = new DecimalFormat("#.##");//subtracting the the numbers after the first 3
+
     public static String getTimeLabel(Double time) {
 
-
-         int hours = time.intValue(); //taking only the hours
+        int hours = time.intValue(); //taking only the hours
 
         int minutes = Double.valueOf(df.format(((time - ((double) hours)) * (double) 100))).intValue();// taking only the minutes and double it by 100
         // creating the strings for the hours and minutes

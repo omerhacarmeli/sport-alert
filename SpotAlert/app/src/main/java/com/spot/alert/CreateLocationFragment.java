@@ -60,7 +60,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateLocationFragment extends Fragment implements OnMapReadyCallback {
-
     public static final String DEFAULT_NAME = "נקודה_1";
     private LocationDao locationDao;
     private LocationTimeRangeDao locationTimeRangeDao;

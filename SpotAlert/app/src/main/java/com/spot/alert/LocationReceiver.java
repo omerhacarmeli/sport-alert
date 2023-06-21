@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 public class LocationReceiver extends BroadcastReceiver {
-
     OnLocationStateListener onLocationStateListener;
     public LocationReceiver(LocationReceiver.OnLocationStateListener onLocationStateListener) {
         this.onLocationStateListener = onLocationStateListener;

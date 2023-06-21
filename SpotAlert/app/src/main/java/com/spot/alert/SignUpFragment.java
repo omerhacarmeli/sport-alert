@@ -38,7 +38,6 @@ public class SignUpFragment extends Fragment {
     private UserDao userDao;
     private ImageEntityDao imageEntityDao;
     private CameraOnClickListenerHandler cameraOnClickListenerHandler;
-
     private ImageView userImage;
     private ImageEntity imageEntity = new ImageEntity();
 

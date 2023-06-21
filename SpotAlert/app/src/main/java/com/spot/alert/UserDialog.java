@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 public class UserDialog extends Dialog {
-
     Bitmap bitmap;
 
     public UserDialog(Context  context, Bitmap bitmap) {

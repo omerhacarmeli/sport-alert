@@ -44,7 +44,6 @@ public class MagicStickManager {
             }
         }
     }
-
     private void insertLocations() {
         //Location(Long id, String name, String label, Integer radius, Double latitude, Double longitude, Integer level, Double zoom) {
         locationDao.insertLocation(new Location(1L, "מוקד אבטחה", "מוקד אבטחה", 25, 31.508419, 34.593228, 1, 15.0, null));

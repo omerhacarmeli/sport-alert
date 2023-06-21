@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity
         UserFragment fragment = new UserFragment();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
     }
-
-
     private void createNotificationChannel() {
 
         if (ActivityCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {

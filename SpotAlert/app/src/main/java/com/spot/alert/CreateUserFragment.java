@@ -54,7 +54,6 @@ public class CreateUserFragment extends Fragment {
     private EditText userName;
     private EditText phone;
     private EditText email;
-
     private ImageView userImage;
 
     private CameraOnClickListenerHandler cameraOnClickListenerHandler;

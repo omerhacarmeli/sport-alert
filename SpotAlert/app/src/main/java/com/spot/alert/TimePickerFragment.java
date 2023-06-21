@@ -25,8 +25,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     private int hours;
     private ITimeRange timeRange;
     private String fromto;
-
-    public TimePickerFragment(TextView textView, TextView errorView, ITimeRange timeRange, String fromto) {// constrator
+    public TimePickerFragment(TextView textView, TextView errorView, ITimeRange timeRange, String fromto) {// constructor
         this.textView = textView;
         this.timeRange = timeRange;
         this.fromto = fromto;

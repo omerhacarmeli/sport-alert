@@ -126,10 +126,7 @@ public class EditUserFragment extends Fragment {
             this.imageEntity = new ImageEntity();
         }
 
-
         this.userTimeRangeList = mapTimeRangeList(this.userTimeRangeDao.getUserRangesByUserId(this.editUser.getUserId()));
-
-
 
         deleteListener = new ClickListener() {//after deleting the
             @Override

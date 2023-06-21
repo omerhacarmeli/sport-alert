@@ -1,6 +1,5 @@
 package com.spot.alert;
 
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -40,8 +39,6 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
     private LocationDao locationDao;
     private GoogleMap mMap;
     private Location location;
-
-    private LatLng latLng;
     private Marker marker;
     private EditText editTextLongitude;
     private EditText editTextLatitude;
@@ -168,7 +165,6 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             }
 
         } else {
-
             Toast.makeText(getActivity(), "המיקום לא נבחר, יש צורך להדליק את המיקום במכשיר", Toast.LENGTH_LONG).show();
             GeoUtils.alertDialogEnableLocation(getActivity());
         }
@@ -197,7 +193,6 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         } else {
             editTextLongitude.setError(null);
             editTextLatitude.setError(null);
-
         }
 
         return validateResponse;

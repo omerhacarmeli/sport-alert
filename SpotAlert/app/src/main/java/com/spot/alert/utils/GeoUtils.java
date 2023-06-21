@@ -16,7 +16,6 @@ public class GeoUtils {
     public static double getDistanceFromLatLonInKm(LatLng from, LatLng to) {
         return getDistanceFromLatLonInKm(from.latitude, from.longitude, to.latitude, to.longitude);
     }
-
     public static double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
         double R = 6371; // Radius of the earth in km
         double dLat = deg2rad(lat2 - lat1);  // deg2rad below

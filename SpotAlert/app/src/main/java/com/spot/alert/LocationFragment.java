@@ -278,7 +278,6 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             GeoUtils.alertDialogEnableLocation(getActivity());
         }
     }
-
     private void loadLiveData() {
         this.locationDao.getLocations().observe(getActivity(), new Observer<List<com.spot.alert.dataobjects.Location>>() {
             @Override

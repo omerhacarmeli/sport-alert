@@ -11,14 +11,8 @@ public class SpotAlertAppContext {
     public static final String TO_TIME = "to";
     public static final String CENTER_POINT_STRING = "מוקד אבטחה";
     public static final User SPOT_ALERT_ADMIN_USER = new User(0L, SPOT_ALERT_ADMIN_EMAIL, null, "spotalert", "amdin", "0509999999");
-
     public static final long MAX_IMAGE_SIZE = 1024 * 1024;
-
     public static final String LOCATION_CHANNEL_ID = "locationChannelId";
     public static final String LOCATION_CHANNEL_NAME = "locationChannelName";
-
     public static final String CHECK_FOR_SHIFTING = "checkForShifting";
-
-
-
 }
