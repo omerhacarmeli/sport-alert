@@ -92,7 +92,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {//check if the location in on
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {//check if i have acsses to the GPS
 
             Log.i("About GPS", "GPS is Enabled in your device");
         } else {
@@ -130,7 +130,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
                     if (location.getImageId() != null) { //check if it is difference from null
                         ImageEntity imageEntity = new ImageEntity(); // creating an object of imageEntity
                         imageEntity.setId(location.getImageId()); // setting the id of the deleting location
-                        imageEntityDao.deleteImageEntity(imageEntity); // deleting the image of the place
+                        imageEntityDao.deleteImageEntity(imageEntity); // deleting the image of the place from the data base
                     }
 
                     Toast.makeText(getActivity(), location.getName() + " נמחק בהצלחה", Toast.LENGTH_LONG).show();//toast message of sucsseful deleting

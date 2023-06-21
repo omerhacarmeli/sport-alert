@@ -108,7 +108,6 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
                     }
                 }
         );
-
         this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this, startCamera); //listener for the camera
 
         this.locationDao = AppDataBase.getDatabase(getActivity()).locationDao(); // taking the data of the locations
@@ -199,7 +198,7 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
                 newLocation.setName(createLocationNameEditText.getText().toString()); // setting a name to the new location
                 newLocation.setLabel(createLocationNameEditText.getText().toString());// setting a label to the new location
 
-                boolean validateLocation = validateLocationName().isValidate(); // checking of the name is validate
+                boolean validateLocation = validateLocationName().isValidate(); // checking If the name is validate
                 boolean validateLocationPoint = validateLocationPoint().isValidate();// checking of the location point is validate
                 boolean validateLocationTimeRange = validateLocationTimeRange().isValidate();// checking of the time range are validate
 

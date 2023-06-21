@@ -6,12 +6,7 @@ import com.spot.alert.database.LocationTimeRangeDao;
 import com.spot.alert.database.UserDao;
 import com.spot.alert.database.UserTimeRangeDao;
 import com.spot.alert.dataobjects.Location;
-import com.spot.alert.dataobjects.LocationTimeRange;
 import com.spot.alert.dataobjects.User;
-import com.spot.alert.dataobjects.UserTimeRange;
-import com.spot.alert.utils.CalendarUtils;
-
-import java.time.LocalDate;
 
 public class MagicStickManager {
     LocationTimeRangeDao locationTimeRangeDao;

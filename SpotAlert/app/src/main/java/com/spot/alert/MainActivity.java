@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);//-tool barפה יוצרים את ה
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);// פנ יוצרים את הפאב
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);// פה יוצרים את הפאב
         fab.setOnClickListener(new View.OnClickListener() {// בעת לחיצה
             @Override
             public void onClick(View view) {
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         });
         //טיפול בסגירה ופתיחה של הdrawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //this toggle is to open to open the navigation drawer
+        //this toggle is to open the navigation drawer
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_location);
 
-        //בדוק שהמשתמש הנוכחי הוא אדמין אם לא הקסם לא יופיע בתפריט
+        //בודק שהמשתמש הנוכחי הוא אדמין אם לא הקסם לא יופיע בתפריט
         if (!SpotAlertAppContext.ACTIVE_USER.getEmail().equals(SpotAlertAppContext.SPOT_ALERT_ADMIN_EMAIL)) {
             MenuItem item = navigationView.getMenu().findItem(R.id.nav_magic_stick);
             item.setVisible(false);
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         LocationFragment fragment = new LocationFragment();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
     }
-
+//we create a channel between spotAlert and android we send the notification in channel
     private void createNotificationChannel() {
 
         if (ActivityCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
@@ -97,16 +97,14 @@ public class MainActivity extends AppCompatActivity
             // You can request the permission from the user
             ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 11122);
         }
-
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-        NotificationChannel channel = new NotificationChannel(SpotAlertAppContext.LOCATION_CHANNEL_ID, SpotAlertAppContext.LOCATION_CHANNEL_NAME, importance);
+        NotificationChannel channel = new NotificationChannel(SpotAlertAppContext.LOCATION_CHANNEL_ID, SpotAlertAppContext.LOCATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
 
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
     }
 
     private void setAlarmManager() {
+        // we ask for alarmMenger
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         // צור כוונה למקלט כשזמן ההתראה מגיע
         Intent intent = new Intent(this, AlarmManagerReceiver.class);

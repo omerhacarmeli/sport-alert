@@ -30,7 +30,8 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {// when the user press back on the phone
+        // creating a alert dialog and ask if he wants to leave the app
         new AlertDialog.Builder(this).setMessage("האם אתה מעוניין לצאת מהאפליקציה S?")
                 .setCancelable(true).setPositiveButton(
                         "כן",
@@ -48,5 +49,4 @@ public class SplashActivity extends AppCompatActivity {
                         })
                 .create().show();
     }
-
 }

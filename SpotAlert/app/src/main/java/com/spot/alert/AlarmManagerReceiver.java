@@ -20,12 +20,9 @@ import androidx.core.app.NotificationManagerCompat;
 import com.spot.alert.database.AppDataBase;
 import com.spot.alert.database.UserDao;
 import com.spot.alert.database.UserTimeRangeDao;
-import com.spot.alert.dataobjects.Location;
 import com.spot.alert.dataobjects.User;
-import com.spot.alert.utils.CalendarUtils;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,19 +38,11 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
             return;
         }
 
-        String action = intent.getStringExtra("action");
-
-        if (!SpotAlertAppContext.CHECK_FOR_SHIFTING.equals(action)) {
-            return;
-        }
-
         if (SpotAlertAppContext.ACTIVE_USER != null) {
-
-
             UserTimeRangeDao userTimeRangeDao = AppDataBase.getDatabase(context).userTimeRangeDao();
             UserDao userDao = AppDataBase.getDatabase(context).userDao();
 
-            int dayNumber = CalendarUtils.getDayOfWeek();
+            int dayNumber = getDayOfWeek();
 
             List<Long> allUserIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
             if (diffInUsersList(allUserIds)) {
@@ -111,5 +100,13 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
         notificationManager.notify(1, notification);
+    }
+
+
+    public static int getDayOfWeek() {
+        int dayOfWeekValue = LocalDate.now().getDayOfWeek().getValue();
+        int adjustedDayOfWeek = (dayOfWeekValue % 7) + 1;
+
+        return adjustedDayOfWeek;
     }
 }

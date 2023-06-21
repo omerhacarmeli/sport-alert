@@ -66,15 +66,17 @@ public class CameraOnClickListenerHandler implements View.OnClickListener {
         }
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // check for premission on a android file system
         if (cameraIntent.resolveActivity(this.context.getPackageManager()) != null) {
             // Create a file to save the image
             imageFile = createImageFile();
 
             if (imageFile != null) {
+                //get the file location from fileProvider
                 Uri photoUri = FileProvider.getUriForFile(this.context, "com.spot.alert.fileprovider", imageFile);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 
-                startCamera.launch(cameraIntent);
+                startCamera.launch(cameraIntent); // start camera and send
             }
         }
     }
@@ -99,13 +101,13 @@ public class CameraOnClickListenerHandler implements View.OnClickListener {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
 
             Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap);
-
+            // transform the image bit map to byteArray to keep the image in dataBase
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 
             byte[] imageData = outputStream.toByteArray();
-
+//
             return new CameraImage(imageData, scaledBitmap);
         } catch (Exception e) {
             return null;
