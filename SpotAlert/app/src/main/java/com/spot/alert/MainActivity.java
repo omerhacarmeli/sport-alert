@@ -63,8 +63,7 @@ public class MainActivity extends AppCompatActivity
         //טיפול בסגירה ופתיחה של הdrawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         //this toggle is to open the navigation drawer
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -167,30 +166,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new CenterPointFragment();//פרגמנט יהיה שווה למוקד פרגמנט
         } else if (id == R.id.logout) {//אם ההזהות שווה ליצאה
             logout();// עוברים לפונקציית יצאה
-        } else if (id == R.id.nav_zoki) {//אם ההזהות שווה ליצאה
-
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);//פה אני יוצר אלרט ואני שואל האם הוא בטוח לגבי יצירת המשתמש
-            builder1.setMessage("האם אתה מעוניין לעבור למוקד??");//ההודעה
-            builder1.setCancelable(true);//אם הוא לוחץ ביטול
-            builder1.setPositiveButton(//במקרה של אם כן
-                    "כן",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-
-                            moveCenterPoint();
-                        }
-                    });
-            builder1.setNegativeButton(//במקרה שהמשתמש לוחץ לא, האפליקציה לא עושה כלום
-                    " לא",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();//ביטול
-                        }
-                    });
-
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
-        }
+        } 
 
         if (fragment != null) { //כאן בודקים אם הפרגמנט הוא שונה מנל
             moveFragment(fragment);//אם הוא כן אז עוברים לפונקציה שמעבירה מסך

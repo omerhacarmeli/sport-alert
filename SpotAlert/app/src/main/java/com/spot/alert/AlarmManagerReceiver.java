@@ -49,7 +49,7 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
             List<User> allUserByIds = userDao.getAllUserByIds(allUserIds);
 
-
+//in here we create the message for the notification
                 StringBuilder sb = new StringBuilder();
                 sb.append("רשימת הזקיפים להיום: ");
 
@@ -80,13 +80,13 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
         Intent tapResultIntent = new Intent(context, MainActivity.class);
         tapResultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = getActivity(context, 0, tapResultIntent, FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
-
+//this give a drop down
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.bigText(msg); // Set the expanded message
         bigTextStyle.setSummaryText("תזכורת לגבי זקיפים"); // Set a summary for the expanded message
 
         Notification notification = new
-                NotificationCompat.Builder(context, SpotAlertAppContext.LOCATION_CHANNEL_ID)
+                NotificationCompat.Builder(context, SpotAlertAppContext.LOCATION_CHANNEL_ID)//giving the channel
                 .setContentTitle("תזכורת לגבי זקיפים")
                 .setContentText(msg)
                 .setStyle(bigTextStyle)
@@ -99,9 +99,8 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        notificationManager.notify(1, notification);
+        notificationManager.notify(1, notification); //send the notification
     }
-
 
     public static int getDayOfWeek() {
         int dayOfWeekValue = LocalDate.now().getDayOfWeek().getValue();

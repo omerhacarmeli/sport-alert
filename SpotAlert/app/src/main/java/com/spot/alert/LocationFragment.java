@@ -159,7 +159,6 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
             public void click(Object obj) {
                 if (obj instanceof com.spot.alert.dataobjects.Location) {// checking if it is from location kind
                     com.spot.alert.dataobjects.Location location = (com.spot.alert.dataobjects.Location) obj;// giving the object to location
-
                     if (markerMap.get(location.getId()) != null) {// checking if the marker is difference from null
                         markerMap.get(location.getId()).showInfoWindow();// giving the name of the place on the map
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())); // updating the Longitude and Latitude on the camera

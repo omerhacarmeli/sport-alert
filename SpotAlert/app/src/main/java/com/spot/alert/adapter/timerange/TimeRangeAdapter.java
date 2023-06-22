@@ -169,20 +169,22 @@ public class TimeRangeAdapter
 
         this.timeRangeList = timeRangeList;// השמה
 
-        this.notifyDataSetChanged();// refresh the data
+        this.notifyDataSetChanged();// refresh the recycle view
     }
 
-    private ValidateResponse validateTimeRange(TextView errorView, ITimeRange timeRange) {
+    private ValidateResponse validateTimeRange(TextView errorView, ITimeRange timeRange) { // checks if the time range is validate
+        // sends the time range to validation and gets boolean and msg
         ValidateResponse validateResponse = TimeRangeValidation.validateTimeRange(timeRange);
 
-        if (!validateResponse.isValidate()) {
+        if (!validateResponse.isValidate()) { // if it is difference from true
+            // msg will be not validate
             errorView.setError("טווח שעות אינו תקין");
             errorView.setText("טווח שעות אינו תקין");
-        } else {
-                        errorView.setError(null);
+        } else { // if it is validate then setError will be null
+            errorView.setError(null);
             errorView.setText(null);
         }
 
-        return validateResponse;
+        return validateResponse; // return the value
     }
 }

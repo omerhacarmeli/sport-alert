@@ -118,8 +118,6 @@ public class UserFragment extends Fragment {
     }
 
     private void showUserDialog(User user) {
-
-
         if (user.getImageId() != null) {
            ImageEntity imageEntity = imageEntityDao.getImageEntity(user.getImageId());
             if (imageEntity != null) {
