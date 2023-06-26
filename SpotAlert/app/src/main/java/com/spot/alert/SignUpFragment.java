@@ -62,12 +62,9 @@ public class SignUpFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CameraOnClickListenerHandler.CAMERA_REQUEST_CODE);
         }
-
-        ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
+        //registerForActivityResult it is like a luncher to the camera results
+        ActivityResultLauncher<Intent> startCamera = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK) {
-
                         CameraOnClickListenerHandler.CameraImage cameraImage = cameraOnClickListenerHandler.onActivityResultGetCameraImage();
                         if (cameraImage != null) {
                             userImage.setImageBitmap(cameraImage.getBitmap());

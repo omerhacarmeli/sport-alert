@@ -37,7 +37,7 @@ public class CameraOnClickListenerHandler implements View.OnClickListener {
 
     private File imageFile;
 
-
+//this class in listener on click on the image to open the camera and handel all the image file and retrive the image
     public CameraOnClickListenerHandler(Context context, Fragment fragment, ActivityResultLauncher<Intent> startCamera) {
         this.context = context;
         this.fragment = fragment;
@@ -96,18 +96,13 @@ public class CameraOnClickListenerHandler implements View.OnClickListener {
     }
 
     public CameraImage onActivityResultGetCameraImage() {
-
         try {
-            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
-
-            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap);
+            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath()); // gibe the bitmap the path to the image file in the phone
+            Bitmap scaledBitmap = BitMapUtils.scaleBitmap(bitmap); // the size of the image
             // transform the image bit map to byteArray to keep the image in dataBase
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
-            byte[] imageData = outputStream.toByteArray();
-//
+            byte[] imageData = outputStream.toByteArray(); // array og the picxels
             return new CameraImage(imageData, scaledBitmap);
         } catch (Exception e) {
             return null;

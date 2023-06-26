@@ -96,7 +96,7 @@ public class UserFragment extends Fragment {
         });
 
         //כאן יוצרים את המשתמש הדאפטר, נותנים לו את שני הליסנרים של מחיקה ועריכת משתמש
-        //התפקיד של הדאפטר לעדכן את הריסיקל ברשימת המשתמשים ולעדכן את התצוגה
+        // to connect between the data (list of users) to the RecycleView
         adapter = new UserAdapter(getActivity(), deleteListener, editListener);
         recyclerView.setAdapter(adapter);//כאן עושים סט לאדפטר
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -118,14 +118,14 @@ public class UserFragment extends Fragment {
     }
 
     private void showUserDialog(User user) {
-        if (user.getImageId() != null) {
-           ImageEntity imageEntity = imageEntityDao.getImageEntity(user.getImageId());
+        if (user.getImageId() != null) { // checks if the user has a image on him
+           ImageEntity imageEntity = imageEntityDao.getImageEntity(user.getImageId());// bring image data base to image
             if (imageEntity != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageEntity.getImageData(), 0, imageEntity.getImageData().length);
                 UserDialog userDialog = new UserDialog(getActivity(),bitmap);
                 userDialog.show();
             }
-        } else {
+        } else { // if the image doesn't exit  im showing the toast massege that says the image isn't exit
             Toast.makeText(getActivity(), user.getUserName() + "תמונה לא קיימת", Toast.LENGTH_LONG).show(); //toast message that the user has been deleted
         }
 

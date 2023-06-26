@@ -32,46 +32,38 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-
         if (ActivityCompat.checkSelfPermission(context, POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        UserTimeRangeDao userTimeRangeDao = AppDataBase.getDatabase(context).userTimeRangeDao();
+        UserDao userDao = AppDataBase.getDatabase(context).userDao();
 
-        if (SpotAlertAppContext.ACTIVE_USER != null) {
-            UserTimeRangeDao userTimeRangeDao = AppDataBase.getDatabase(context).userTimeRangeDao();
-            UserDao userDao = AppDataBase.getDatabase(context).userDao();
+        int dayNumber = getDayOfWeek();
 
-            int dayNumber = getDayOfWeek();
-
-            List<Long> allUserIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
-            if (diffInUsersList(allUserIds)) {
+        List<Long> allUserIds = userTimeRangeDao.getUserIdsAndDay(dayNumber);
+        if (diffInUsersList(allUserIds)) {
 
             List<User> allUserByIds = userDao.getAllUserByIds(allUserIds);
 
-//in here we create the message for the notification
-                StringBuilder sb = new StringBuilder();
-                sb.append("רשימת הזקיפים להיום: ");
+            //in here we create the message for the notification
+            StringBuilder sb = new StringBuilder();
+            sb.append("רשימת הזקיפים להיום: ");
 
-                for (User user : allUserByIds) {
-                    sb.append(user.getUserName() + ",");
-                }
-
-                sendNotification(context, sb.toString());
+            for (User user : allUserByIds) {
+                sb.append(user.getUserName() + ",");
             }
+
+            sendNotification(context, sb.toString());
         }
     }
 
     private boolean diffInUsersList(List<Long> allUserIds) {
 
         if (allUserIds.size() != userIds.size()) {
-
             userIds = allUserIds;
             return true;
         }
-
         userIds = allUserIds;
-
         return false;
     }
 
@@ -80,13 +72,12 @@ public class AlarmManagerReceiver extends BroadcastReceiver {
         Intent tapResultIntent = new Intent(context, MainActivity.class);
         tapResultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = getActivity(context, 0, tapResultIntent, FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE);
-//this give a drop down
+         //this give a drop down
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.bigText(msg); // Set the expanded message
         bigTextStyle.setSummaryText("תזכורת לגבי זקיפים"); // Set a summary for the expanded message
 
-        Notification notification = new
-                NotificationCompat.Builder(context, SpotAlertAppContext.LOCATION_CHANNEL_ID)//giving the channel
+        Notification notification = new NotificationCompat.Builder(context, SpotAlertAppContext.LOCATION_CHANNEL_ID)//giving the channel
                 .setContentTitle("תזכורת לגבי זקיפים")
                 .setContentText(msg)
                 .setStyle(bigTextStyle)

@@ -13,7 +13,6 @@ import com.spot.alert.dataobjects.User;
 import java.util.List;
 //data access object
 @Dao
-
 public interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertUser(User user);
@@ -23,22 +22,19 @@ public interface UserDao {
     @Update
     void updateUser(User user);
 
-    @Query("SELECT * FROM User WHERE userId =:userId")
-    LiveData<User> getUserInfo(int userId);
-
     @Query("SELECT * FROM User WHERE email = :email AND password = :password")// צחפש אימייל שיש לו אימייל וסיסמה מהקלט שקיבלנו
     public User login(String email, String password);
 
     @Query("SELECT COUNT(*) FROM User WHERE email = :email")//פה אני מביא את מספר המופעים של האיימיל
     public long isEmailExist(String email);
 
-    @Query("SELECT * FROM User WHERE userId= :userId ")
+    @Query("SELECT * FROM User WHERE userId= :userId ") // bring the user by userId = userID
     User getUser(long userId);
 
     //בכל פעם שיש עידכון על המשתמשים הלייב דטה יביא לי רשימה חדשה
     @Query("SELECT * FROM User")
     LiveData<List<User>> getUsers();//מחזיר לייב דטה שיודע לטפל ברשימה של משתמשים
-
+      //select all users that IN list of ids
     @Query("SELECT * FROM User WHERE userId IN (:ids)")
     List<User> getAllUserByIds(List<Long> ids);
 }

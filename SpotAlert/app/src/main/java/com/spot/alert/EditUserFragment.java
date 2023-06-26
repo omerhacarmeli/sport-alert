@@ -107,7 +107,6 @@ public class EditUserFragment extends Fragment {
 
         Bundle bundle = getActivity().getIntent().getExtras();
         Long userId = bundle.getLong("userId");
-
         this.editUser = userDao.getUser(userId);
 
         userNameEditText.setText(this.editUser.getUserName());

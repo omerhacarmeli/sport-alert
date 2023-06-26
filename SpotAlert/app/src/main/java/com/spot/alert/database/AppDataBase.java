@@ -14,9 +14,9 @@ import com.spot.alert.dataobjects.UserTimeRange;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-@Database(entities = {User.class, Location.class, LocationTimeRange.class, UserTimeRange.class, ImageEntity.class}, version = 16)
-public abstract class AppDataBase extends RoomDatabase {
+//abstract class implementation class creates in build time by room library
+@Database(entities = {User.class, Location.class, LocationTimeRange.class, UserTimeRange.class, ImageEntity.class}, version = 20)
+public abstract class AppDataBase extends RoomDatabase{
 
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);

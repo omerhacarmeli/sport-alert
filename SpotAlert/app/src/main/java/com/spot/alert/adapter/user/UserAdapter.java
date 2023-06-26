@@ -32,7 +32,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
     }
 
     @Override
-    public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {// creates the amount of the user item it need
 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -46,8 +46,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
     @Override
     public void onBindViewHolder(final UserViewHolder viewHolder, final int position) {
-        User user = list.get(position);// לוקח את המשתמש
-        viewHolder.userName.setText(user.userName);//מציג אותו בריסקל
+        User user = list.get(position);// takes the user from the position
+        viewHolder.userName.setText(user.userName);// give the viewHolder the item user (text, username)
 
         viewHolder.editItem.setOnClickListener(new View.OnClickListener() {//שולח אותו לעריכה
             @Override

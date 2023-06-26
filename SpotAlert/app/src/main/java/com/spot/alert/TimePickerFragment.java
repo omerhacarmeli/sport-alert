@@ -47,7 +47,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         minutes = selectedMinute;//here we are doing insert to the minutes
         hours = selectedHour;//here we are doing insert to the hours
 
-        Double timeNum = TimeRangeUtils.getTimeNumber(selectedHour, selectedMinute);
+        Double timeNum = TimeRangeUtils.getTimeNumber(selectedHour, selectedMinute); //time with minutes and hours
 
         if (SpotAlertAppContext.FROM_TIME.equals(fromto)) {
             ValidateResponse validation = TimeRangeValidation.validateTimeFromTo(timeNum, timeRange.getToTime());

@@ -99,16 +99,14 @@ public class MainActivity extends AppCompatActivity
         NotificationChannel channel = new NotificationChannel(SpotAlertAppContext.LOCATION_CHANNEL_ID, SpotAlertAppContext.LOCATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
 
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
+        notificationManager.createNotificationChannel(channel);// create the notification cha
     }
 
     private void setAlarmManager() {
         // we ask for alarmMenger
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        // צור כוונה למקלט כשזמן ההתראה מגיע
+        // when we get a notification it will Receiv in the AlarmManagerReceiver
         Intent intent = new Intent(this, AlarmManagerReceiver.class);
-        // הגדר כל מידע נוסף שתרצה להעביר למקלט שלך (אופציונלי)
-        intent.putExtra("action", SpotAlertAppContext.CHECK_FOR_SHIFTING);//פרמטרים של ההודעה יכול להיות כל ערך שנחליט
         // צור PendingIntent שתופעל כאשר האזעקה מופעלת
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         //עושים התראה עם דיליי 5 שניות
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() { // to close the navigation drawer or to logout if the navigation is close already
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -166,7 +164,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new CenterPointFragment();//פרגמנט יהיה שווה למוקד פרגמנט
         } else if (id == R.id.logout) {//אם ההזהות שווה ליצאה
             logout();// עוברים לפונקציית יצאה
-        } 
+        }
 
         if (fragment != null) { //כאן בודקים אם הפרגמנט הוא שונה מנל
             moveFragment(fragment);//אם הוא כן אז עוברים לפונקציה שמעבירה מסך

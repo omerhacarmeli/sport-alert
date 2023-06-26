@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 
 import com.spot.alert.SpotAlertAppContext;
 
-public class BitMapUtils {
+public class BitMapUtils { // shrink the image
     public static Bitmap scaleBitmap(final Bitmap input ) {
         final int currentWidth = input.getWidth();
         final int currentHeight = input.getHeight();

@@ -50,5 +50,4 @@ public class TimeRangeValidation {
             return new ValidateResponse(true, "בחירת שעות תקינה");
         }
     }
-
 }

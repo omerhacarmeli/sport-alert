@@ -57,10 +57,11 @@ public class TimeRangeAdapter
     }
 
     @Override
-    public void onBindViewHolder(final TimeRangeViewHolder viewHolder, final int position) {// updete the reacelce view
+    public void onBindViewHolder(final TimeRangeViewHolder viewHolder, final int position) {// update the recycle view
         final int index = viewHolder.getAdapterPosition();
-      //creating adapter for dropdown list of days (days from string Resource)
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context.getApplicationContext(), R.array.days, R.layout.spinner_item);// it create an ArrayAdapter to the drop down list
+        //creating adapter for dropdown list of days (days from string Resource)+
+        // it create an ArrayAdapter of days to the drop down list
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context.getApplicationContext(), R.array.days, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         viewHolder.spinnerDays.setAdapter(adapter);
 

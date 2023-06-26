@@ -98,7 +98,7 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
         } else {
             GeoUtils.alertDialogEnableLocation(getActivity());
         }
-//getting the map fragment
+        //getting the map fragment
         FragmentManager fm = getActivity().getSupportFragmentManager();
         supportMapFragment = SupportMapFragment.newInstance();
         fm.beginTransaction().replace(R.id.map, supportMapFragment).commit();
@@ -298,11 +298,11 @@ public class LocationFragment extends Fragment implements LocationReceiver.OnLoc
 
             com.spot.alert.dataobjects.Location center = getCenterPoint(locations);
 
-            if (center == null || center.getLatitude() == null || center.getLongitude() == null) {
+           if (center == null || center.getLatitude() == null || center.getLongitude() == null) {
                 return;
             }
 
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.getLatitude(), center.getLongitude()), center.getZoom().floatValue());
+          CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.getLatitude(), center.getLongitude()), center.getZoom().floatValue());
 
             mMap.animateCamera(cameraUpdate);
             mMap.moveCamera(cameraUpdate);//animetion for movement

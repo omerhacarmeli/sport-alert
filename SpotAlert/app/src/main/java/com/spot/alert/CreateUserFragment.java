@@ -67,21 +67,19 @@ public class CreateUserFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-
+        // register when camera result is coming
+        ActivityResultLauncher<Intent> startCamera = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK) { // if there is result
+                        // sends the cameraImage to the function onActivityResultGetCameraImage
                         CameraOnClickListenerHandler.CameraImage cameraImage = cameraOnClickListenerHandler.onActivityResultGetCameraImage();
-                        if (cameraImage != null) {
+                        if (cameraImage != null) { // id there is cameraImage
                             userImage.setImageBitmap(cameraImage.getBitmap());
                             imageEntity.setImageData(cameraImage.getImageData());
                         }
                     }
                 }
         );
-
+       //create a listener to the camera handler
        this.cameraOnClickListenerHandler = new CameraOnClickListenerHandler(this.getActivity(), this, startCamera);
 
         this.userDao = AppDataBase.getDatabase(getActivity()).userDao();//bring the data base to userDao
@@ -173,7 +171,7 @@ public class CreateUserFragment extends Fragment {
                 }
             }
         });
-
+        //creating the recycle to the time range list
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);// reference of recycleView
         timeRangeAdapter = new TimeRangeAdapter(getActivity(), deleteListener);
         recyclerView.setAdapter(timeRangeAdapter);

@@ -297,8 +297,8 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
 
         return validateResponse; // return the boolean
     }
-
-    private ValidateResponse validateLocationPoint() {//validateLocationPoint checks if the location point is validate
+    //validateLocationPoint checks if the location point is validate
+    private ValidateResponse validateLocationPoint() {
        // sending the newLocation to the validateName and gets in return boolean and msg-message
         ValidateResponse validateResponse = LocationValidation.validateLocation(newLocation);
 
@@ -366,6 +366,11 @@ public class CreateLocationFragment extends Fragment implements OnMapReadyCallba
     }
 
     private void updateCenterLocationOnMap() {
+
+        if(centerLocation == null)
+        {
+            return;
+        }
 
         LatLng latLng = new LatLng(centerLocation.getLatitude(), centerLocation.getLongitude());
 

@@ -67,7 +67,12 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
             location = new Location();
             location.setLabel(SpotAlertAppContext.CENTER_POINT_STRING);
             location.setLevel(1);
+            location.setZoom(15d);
             location.setRadius(10);
+
+            location.setLatitude(31.508419d);
+            location.setLongitude(34.593228d);
+
             location.setName(SpotAlertAppContext.CENTER_POINT_STRING);
             location.setId(locationDao.insertLocation(location));
 
@@ -130,7 +135,12 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
 
     private void updateLocationOnMap(Location location) {
 
-        if (location == null || location.getLatitude() == null || location.getLongitude() == null) {
+        if(mMap == null)
+        {
+            return;
+        }
+
+        if (location == null || location.getLatitude() == null|| location.getLongitude() == null) {
             return;
         }
 
@@ -141,7 +151,9 @@ public class CenterPointFragment extends Fragment implements OnMapReadyCallback 
         } else {
             this.marker = mMap.addMarker(new MarkerOptions().position(latLng).title(location.getLabel()));
         }
+
         this.marker.showInfoWindow();
+
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, location.getZoom().floatValue());
         mMap.animateCamera(cameraUpdate);
         mMap.moveCamera(cameraUpdate);
